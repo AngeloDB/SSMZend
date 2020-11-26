@@ -1,0 +1,91 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+?>
+
+});
+
+$(document).ready(function(){
+});
+
+function printIt()
+    {
+    $('#toPrint').printThis({canvas: false});
+    }
+
+function toggleTitle()
+    {
+    $('#chartTitle').toggle();
+//    if($('#chartTitle').css('visibility') == 'hidden')
+//        {
+//        $('#chartTitle').css('visibility', 'visible');
+//        }
+//    else
+//        {
+//        $('#chartTitle').css('visibility', 'hidden');
+//        }
+    }
+
+</script>
+
+<style>
+.chartTitleClass {
+	background: #FFFFFF;
+}
+</style>
+
+<div id="buttons_wrapper" style="width: 98%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="printIt"class="buttonLike">
+                <a href= "javascript: toggleTitle();">Title</a>
+            </div>
+            <div id="printIt"class="buttonLike">
+                <a href= "javascript: printIt();">Print</a>
+            </div>
+            <div id="backWorld"class="buttonLike">
+                <a href= "javascript:history.back()">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toPrint"> <h3>
+        <div id="chartTitle" class="chartTitleClass">
+<?php echo implode('<br>',$this->titles); ?> </h3>            
+        </div>        
+<div style="position:relative" class="gantt" id="GanttChartDIV"></div>
+</div>
+</br>
+</br>
+</br>
+</br>
+</br>
+<script>
+
+  var g = new JSGantt.GanttChart('g',document.getElementById('GanttChartDIV'), 'month');
+  g.setShowRes(0); // Show/Hide Responsible (0/1)
+  g.setShowDur(0); // Show/Hide Duration (0/1)
+  g.setShowComp(0); // Show/Hide % Complete(0/1)
+  g.setCaptionType('Resource');  // Set to Show Caption
+
+  if( g ) {
+      
+  <?php  echo $this->planGrid;  ?>
+
+    g.Draw();	
+    g.DrawDependencies();
+
+
+  }
+  else
+  {
+    alert("not defined");
+  }
+
+</script>

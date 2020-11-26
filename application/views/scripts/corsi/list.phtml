@@ -1,0 +1,68 @@
+<script>
+
+function setCorso(idcorso, pubb)
+    {
+//    alert('idCorso = '+idcorso+' Pubb = '+pubb);
+    $.ajax({
+        type: "POST",
+        url: "/public/corsi/savepubb",
+        data: {idcorso:idcorso, pubb:pubb},
+        timeout: 3000, // in milliseconds
+        success: function(data) 
+            {
+            location.reload(true);
+            },
+        error: function(request, status, err) 
+            {
+            if(status == "timeout") 
+                {
+                alert(err);
+                }
+            }
+    });
+
+//         dataType: "json",
+//    $.post("/public/corsi/savepubb", {idcorso:idcorso, pubb:pubb},
+//    function() 
+//        {
+//        location.reload(true);
+//        //        gridAjax('sceltacorsi','Corsi/list/deploy.pdf.title/sceltacorsi/deploy.pdf.subtitle//deploy.print.title/sceltacorsi/gridmodsceltacorsi/ajax/_zfgid/sceltacorsi/ordersceltacorsi/DataCorso_DESC')
+//        }, 'json');
+    return false;
+    }
+
+
+$(function() {
+    $( "#GGtabs" ).tabs();
+    <?php
+    if ($this->addLink != '' && $this->addLabel != '')
+    {
+    ?>
+    macroAddTabsBtn (".tabsul", "btn_tab_creanuovo", "+ Nuovo dipendente", <?php echo $this->addLink; ?>, "l");
+    <?php
+    }    
+    ?>
+});
+
+</script>
+<?php
+
+//echo $this->javascript;
+
+echo $this->jsGrid;
+
+?>
+<div id="GGtabs">
+<ul class="tabsul">
+        <li><a href="#GGtabs-1">
+            <?php 
+            $translate = Zend_Registry::get('translate');
+            echo $this->title.' '.$translate->_('(elenco)');
+            ?>
+            </a>
+        </li>
+</ul>
+    <div id="GGtabs-1">
+    <?php echo $this->grid; ?>
+    </div>
+</div>

@@ -1,0 +1,393 @@
+<style>
+    .container {
+        background-color: #b6dfe5;
+        height: 99%;
+        border: 1px solid #000000;
+    }
+        .mapael .map {
+            position: relative;
+        }
+
+        .mapael .mapTooltip {
+            position: absolute;
+            background-color: #474c4b;
+            moz-opacity: 0.70;
+            opacity: 0.70;
+            filter: alpha(opacity=70);
+            border-radius: 10px;
+            padding: 7px;
+            z-index: 1000;
+            max-width: 200px;
+            display: none;
+            color: #fff;
+        }
+        .mapael .zoomButton {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            color: #000;
+            width: 15px;
+            height: 15px;
+            line-height: 15px;
+            text-align: center;
+            border-radius: 3px;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            font-weight: bold;
+            left: 10px;
+
+            -webkit-user-select: none;
+            -khtml-user-select : none;
+            -moz-user-select: none;
+            -o-user-select : none;
+            user-select: none;
+        }
+
+
+        .mapael .areaLegend {
+            margin-bottom: 20px;
+            height: 30px;
+        }
+
+        /* Reset Zoom button first */
+        .mapael .zoomReset {
+            top: 10px;
+        }
+
+        /* Then Zoom In button */
+        .mapael .zoomIn {
+            top: 30px;
+        }
+        
+        .mapael .plotLegend {
+            margin-bottom: 20px;
+            height: 30px;
+        }
+
+        /* Then Zoom Out button */
+        .mapael .zoomOut {
+            top: 50px;
+        }
+</style>
+
+<script>
+    
+        $(function () {
+            
+<?php
+echo '            var mapName = "' . $this->mappa['Mappa'] . "\";\n";
+//echo '            var mapName = "' . $this->currMap . "\";\n";
+echo '            var mapHeight = ' . $this->mappa['MapHeight'] . ";\n";
+echo '            var mapWidth = ' . $this->mappa['MapWidth'] . ";\n";
+echo '            var mapRatio = ' . $this->mapRatio . ";\n";
+echo '            var mapRatio = ' . $this->mapRatio . ";\n";
+echo '            var pointSize = ' . $this->dotSize . ";\n";
+$outDots = '';
+foreach ($this->locations as $dot)
+    {
+    if($outDots == '')
+        {
+        $outDots = "var test_plots = {\n";
+        }
+    else if($dot['Latitudine'] != 0  && $dot['Longitudine'] != 0)
+        {
+        $outDots .= ",\n";
+        }
+    if($dot['Latitudine'] != 0  && $dot['Longitudine'] != 0)
+        {        
+        $outDots .= '"'.$dot['Nome']."\": {\n".
+                "size: pointSize,\n".
+                "latitude: ".$dot['Latitudine'].",\n".
+                "longitude: ".$dot['Longitudine'].",\n".
+                "value: [".$dot['Status']."],\n";
+        if(($this->currUser['desc_ul_short'] == 'Project' ||
+                $this->currUser['desc_ul_short'] == 'PM-CM' ) &&
+                (strpos($this->currUser['AutCommesse'], '#'.$dot['idProgetto'].'#') === FALSE))
+            {
+            $outDots .= "tooltip: {content: \"<img src='../images/delete.png'> ".
+                        $dot['Nome']." (Not authorized)\"},\n".
+                        "href: \"#\"\n";        
+            }
+        else if($this->currUser['desc_ul_short'] == 'Project' ||
+                $this->currUser['desc_ul_short'] == 'PM-CM' )   
+            {
+            $outDots .= "tooltip: {content: \"".$dot['Nome']."\"},\n".        
+                        "href: \"" . $this->baseUrl() . 
+                        "/giorni-lav/grid/id/".$dot['idProgetto']."\"\n";
+            }
+        else if($dot['idProgetto'] > 0) 
+            {
+            $outDots .= "tooltip: {content: \"".$dot['Nome']."\"},\n".        
+                        "href: \"" . $this->baseUrl() . 
+                        "/giorni-lav/grid/id/".$dot['idProgetto']."\"\n";
+            }
+        else 
+            {
+            $outDots .= "tooltip: {content: \"<img src='../images/delete.png'> ".$dot['Nome']."\"},\n".        
+                        "href: \"#\"\n";
+            }
+        $outDots .= "}";
+        }
+    }
+$outDots .= "};\n";
+echo $outDots;
+?>
+    $("#backWorld").click(function() {
+            window.location = baseUrl+"/index/admin/id/";
+        });
+        
+    $("#jobsDisplay").click(function() {
+            if($("#jobsDisplay").text() == "All") {
+                $("#jobsDisplay").text("Opened");
+            }
+            else {
+                $("#jobsDisplay").text("All");
+            }
+//            window.location = baseUrl+"/index/admin/id/";
+        });
+        
+    var getElemID = function(elem) {
+        // Show element ID
+        return $(elem.node).attr("data-id");
+    };
+
+    var calcWidth = $(".container").width();
+    var calcHeight = mapHeight;
+    if(mapWidth > 0) {
+        var widthRatio = mapWidth / $(".container").width();
+        calcHeight = mapHeight / widthRatio;
+        if(calcHeight > $(".container").height()) {
+            heightRatio =  calcHeight / $(".container").height();
+            calcHeight = $(".container").height();
+            calcWidth = calcWidth / heightRatio;
+            }
+        }
+    
+        
+//    if(mapRatio !== 0 && mapRatio >= contRatio) {
+//        calcWidth = calcWidth / (1+contRatio-mapRatio);
+//    var contRatio = $(".container").width() / $(".container").height();
+//    var calcWidth = $(".container").width();
+//    if(mapRatio !== 0 && mapRatio >= contRatio) {
+//        calcWidth = calcWidth / (1+contRatio-mapRatio);
+//    };
+//<?php                    
+//echo '        name: "' . $this->currMap . "\",\n";
+//if($this->mappa['MapWidth'] > 0) {
+//    echo '        width: ' . $this->width . ",\n";
+//    }
+//?>
+//        width: $(".container").width(),
+             
+    $(".mapcontainer").mapael({
+      map: {
+        name: mapName,
+        zoom: {
+            enabled: true,
+            maxLevel: 10
+            },
+        width: calcWidth,
+        defaultArea: {
+            eventHandlers: {
+                click: function (e, id, mapElem, textElem, elemOptions) {
+//                    alert("Ciao!");
+                    window.location = baseUrl+"/index/admin/id/"+id;
+                    }
+                },                    
+            attrs: {
+                fill: "#c4e448"
+                , stroke: "#aeb8b0"
+            }
+            , attrsHover: {
+                fill: "#a4e100"
+            },
+            tooltip: {
+                content: getElemID
+            }
+            }
+        },
+        legend: {
+            plot: [
+                {
+                    labelAttrs: {
+                        fill: "#000",
+                        "font-size": 12
+                    },
+                    titleAttrs: {
+                        fill: "#000",
+                        "font-size": 12
+                    },
+                    cssClass: 'plotLegend',
+                    mode: 'horizontal',
+                    title: "",
+                    marginBottom: 2,
+                    marginBottomTitle: 2,
+                    slices: [
+                    {
+                        size: pointSize,
+                        label: "Next Sites",
+                        min: "2",
+                        max: "2",
+                        attrs: {
+                            fill: "#f333f3"
+                        }
+                    }, 
+                    {
+                        size: pointSize,
+                        label: "Open Sites",
+                        min: "3",
+                        max: "3",
+                        attrs: {
+                            fill: "#004a9b"
+                        }
+                    }, 
+                    {
+                        size: pointSize,
+                        label: "On Hold",
+                        min: "0",
+                        max: "0",
+                        attrs: {
+                            fill: "#FF0"
+                        }
+                    }, 
+                    {
+                        size: pointSize,
+                        label: "Closed Sites",
+                        clicked: true,
+                        min: "1",
+                        max: "1",
+                        attrs: {
+                            fill: "#d92626"
+                        }
+                    }]
+                }
+            ]
+        },
+        plots: test_plots
+    });
+
+    $(".mapcontainer")
+        .on('mousemove', function(e) {
+
+//            if($('.spotPoint').is(":checked")) return;
+
+            var $this = $(this);
+
+            // mapPagePositionToXY() allows to get the x,y coordinates 
+            // on the map from a x,y coordinates on the page
+            var coords = $this.data('mapael').mapPagePositionToXY(e.pageX, e.pageY);
+
+//            $('.mapExtraInfo .pageX').text('Page X: ' + e.pageX);
+//            $('.mapExtraInfo .pageY').text('Page Y: ' + e.pageY);
+            $('.mapExtraInfo .x').text('X: ' + Math.round(1000 * coords.x) / 1000);
+            $('.mapExtraInfo .y').text('Y: ' + Math.round(1000 * coords.y) / 1000);
+        });
+//        .on('click', function(e) {
+  //          if (!$('.spotPoint').is(":checked")) return;
+
+//            var $this = $(this);
+//            var coords = $this.data('mapael').mapPagePositionToXY(e.pageX, e.pageY);
+//            var paper = $(".mapcontainer").data("mapael").paper;
+//
+//            $('.mapExtraInfo .pageX').text('Page X: ' + e.pageX);
+//            $('.mapExtraInfo .pageY').text('Page Y: ' + e.pageY);
+//            $('.mapExtraInfo .x').text('X: ' + Math.round(1000 * coords.x) / 1000);
+//            $('.mapExtraInfo .y').text('Y: ' + Math.round(1000 * coords.y) / 1000);
+//
+//            for (var i = 0; i < currentReticle.length; i++) {
+//                currentReticle[i].remove();
+//            }
+//
+//            currentReticle = [
+//                paper.path("M" + (coords.x - 25) + "," +  coords.y + " " + (coords.x + 25) + "," +  coords.y + "")
+//                    .attr({'stroke':'red', 'stroke-width':0.5}),
+//                paper.path("M" + coords.x + "," +  (coords.y - 25) + " " + coords.x + "," +  (coords.y + 25) + "")
+//                    .attr({'stroke':'red', 'stroke-width':0.5})
+//            ];
+//        });
+
+    });
+</script>
+
+<div class="container">
+
+    <div class="mapcontainer">
+        <div id="buttons_wrapper" style="width: 100%; overflow: hidden; ">
+            <div id="buttons_content">
+                <div style="float: left; display: inline;">                    
+<?php
+    if($this->sigla != 'WW')
+        {
+//        echo $this->currMap;
+?>        
+                    <span style="margin-left: 5px; display: inline">
+                    <a href="/public/index/admin" title="World">
+                        <img src="/public/images/globo_small.jpg" border="0"
+                                alt="World" />
+                    </a>
+                    </span>
+                    <span style="margin-left: 5px; display: inline">&nbsp;</span>
+<?php
+        }
+?>        
+                    <span style="margin-left: 5px; height: 25px; display: inline" class="plotLegend">
+                         No Legend!
+                    </span>        
+                    <span style="margin-left: 5px; height: 25px; display: inline" class="mapExtraInfo">
+<!--                        <span style="margin-left: 5px; height: 25px; display: inline" class="pageX">
+                             Page X: 
+                        </span>        
+                        <span style="margin-left: 5px; height: 25px; display: inline" class="pageY">
+                             Page Y: 
+                        </span>        -->
+                        <span style="margin-left: 5px; height: 25px; display: inline" class="x">
+                             X: 
+                        </span>        
+                        <span style="margin-left: 5px; height: 25px; display: inline" class="y">
+                             Y: 
+                        </span>        
+                    </span>        
+                </div>
+            </div>
+        </div>
+        <div class="map">
+            <span>No Map!</span>
+        </div>
+    </div>
+</div>
+
+
+<script>
+//                        ,
+//                        href: "/public/index/admin/id/",
+//                        target: "_blank"
+
+
+
+//                    defaultPlot: {
+//                        attrs: {
+//                        type: "square",
+//                        size: 5,
+//                        fill: "#004a9b",
+//                        opacity: 0.6
+//                        }
+//                        , attrsHover: {
+//                            opacity: 1
+//                        }
+//                        , text: {
+//                            attrs: {
+//                                fill: "#505444",
+//                                "font-size": 9,
+//                                opacity: 0.8
+//                            }
+//                            , attrsHover: {
+//                                fill: "#000"
+//                            }
+//                            , margin: {
+//                                x: 5,
+//                                y: 5
+//                            }
+//                        }
+//                    } , 
+
+</script>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <business_unit>
+        <title>Business unit</title>
+        <edittitle>Modifica Business Unit</edittitle>
+        <newtitle>Nuova Business Unit</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>business_units</maintable>
+        <currkey>idBusinessUnit</currkey>
+        <currsql>SELECT * FROM business_units WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formbu</name>
+            <elements>
+                <idBusinessUnit>
+                    <type>hidden</type>
+                </idBusinessUnit>
+                <DescShort>
+                    <type>text</type>
+                    <label>Short Name</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </DescShort>
+                <Descrizione>
+                    <type>text</type>
+                    <label>Descrizione</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Descrizione>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </business_unit>
+</edits>

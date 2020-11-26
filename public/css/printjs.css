@@ -1,0 +1,58 @@
+/* 
+    Document   : printjp
+    Created on : 13-apr-2010, 16.44.35
+    Author     : Italo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+    font-family: serif;
+}
+
+.titolo {
+	text-align: center;
+    font-family: serif;
+	font-size: 24px;
+	font-weight: normal;
+}
+
+.sottotitolo {
+	text-align: center;
+    font-family: serif;
+	font-size: 16px;
+	font-weight: bold;
+    font-style: normal;
+}
+
+.italiano {
+	text-align: left;
+    font-family: serif;
+	font-size: 14px;
+	font-weight: normal;
+    font-style: normal;
+}
+
+.inglese {
+	text-align: left;
+    vertical-align: top;
+    font-family: serif;
+	font-size: 10px;
+	font-weight: normal;
+    font-style: italic;
+}
+
+.dato {
+	text-align: left;
+    vertical-align: top;
+    font-family: serif;
+	font-size: 14px;
+	font-weight: normal;
+    font-style: normal;
+}

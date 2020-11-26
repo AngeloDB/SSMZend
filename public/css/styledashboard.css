@@ -1,0 +1,211 @@
+@charset "utf-8";
+/*
+ * div.titolo = titolo modulo
+ * div.info = senz nuvoletta
+ * div.nuvoleta = box con cornice tratteggiata
+ * div.nuvoletagrigia = di colore grigio
+ * div.nuvoletalicenza = colore della societa che ha acquistato la licenza
+ * div.hreftop = link a name
+ * div.spazio = spazio
+ * div.spazio2 = spazio doppio
+ *
+ */
+h1.h1titolo { line-height: 40px; }
+div.pathtesto {
+	min-height: 26px;
+	padding:12px 0px 16px 8px;
+	background-image: url(../images/backgound-path-azioni.png);
+	border-top: 4px solid #97DDFF;
+	border-bottom: 4px solid #97DDFF;
+}
+div.pathtesto h4 a {
+	text-decoration: none;
+	color:#000;
+	cursor: text;
+}
+div.pathtesto h4 a:hover {
+	text-decoration: none;
+	color:#000;
+	cursor: text;
+}
+
+.left { width:25%; }
+.mid { width:49.9%; }
+.right { width:25%; }
+.colonne {
+	width: 100%;
+	padding: 4px 0 32px 0;
+	margin: 0;
+}
+.colonne ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.colonne ul li {
+	position: relative;
+	display: inline;
+	float: left;
+}
+.colonne ul li div ul {
+	margin: 0px;
+	padding: 0px;
+}
+.colonne ul li div ul {
+	display: block;
+	float:none;
+}
+.colonne ul li div div.spazio { margin: 8px 0 0 0; }
+.colonne ul li div div.spazio2 { margin: 16px 0 0 0; }
+.colonne ul li div div.hreftop {
+	font-size: 80%;
+	display:block;
+	margin: 8px 0 16px 0;
+	clear:both;
+	text-align:right;
+}
+.colonne ul li div div.hreftop a {
+	color:#000;
+	text-decoration: none;
+}
+.colonne ul li div div.hreftop a:hover {
+	color:#F00;
+	text-decoration: underline;
+}
+.colonne ul li div ul li {
+	float:none;
+	display: block;
+	width:100%;
+}
+a.menuhome {
+	display: block;
+	border-bottom: 1px dashed #C39C4E;
+	padding: 5px 0px 2px 40px;
+	text-decoration: none;
+	color: #666666;
+	margin:0;
+}
+a.menuhome:hover {
+	display: block;
+	color:#006F00;
+	background-color:#FFF;
+	background: #eeeeee url(../images/link.gif) no-repeat 10px 4px;
+}
+.menuhomeselect {
+	display: block;
+	color:#006F00;
+	background-color: #FF6;
+	background: #eeeeee url(../images/sim.png) no-repeat 10px 4px;
+}
+/*
+.colonne ul li div ul li a {
+	display: block;
+	border-bottom: 1px dashed #C39C4E;
+	padding: 5px 0px 2px 40px;
+	text-decoration: none;
+	color: #666666;
+	margin:0;
+}
+.colonne ul li div ul li a:hover, .colonne ul li div ul li a:focus {
+	display: block;
+	color:#006F00;
+	background-color:#FFF;
+	background: #eeeeee url(/images/link.gif) no-repeat 10px 4px;
+}
+.colonne ul li div ul li.menuhomeselect {
+	display: block;
+	color:#006F00;
+	background-color: #FF6;
+	background: #eeeeee url(/images/sim.png) no-repeat 10px 4px;
+}
+*/
+.cornice {
+	margin: 4px;
+	padding: 8px;
+	border:#999 1px solid;
+	background-color:#FFF;
+	min-height: 400px;
+}
+.titolo {
+	font-size: 90%;
+	text-transform: uppercase;
+	display:block;
+	padding: 4px 0 4px 0;
+	background-color: #ccc;
+	border-bottom-width: 2px;
+	border-bottom-style: solid;
+	border-bottom-color: #000;
+	clear:both;
+}
+.info {
+	font-size: 80%;
+	display: block;
+	border-bottom: 1px dashed #fff;
+	padding: 16px 0px 2px 40px;
+	text-decoration: none;
+	color: #444;
+}
+.nuvoletta, .nuvolettagrigia, .nuvolettalicenza, .logo {
+	font-size: 80%;
+	display: block;
+	margin: 16px 0;
+	padding: 16px;
+	text-decoration: none;
+	color: #333;
+	font-style: italic;
+}
+.nuvoletta {
+	background: #FF9;
+	border: 1px dashed #E6E600;
+}
+.nuvolettagrigia {
+	background: #DDD;
+	border: 1px dashed #666;
+}
+.nuvolettalicenza {
+	background: #DFFFBF;
+	border: 1px dashed #52A400;
+}
+.logo {
+	border: 1px dashed #3FF;
+	background: url(/licenza/log.png) no-repeat;
+}
+input[type='text'], textarea {
+	border: 0px;
+	margin:0px;
+	padding:4px;
+	border: 1px solid #ccc;
+	background-image: url(../images/backgound-path-azioni.png);
+}
+input[type='password'] {
+	border: 0px;
+	margin:0px;
+	padding:4px;
+	border: 1px solid #ccc;
+	background: #FC9 url(../images/backgound-path-input.png);
+}
+.areaidivenziata {
+	margin:0px;
+	padding:4px;
+	border: 1px solid #09C;
+	background: #FC0;/* url(/images/backgound-bianco-segno.png);*/
+}
+td {
+	margin:8px;
+	padding:0;
+	border: hidden;
+	text-align:left;
+}
+.label_cell {
+	margin:0;
+	padding:0px;
+	border-bottom: 1px solid #CCC;
+}
+.input_cell {
+	margin:0px;
+	padding:0px;
+}
+input.subtitolo {
+	width: 90%;
+	text-align:right;
+}

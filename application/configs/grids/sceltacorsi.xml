@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <sceltacorsi>
+        <title>Corsi</title>
+        <addlink>/crud/new/edt/documenti</addlink>  baseUrl+
+        <addtitle>Nuovo documento</addtitle>
+        <parameters>
+            <idcantiere>
+                <from>defaultnamespace</from>
+            </idcantiere>
+	</parameters>
+        <javascript>
+
+            function setCorso(idcorso, pubb)
+                {
+                // alert('idCorso = '+idCorso+' Pubb = '+Pubb);
+                $.post("/public/corsi/savepubb", {idcorso:idcorso, pubb:pubb},
+                function() 
+                    {
+                    gridAjax('sceltacorsi','Corsi/list/deploy.pdf.title/sceltacorsi/deploy.pdf.subtitle//deploy.print.title/sceltacorsi/gridmodsceltacorsi/ajax/_zfgid/sceltacorsi/ordersceltacorsi/DataCorso_DESC')
+                    }, 'json');
+                return false;
+                }
+
+        </javascript>
+        <select>
+            <from>
+                <aliasname>
+                    <calcorsi>calcorsi</calcorsi>
+                </aliasname>
+                <fields>
+                    <ID_Corso>ID_Corso</ID_Corso>
+                    <DataCorso>DataCorso</DataCorso>
+                    <DaPubb>IF(Pubblicato = 0 OR Pubblicato = "" OR Pubblicato IS NULL, 0, 1)</DaPubb>
+                    <NomeSocieta>NomeSocieta</NomeSocieta> 
+                    <CodiceNuovo>CodiceNuovo</CodiceNuovo>
+                    <Titolo>Titolo</Titolo>
+                </fields>
+            </from>
+        </select>
+        <updatecolumns>
+            <ID_Corso>
+                <hidden>1</hidden>
+            </ID_Corso>
+            <DaPubb>
+                <hidden>1</hidden>
+            </DaPubb>
+            <CodiceNuovo>
+                <title>Codice</title>
+            </CodiceNuovo>
+            <DataCorso>
+                <title>Inizio</title>
+<!--                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </DataCorso>
+            <CodiceNuovo>
+                <title>Codice</title>
+            </CodiceNuovo>
+            <NomeSocieta>
+                <title>Impresa</title>
+            </NomeSocieta> 
+        </updatecolumns>
+        <updateCallbacks>
+            <DataCorso>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{DataCorso}}</params>
+            </DataCorso>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Pubb>
+		<position>left</position>
+                <title>Pubb.</title>
+                <customdecorator>
+                    &lt;a href="#" 
+                        onclick='setCorso({{ID_Corso}}, {{DaPubb}}); return false;'"&gt;
+                    &lt;img src="/public/images/ico-pubb{{DaPubb}}.png" alt={{DaPubb}} border="0"&gt;
+                    &lt;/a&gt;
+                </customdecorator>
+<!--                <decorator>
+                    <onclick>
+                        alert("bho"); return false;
+                    </onclick>
+                    <link>                        
+                    </link>
+                    <linkimg>                        
+                        /images/ico-pubb{{DaPubb}}.png
+                    </linkimg>
+                    <linkalt>                        
+                        {{DaPubb}}
+                    </linkalt>
+                </decorator>-->
+
+            </Pubb>
+            <!--            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /crud/edit/id/{{idAppaltoImpresa}}/edt/appaltiimprese#/images/edit.png#Edit
+                </decorator>
+            </Edit>-->
+        </extracolumns>
+    </sceltacorsi>
+</grids>

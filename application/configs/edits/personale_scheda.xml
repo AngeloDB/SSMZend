@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <personale_scheda>
+        <title>Personale</title>
+        <edittitle>Modifica personale</edittitle>
+        <newtitle>Nuovo personale</newtitle>
+        <mode>readonly</mode>
+<!--        <savingalert>1</savingalert>-->
+        <maintable>personale</maintable>
+        <currkey>idPersonale</currkey>
+        <currsql>SELECT * FROM personale WHERE </currsql>
+<!--        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: per selezionare una mansione cliccare sul nome).',
+        noneSelectedText: 'Mansioni possibili (selezione a checkbox)',
+        uncheckAllText: 'Deseleziona',
+        noneSelectedText: 'Nessuna mansione selezionata.',
+        selectedText: 'Sono state selezionate # ',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filtra:",
+        placeholder: "ricerca"
+    });
+  
+});  
+
+        </javascript>-->
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formPersonale</name>
+            <elements>
+<!--                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>-->
+                <Nome>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label></label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Nome>
+                <Cognome>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label></label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Cognome>
+<!--                <DataNascita>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <readonly>true</readonly>
+                    <parameters>
+                        <Label>Nascita</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </DataNascita>
+                <LuogoNascita>
+                    <type>text</type>
+                    <label>Luogo di nascita</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </LuogoNascita>
+                <IndResidenza>
+                    <type>text</type>
+                    <label>Residenza</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </IndResidenza>-->
+                <Email>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Email</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Email>
+                <Telefono>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Telefono</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Telefono>
+                <TelMobile>
+                    <type>text</type>
+                    <label>Cellulare</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </TelMobile>
+                <TelMobileLocal>
+                    <type>text</type>
+                    <label>Cellulate locale</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </TelMobileLocal>
+                <idQualifica>
+                    <type>select</type>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, qualifiche.Descrizione AS Value
+                        FROM qualifiche
+                    </selsql>
+                </idQualifica>
+                <idMultiQual>
+                    <type>multiselect</type>
+                    <label>Mans. possibili</label>
+                    <selsql>
+                        SELECT idQualifica AS KeyId, 
+                            CONCAT(qualifiche.NumRagg, ' - ',
+                            raggruppamenti.Raggruppamento, ' ', 
+                            SiglaDesc, ' - ', Descrizione) AS Value
+                        FROM qualifiche
+                        JOIN raggruppamenti ON raggruppamenti.NumRagg = qualifiche.NumRagg
+                    </selsql>
+                    <aiuto>standard</aiuto>                
+                </idMultiQual>                               
+                <idFornPers>
+                    <type>select</type>
+                    <label>Fornitore</label>
+                    <selsql>
+                        SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                        FROM forn_pers
+                    </selsql>
+                </idFornPers>
+               <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </personale_scheda>
+</edits>

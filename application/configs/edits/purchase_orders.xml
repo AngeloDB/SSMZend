@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <purchase_orders>
+        <title>Periodo lavorativo</title>
+        <edittitle>Modifica periodo lavorativo</edittitle>
+        <newtitle>Nuovo periodo lavorativo</newtitle>
+        <savingalert>1</savingalert>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <javascript>
+                
+// $(document).ready(function() 
+//  {
+//  });
+
+        </javascript>
+        <form>
+            <name>formPersFornPers</name>
+            <elements>
+                <idPersFornPers>
+                    <type>hidden</type>
+                </idPersFornPers>
+                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>
+                <idProgetto>
+                    <type>hidden</type>
+                </idProgetto>
+                <Dal>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Inizio</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <size>10</size>
+                        <maxlen>10</maxlen>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Dal>
+                <Al>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Fine</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Al>
+                <idQualifica>
+                    <type>select</type>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, 
+                            CONCAT(raggruppamenti.Raggruppamento, " - ", qualifiche.Descrizione) AS Value
+                        FROM qualifiche
+                        JOIN raggruppamenti ON raggruppamenti.idRagg = qualifiche.idRagg
+                        ORDER BY CONCAT(raggruppamenti.Raggruppamento, " - ", qualifiche.Descrizione)
+                    </selsql>
+                </idQualifica>
+                <idFornPers>
+                    <type>select</type>
+                    <label>Fornitore</label>
+                    <selsql>
+                        SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                        FROM forn_pers
+                        ORDER BY forn_pers.RagSoc
+                    </selsql>
+                </idFornPers>
+                <PurchaseOrder>
+                     <type>text</type>
+                     <label>Order</label>
+                     <parameters>
+                         <size>40</size>
+                         <maxlen>80</maxlen>
+                     </parameters>
+                </PurchaseOrder>
+                <RateGG>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Rate/Day</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </RateGG>
+                <RateHH>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Rate/Hour</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </RateHH>
+                <PocketMoney>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Pocket Money</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </PocketMoney>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+<!--                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>-->
+            </elements>
+        </form>
+    </purchase_orders>
+</edits>

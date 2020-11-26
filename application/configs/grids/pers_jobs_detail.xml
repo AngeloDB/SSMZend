@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <pers_jobs_detail>
+        <title>Periodi lavorativi</title>
+        <parameters>
+            <pers_id>
+                <from>pararr</from>
+            </pers_id>
+            <ric_id>
+                <from>pararr</from>
+            </ric_id>
+        </parameters>
+<!--        <addlink>/company-rate/new</addlink>
+        <addtitle>Nuovo periodo lavorativo</addtitle>-->
+        <select>
+            <from>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <idPersonale>idPersonale</idPersonale>
+                </fields>
+            </from>
+            <join id='giorni_lav'>
+                <cond>giorni_lav.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <giorni_lav>giorni_lav</giorni_lav>
+                </aliasname>
+                <fields>
+                    <Anno>Anno</Anno>
+                    <Mese>Mese</Mese>
+                    <Planned>GiorniTarget</Planned>
+                    <Actual>GiorniEff</Actual>
+                </fields>
+            </join>
+            <join id='jobs'>
+                <cond>jobs.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <jobs>jobs</jobs>
+                </aliasname>
+                <fields>
+                    <Inizio>Inizio</Inizio>
+                    <Fine>Fine</Fine>
+                </fields>
+            </join>
+            <join id='personale'>
+                <cond>personale.idPersonale = jobs.idPersonale</cond>
+                <aliasname>
+                    <personale>personale</personale>
+                </aliasname>
+                <fields>
+                    <Nome>Nome</Nome>
+                    <Cognome>Cognome</Cognome>
+                    <NomeCognome>CONCAT(personale.Nome, " ", personale.Cognome)</NomeCognome>
+                </fields>
+            </join>
+            <join id='qualifiche'>
+                <cond>qualifiche.idQualifica = richieste.idQualifica</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <Qualifica>Descrizione</Qualifica>
+                </fields>
+            </join>
+            <join id='prog_steps'>
+                <cond>prog_steps.idProgStep = richieste.idProgstep</cond>
+                <aliasname>
+                    <prog_steps>prog_steps</prog_steps>
+                </aliasname>
+                <fields>
+                    <Step>Step</Step>
+                </fields>
+            </join>
+            <join id='progetti'>
+                <cond>progetti.idProgetto = prog_steps.idProgetto</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <Commessa>Nome</Commessa>
+                    <JobNumber>JobNumber</JobNumber>
+                </fields>
+            </join>
+            <join id='pers_forn_pers'>
+                <type>left</type>
+                <cond>
+                    pers_forn_pers.idPersonale = jobs.idPersonale AND 
+                     (pers_forn_pers.idQualifica = richieste.idQualifica OR
+                      pers_forn_pers.idProgetto = prog_steps.idProgetto)
+                </cond>
+                <aliasname>
+                    <pers_forn_pers>pers_forn_pers</pers_forn_pers>
+                </aliasname>
+                <fields>
+                    <idPersFornPers>idPersFornPers</idPersFornPers>
+                </fields>
+            </join>
+            <join></join>
+<!--            <group>
+                jobs.idRichiesta
+            </group>                        -->
+            <order>CONCAT(Anno, Mese)</order>
+            <where>
+                <from>
+                    jobs.idPersonale = "{{pers_id}}" AND richieste.idRichiesta = "{{ric_id}}"
+                </from>
+            </where>
+        </select>
+        <updatecolumns>
+            <idPersonale>
+                <hidden>1</hidden>
+            </idPersonale>
+            <Inizio>
+                <hidden>1</hidden>
+            </Inizio>
+            <Fine>
+                <hidden>1</hidden>                
+            </Fine>
+            <Nome>
+                <title>Nome</title>
+                <hidden>1</hidden>                
+            </Nome>
+            <Cognome>
+                <title>Cognome</title>
+                <hidden>1</hidden>                
+            </Cognome>
+            <idPersFornPers>
+                <hidden>1</hidden>                
+            </idPersFornPers>
+            <NomeCognome>
+                <position>1</position>
+                <title>Person</title>
+            </NomeCognome>
+            <Anno>
+                <position>2</position>
+                <class>width_80</class>
+                <title>Anno</title>
+            </Anno>
+            <Mese>
+                <position>3</position>
+                <class>width_80</class>
+                <title>Mese</title>
+            </Mese>
+            <Planned>
+                <position>4</position>
+                <class>width_80</class>
+                <title>Planned</title>
+            </Planned>
+            <Actual>
+                <position>5</position>
+                <class>width_80</class>
+                <title>Actual</title>
+            </Actual>
+            <Qualifica>
+                <position>6</position>
+                <title>Qualifica</title>
+            </Qualifica>
+            <Step>
+                <position>7</position>
+                <title>Step</title>
+            </Step>
+            <JobNumber>
+                <position>8</position>
+                <title>Job N.</title>
+            </JobNumber>
+            <Commessa>
+                <position>9</position>
+                <title>Commessa</title>
+            </Commessa>
+        </updatecolumns>
+        <extracolumns>
+            <I>
+                <position>left</position>
+            </I>
+<!--            <Edit>
+                <position>left</position>
+                <title>Detail</title>
+                <decorator>
+                    /company-rate/edit/id/{{idPersFornPers}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>-->
+        </extracolumns>
+    </pers_jobs_detail>
+</grids>

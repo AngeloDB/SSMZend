@@ -1,0 +1,667 @@
+<div id="buttons_wrapper" style="width: 98%; overflow: hidden">
+    <div id="buttons_content">
+        <div style="display: inline">
+<!--            <div class="levelsSign">                
+            </div>-->
+                <span id='lev1Label' class='lev1Label'>Level 1</span>
+                <span id='lev2Label' class='lev2Label'>Level 2</span>
+                <span id='lev3Label' class='lev3Label'>Level 3</span>
+            <span style="margin-left: 20px; display: inline;">&nbsp;</span>
+            <div id="nav-m" class="buttonLike">
+                <span id="visModeLabel">&nbsp;</span>
+            </div>
+            <span style="margin-left: 30px; display: inline;">&nbsp;</span>
+            <div id="nav-fr" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/fast-rewind.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <div id="nav-l" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/arrow-left.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <div id="slider" style= "margin-left: 10px; margin-right: 10px; min-width: 150px; width: 150px; display:inline-block;"></div>
+            <div id="nav-r" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/arrow-right.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <div id="nav-ff" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/fast-forward.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <span style="margin-left: 20px; display: inline;">&nbsp;</span>
+            <div id="nav-fu" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/fast-up.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <div id="nav-u" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/arrow-up.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <div id="nav-d" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/arrow-down.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <div id="nav-fd" class="buttonLike">
+                <img src=<?php echo '"'.$this->baseUrl().'/images/fast-down.png"'; ?>
+                    class="dirButtons" >
+            </div>
+            <span class="yellowSign">&nbsp;&nbsp;</span>
+            <span class="labelSign">Planned</span>
+            <span class="greenSign">&nbsp;&nbsp;</span>
+            <span class="labelSign">Actual</span>
+            <span class="redSign">&nbsp;&nbsp;</span>
+            <span class="labelSign">Detail</span>
+        </div>
+        <div style="float: right; display: inline;">
+            <div id="toggleTitle" class="buttonLike">
+                    Title
+            </div>
+            <div id="printIt" class="buttonLike">
+                    Print
+            </div>
+            <div id="backWorld" class="buttonLike">
+                    Back
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="visualization" style="height: 96%;">
+    
+<div id="toPrint"> 
+    <h3>
+        <div id="chartTitle" class="chartTitleClass">
+<?php echo implode('<br>',$this->titles); ?> 
+        </div>        
+    </h3>            
+</div>        
+<div id="drawing"></div>
+
+</div> 
+
+
+<script>
+
+$(document).ready(function () {    
+    $('#nav-m').click(function(){switchMode(visMode);});
+    $('#nav-fl').click(function(){goFarLeft();});
+    $('#nav-l').click(function(){goLeft();});
+    $('#nav-r').click(function(){goRight();});
+    $('#nav-fr').click(function(){goFarRight();});
+    $('#nav-fu').click(function(){goFarUp();});
+    $('#nav-u').click(function(){goUp();});
+    $('#nav-d').click(function(){goDown();});
+    $('#nav-fd').click(function(){goFarDown();});
+    $('#toggleTitle').click(function(){toggleTitle();});
+    $('#printIt').click(function(){printIt();});
+    $('#backWorld').click(function(){history.back();});
+});
+    
+<?php 
+echo 'var currData = '.$this->resSvg.";\n".
+     'var minData = "'.$this->minYYMM."\";\n".
+     'var maxData = "'.$this->maxYYMM."\";\n";
+?>
+    
+    var arrMonths = [];
+    var startSlider = 0;
+    
+    calcMonths = function(){
+        var first = new Date(minData.substring(0, 4), parseInt(minData.substring(4, 6))-1, 1);
+        var last = new Date(maxData.substring(0, 4), parseInt(maxData.substring(4, 6))-1, 1);
+        while(first <= last){
+            if(first < startPeriod) {
+                startSlider ++; 
+                }
+            arrMonths.push(new Date(first.getTime()));            
+            first.setMonth(first.getMonth()+1);
+            }
+        }
+    
+    getMonths = function(startDate, endDate){
+        var resultList = [];
+        var date = new Date(startDate.getTime());
+        var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        while (date <= endDate)
+        {
+            var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+
+            //get first and last day of month
+            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            resultList.push({
+                monthNum:date.getMonth(),
+                month:monthNameList[date.getMonth()],
+                year:date.getFullYear(),
+                str:stringDate,
+                first:firstDay,
+                last:lastDay,
+            });
+            date.setMonth(date.getMonth() + 1);
+        }
+        return resultList;
+    }
+    
+    var draw;
+    var startItem = 0;
+    var maxItems = 0;
+    var startPeriod = new Date(2018, 0, 1);
+    var endPeriod = new Date(2024, 0, 1);
+    var visMode = 'Months';
+    var rows = [];
+    var columns = [];
+    var gridCol = 35;
+    var gridRow = 25;
+
+
+function redraw() {
+    draw.clear();
+    columns = [];
+    rows = [];
+    colIndex = new Object();
+    var drawHeight = $("#drawing").height();
+    var drawWidth = $("#drawing").width();
+    var titleHeight = 2;
+    var textMargin = 2;
+    var gridMargin = 0;
+    var gridTitle1Height = 15;
+    var gridTitle2Height = 15;
+    var gridLabel = 400;
+    var gridStartY = titleHeight + gridMargin;
+    var gridStartX = gridMargin;
+    var gridHeight = drawHeight -titleHeight -(gridMargin*2);
+    var gridWidth = drawWidth - (gridMargin * 2);
+
+    // Grid container
+    draw.rect(gridWidth, gridHeight).x(gridStartX).y(gridStartY)
+            .stroke({ color: '#fff', opacity: 0.6, width: 0.5 }).fill('none');
+    // Title
+    draw.rect(gridWidth, gridTitle1Height+gridTitle2Height).x(gridStartX).y(gridStartY)
+            .stroke({ color: '#eee', opacity: 0.6, width: 0.5 }).fill('#eee');
+    draw.rect(gridLabel, gridHeight).x(gridStartX).y(gridStartY+gridTitle1Height-gridTitle2Height)
+            .stroke({ color: '#eee', opacity: 0.6, width: 0.5 }).fill('#eee');
+    $('#visModeLabel').html(visMode);
+    
+    var gradient = draw.gradient('linear', function(stop) {
+                        stop.at(0, '#000')
+                        stop.at(0.9, '#000')
+                        stop.at(1, '#fff')
+                        }).attr({gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 400, y2: 0});
+    var gradientRed = draw.gradient('linear', function(stop) {
+                        stop.at(0, '#b00')
+                        stop.at(0.9, '#b00')
+                        stop.at(1, '#fff')
+                        }).attr({gradientUnits: 'userSpaceOnUse', x1: 0, y1: 0, x2: 400, y2: 0});
+    var text1 = draw.text("");
+    text1.build(true);
+    text1.font({weight: 'bold'}).tspan("").x(gridMargin+textMargin)
+            .y(gridStartY+gridTitle1Height-textMargin);
+    text1.tspan("").x(gridMargin+textMargin)
+            .y(gridStartY+gridTitle1Height+gridTitle2Height-textMargin);
+     // Grid titles separator
+    var text = draw.text("");
+    text.build(true);
+    var textItal = draw.text("");
+    textItal.font({style: 'italic', weight: 'lighter', fill: '#b00'}).tspan("");
+    textItal.build(true);
+    draw.line(gridStartX+gridLabel, gridStartY+gridTitle1Height, 
+                gridStartX+gridWidth, gridStartY+gridTitle1Height)
+            .stroke({ color: '#000', opacity: 0.6, width: 0.6 });
+    draw.line(gridStartX, gridStartY+gridTitle1Height+gridTitle2Height, 
+                gridStartX+gridWidth, gridStartY+gridTitle1Height+gridTitle2Height)
+            .stroke({ color: '#000', opacity: 0.8, width: 1.5 });
+    // Grid label separator
+    draw.line(gridStartX+gridLabel, gridStartY, gridStartX+gridLabel, 
+                gridStartY+gridHeight)
+            .stroke({ color: '#000', opacity: 0.8, width: 1.5 });
+    // Grid rows lines
+    var j=startItem;
+    for(var i=gridStartY+gridTitle1Height+gridTitle2Height+gridRow; i<gridStartY+gridHeight; i+=gridRow)
+        {
+        draw.line(gridStartX, i, gridStartX+gridWidth, i)
+                .stroke({ color: '#000', opacity: 0.6, width: 0.3 });
+        if(j < currData.length) {            
+            rows.push({
+                position: i,
+                data: currData[j],
+                level: currData[j].level,
+                label: currData[j].label,
+                firstColumn: -1,
+                lastColumn: -1,
+                topLevel: -1,
+                order: j
+                }); 
+            if(currData[j].level==1 && !currData[j].expanded) {
+                j++;    
+                while(j < currData.length && currData[j].level > 1) {
+                    j++;
+                    }
+                } else {
+                j++;    
+                }                
+            }
+        }
+    maxItems = j-startItem;
+    // Grid rows labels 
+    var maxRows = rows.length;
+    var currTopLevel = -1;
+    rows.forEach(function(row,i){
+        if(row.level == 1){
+            currTopLevel = i;
+            var toExp = row.data.expanded ? '' : ' +';
+            text1.tspan(row.label+toExp)
+                    .x(gridMargin+textMargin+(row.level-1)*30)
+                    .y(row.position-textMargin)
+                    .attr({ fill: gradient })
+                    .click(function() {toggleExpanded(row.order); });
+            }
+        else {
+            rows[i].topLevel = currTopLevel;
+                if(row.level == 2){            
+                text.tspan(row.label)
+                        .x(gridMargin+textMargin+(row.level-1)*30)
+                        .y(row.position-textMargin)
+                        .attr({ fill: gradient });
+                }
+                else{            
+                textItal.tspan(row.label)
+                        .x(gridMargin+textMargin+(row.level-1)*30)
+                        .y(row.position-textMargin)
+                        .attr({ fill: gradientRed });
+                }
+            }
+        });
+// Grid column lines months
+    for(var i=gridStartX+gridLabel+gridCol; i<gridStartX+gridWidth; i+=gridCol)
+        {
+        draw.line(i, gridStartY+gridTitle1Height, i, gridStartY+gridHeight)
+                .stroke({ color: '#000', opacity: 0.6, width: 0.2 });
+        columns.push({
+            position: i,
+            label: "",
+            year: "",
+            month: "",
+            day: ""
+            });
+        }
+    var maxCols = columns.length;
+    var mos = getMonths(startPeriod, endPeriod);
+
+    if(visMode == 'Months')
+        {
+        // Months
+        columns.forEach(function(col,i){
+            columns[i].year = mos[i].year;
+            columns[i].month = mos[i].month;
+            columns[i].monthNum = mos[i].monthNum;
+            columns[i].day = 1;
+            colIndex[columns[i].year+'-'+
+                    ('0' + columns[i].monthNum).slice(-2)] = columns[i];
+            text.tspan(mos[i].month).x(textMargin+col.position+gridStartX-gridCol)
+                    .y(gridStartY+gridTitle1Height+gridTitle2Height-textMargin);
+            if(mos[i].month == "Jan"){
+                text.tspan(mos[i].year).x(textMargin+col.position+gridStartX-gridCol)
+                        .y(gridStartY+gridTitle1Height-textMargin);
+                draw.line(col.position-gridCol, gridStartY, col.position-gridCol, gridStartY+gridHeight)
+                        .stroke({ color: '#000', opacity: 0.6, width: 0.6 });
+                }        
+            });
+        }
+    else
+        {
+        // Days
+        var currDay = 1;
+        var currMonth = 0;
+        columns.forEach(function(col,i){
+            columns[i].year = mos[currMonth].year;
+            columns[i].month = mos[currMonth].month;
+            columns[i].monthNum = mos[currMonth].monthNum;
+            columns[i].day = currDay;
+            colIndex[columns[i].year+'-'+
+                    ('0' + columns[i].monthNum).slice(-2) + '-' +
+                    ('0'+currDay).slice(-2)] = columns[i];
+            text.tspan(currDay).x(textMargin+col.position+gridStartX-gridCol)
+                    .y(gridStartY+gridTitle1Height+gridTitle2Height-textMargin);
+            if(currDay == 1){
+                text.tspan(mos[currMonth].month + ' ' +mos[currMonth].year)
+                        .x(textMargin+col.position+gridStartX-gridCol)
+                        .y(gridStartY+gridTitle1Height-textMargin);
+                draw.line(col.position-gridCol, gridStartY, col.position-gridCol, gridStartY+gridHeight)
+                        .stroke({ color: '#000', opacity: 0.6, width: 0.6 });
+                }        
+            currDay++;
+            if(currDay > mos[currMonth].last.getDate()){
+                currMonth++;
+                currDay = 1;
+                }            
+            });
+        }    
+
+        rows.forEach(function(row,i){ 
+            if(typeof(row.data.perlav) !== "undefined"){
+                (row.data.perlav).forEach(function(lav){
+                    var YYMM = lav.anno+'-'+('0'+(parseInt(lav.mese, 10)-1)).slice(-2);
+                    var colPos = -1;
+                    if(visMode != 'Months')
+                        {
+                        if(lav.hasDetail !== '' && lav.details.length > 0)
+                            {
+                            lav.details.forEach(function(DD){
+                                var YYMMDD = YYMM + '-'+ DD;
+                                if(typeof(colIndex[YYMMDD]) !== "undefined"){
+                                    colPos = colIndex[YYMMDD].position;
+                                    drawCell(lav, colPos, row.position);
+                                    }
+                                });
+                            }
+                        else
+                            {
+                            for(var DD = 1; DD<=31; DD++) {   
+                                var YYMMDD = YYMM + '-'+('0'+parseInt(DD, 10)).slice(-2);
+                                if(typeof(colIndex[YYMMDD]) !== "undefined"){
+                                    colPos = colIndex[YYMMDD].position; 
+                                    drawCell(lav, colPos, row.position);
+                                    }
+                                }
+                            }
+                        }
+                    else
+                        {
+                        if(typeof(colIndex[YYMM]) !== "undefined"){
+                            colPos = colIndex[YYMM].position;
+                            drawCell(lav, colPos, row.position);
+                            }
+                        }
+                    var currRef = row.topLevel;
+                    if(currRef >= 0 && colPos >= 0) {
+                        if(rows[currRef].firstColumn < 0 || rows[currRef].firstColumn > colPos) {
+                            rows[currRef].firstColumn = colPos;
+                            };
+                        if(rows[currRef].lastColumn < colPos) {
+                            rows[currRef].lastColumn = colPos;
+                            };
+                        }
+                    });
+                }
+            });
+
+        rows.forEach(function(row,i){ 
+            if(row.level == 1 && row.firstColumn >= 0 && row.lastColumn >=0){
+                var lineY = gridStartY+gridTitle1Height+gridTitle2Height+(i+1)*gridRow -(gridRow/2);
+                draw.line(row.firstColumn-gridCol+2, lineY, row.lastColumn-2, lineY)
+                        .stroke({ color: '#000', opacity: 0.6, width: 5 });
+                draw.polygon((row.firstColumn-gridCol+2).toString()+','+(lineY+(gridRow/2)).toString()+' '+
+                             (row.firstColumn-gridCol+2).toString()+','+(lineY+2.5).toString()+' '+
+                             (row.firstColumn-gridCol+10).toString()+','+(lineY+2.5).toString())
+                        .fill({ color: '#000', opacity: 0.6});
+                draw.polygon((row.lastColumn-2).toString()+','+(lineY+(gridRow/2)).toString()+' '+
+                             (row.lastColumn-2).toString()+','+(lineY+2.5).toString()+' '+
+                             (row.lastColumn-10).toString()+','+(lineY+2.5).toString())
+                        .fill({ color: '#000', opacity: 0.6});
+                }            
+            });
+
+    }
+
+    
+    function drawCell(lav, colPosition, rowPosition) {
+        var cellColor = '#fdfd4b';
+        if(lav.actual > 0) {
+            cellColor = '#90fd4b';
+            }
+        if(lav.hasDetail !== '') {
+            cellColor = '#ee604a';
+            }                                                    
+        draw.rect(gridCol, gridRow-8)
+            .x(colPosition-gridCol)
+            .y((rowPosition-gridRow)+4)
+            .stroke({ color: cellColor, opacity: 0.6, width: 0.5 }).fill(cellColor);            
+    }
+    
+    
+    function countMonths() {
+        return endPeriod.getMonth() - startPeriod.getMonth() + 
+           (12 * (endPeriod.getFullYear() - startPeriod.getFullYear()))
+    }
+    
+    
+    function countDays() {
+        return Math.round(Math.abs((startPeriod.getTime() - 
+                endPeriod.getTime())/(oneDay)));
+    }
+    
+    
+    
+    function goRight() {
+        startPeriod = new Date(startPeriod.setMonth(startPeriod.getMonth()+1));
+        endPeriod = new Date(endPeriod.setMonth(endPeriod.getMonth()+1));
+        redraw();
+    }
+    
+    function goLeft() {
+        startPeriod = new Date(startPeriod.setMonth(startPeriod.getMonth()-1));
+        endPeriod = new Date(endPeriod.setMonth(endPeriod.getMonth()-1));
+        redraw();
+    }
+
+    function goFarRight() {
+        startPeriod = new Date(startPeriod.setYear(startPeriod.getFullYear()+1));
+        endPeriod = new Date(endPeriod.setYear(endPeriod.getFullYear()+1));
+        redraw();
+    }
+    
+    function goFarLeft() {
+        startPeriod = new Date(startPeriod.setYear(startPeriod.getFullYear()-1));
+        endPeriod = new Date(endPeriod.setYear(endPeriod.getFullYear()-1));
+        redraw();
+    }
+
+    function goFarUp() {
+        startItem -= Math.round(maxItems/2);
+        if(startItem < 0){
+            startItem = 0;
+            }
+        redraw();
+    }
+
+    function goUp() {
+        startItem--;
+        if(startItem < 0){
+            startItem = 0;
+            }
+        redraw();
+    }
+    
+    function goDown() {
+        startItem++;
+        if(startItem >= currData.length){
+            startItem = currData.length-1;
+            }
+        redraw();
+    }
+    
+    function goFarDown() {
+        startItem += Math.round(maxItems/2);
+        if(startItem >= currData.length){
+            startItem = currData.length-1;
+            }
+        redraw();
+    }
+    
+    function switchMode(currMode) {
+        if(currMode == 'Months') {
+            visMode = 'Days';
+            gridCol = 25;
+            }
+        else {    
+            visMode = 'Months';
+            gridCol = 35;
+            }            
+        redraw();
+    }
+    
+    function toggleExpanded(currElem) {
+        currData[currElem].expanded = !currData[currElem].expanded;
+        redraw();
+    }
+
+    function doSlide(newValue) {
+//        debugger;
+        var diffYears = endPeriod.getFullYear()-startPeriod.getFullYear();
+        startPeriod = new Date(arrMonths[newValue].getTime());
+        endPeriod = new Date(arrMonths[newValue].getFullYear()+diffYears, arrMonths[newValue].getMonth(), 1);
+        redraw();
+//        alert(arrMonths[newValue]);
+//        redraw();
+    }
+
+
+    $(function () {
+    // initialize SVG.js
+<?php
+    echo '$("#lev1Label").html("'.$this->levelTitles['1'].'");';
+    echo '$("#lev2Label").html("'.$this->levelTitles['2'].'");';
+    echo '$("#lev3Label").html("'.$this->levelTitles['3'].'");';
+?>            
+    draw = SVG('drawing');
+    calcMonths();
+    redraw();
+    $('#slider').slider({
+//          range: "max",
+          min: 0,
+          max: arrMonths.length,
+          value: startSlider,
+          slide: function( event, ui ) {
+            doSlide( ui.value );
+          }
+        });
+//          countMonths(),
+//        $( "#amount" ).val( $( "#slider-range-max" ).slider( "value" ) );
+    
+    $('#drawing').bind('mousewheel DOMMouseScroll', function(event){
+        if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+            goUp(); // scroll up
+            } else {
+            goDown(); // scroll down
+            }
+        });
+    });
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    var now = moment().minutes(0).seconds(0).milliseconds(0);
+//    var itemCount = 60;
+//    // create a data set with groups
+//    var groups = new timeline.DataSet();
+//    var items = new timeline.DataSet();
+//<?php // echo $this->resVis;?>    
+//    
+//   // create visualization
+//    var container = document.getElementById('visualization');
+//    var options = {
+//    zoomMin: 864000000,    
+//    zoomMax: 315569520000, 
+//    zoomKey: 'ctrlKey',
+//    zoomable: true,
+//    groupOrder: 'content',  // groupOrder can be a property name or a sorting function
+//    maxHeight: '600px',
+//    verticalScroll: false,
+//    horizontalScroll: false,
+//    cluster: false,
+//    stack: false,
+//    stackSubgroups: true,
+//    margin: {
+//        item : {
+//            horizontal : 0
+//            }
+//        }
+//    };
+//    var timeline = new timeline.Timeline(container, items, groups, options);
+//    
+//    $(document).keypress(function(e) {
+//      if(e.which == 39) {
+//        // right pressed
+//        }
+//      if(e.which == 37) {
+//        // left pressed
+//        }
+//      if(e.which == 38) {
+//        // up pressed
+//        }
+//      if(e.which == 40) {
+//        // down pressed
+//        }
+//      if(e.which == 107 || e.which == 171) {
+//        // + pressed
+//        }
+//      if(e.which == 109 || e.which == 173) {
+//        // - pressed
+//        }
+//      if(e.which == 33) {
+//        // pgup pressed
+//        }
+//      if(e.which == 34) {
+//        // pgdown pressed
+//        }
+//    });
+
+function printIt()
+    {
+    var options = {
+        debug: true,               // show the iframe for debugging
+        importCSS: true,            // import parent page css
+        importStyle: true,         // import style tags
+        printContainer: false,       // print outer container/$.selector
+        loadCSS: <?php echo "[\"".$this->baseUrl().'/styles/styles.css'."\", ".
+                            "\"".$this->baseUrl().'/node_modules/timeline-plus/dist/timeline.min.css'."\", ".
+                            "\"".$this->baseUrl().'/styles/giorni_lav_grid.css'."\", ".     
+                            "\"".$this->baseUrl().'/styles/style-print-a4.css'."\"]"; ?> , 
+//                            "\"".$this->baseUrl().'/styles/style-print-timeline.css'."\"]"; ?> , 
+        pageTitle: $('#chartTitle').html(),              // add title to print page
+        removeInline: false,        // remove inline styles from print elements
+        removeInlineSelector: "",  // custom selectors to filter inline styles. removeInline must be true
+        printDelay: 999,            // variable print delay
+        header: null,               // prefix to html
+        footer: null,               // postfix to html
+        base: false,                // preserve the BASE tag or accept a string for the URL
+        formValues: true,           // preserve input/form values
+        canvas: false,              // copy canvas content
+        doctypeString: '',       // enter a different doctype for older markup
+        removeScripts: false,       // remove script tags from print content
+        copyTagClasses: true,      // copy classes from the html & body tag
+        beforePrintEvent: null,     // function for printEvent in iframe
+        beforePrint: function(){
+                $('#visualization').css('height', '600%');
+//                $('#visualization').css('width', '200%');
+                $('#drawing').css('height', '400%');
+                redraw();
+            }       ,          // function called before iframe is filled
+        afterPrint: function(){
+                $('#visualization').css('height', '96%');
+//                $('#visualization').css('width', '100%');
+                $('#drawing').css('height', '100%');
+                redraw();
+            }           // function called before iframe is removed
+        };    
+    $('#visualization').printThis(options);        
+    }
+
+
+function toggleTitle()
+    {
+    $('#chartTitle').toggle();
+    }
+</script>

@@ -1,0 +1,203 @@
+<!-- #Sezione main1 -->
+<div class="logoheader"><img style="width:200mm" border="0" src="<?php echo $this->Intestazione;?>"></div>
+<table width="100%" cols="10" CELLSPACING="0" BORDER="0">
+    <tr>
+        <td style="width:10mm"></td>
+        <td style="width:10mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:10mm"></td>
+        <td style="width:10mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+	</tr>
+    <tr>
+        <td colspan="12" class="mod">MOD_06.02.28_RGC-DDS Rev 0  Ed 2</td>
+    </tr>
+    <tr>
+        <td HEIGHT=17 colspan="12" class="titoli3"><u>RAPPORTO DI EVENTO (RDE)</u></td>
+    </tr>
+    <tr>
+        <td colspan="12" class="spazioverticale"></td>
+    </tr>
+    <!-- <td class="bordi">{{Datapub, italdate}}</td> -->
+    <tr>
+        <td colspan="3" class="titoli">DATA</td>
+        <td colspan="5" class="bordi">{{Data, italdate}}</td>
+        <td colspan="2" class="titoli"> RDE N&deg;</td>
+        <td colspan="2" class="bordi">{{idRde}}</td>
+    </tr>
+    <tr>
+        <td colspan="3" class="titoli">CANTIERE</td>
+        <td colspan="5" class="bordi"> {{Cantiere}}</td>
+        <td colspan="2" class="titoli"> AFFIDATARIA</td>
+        <td colspan="4" class="bordi" colspan="3"> {{Appaltatrice}}</td>
+    </tr>
+
+    <tr>
+        <td colspan="3" class="titoli">Referente</td>
+        <td colspan="5" class="bordi">{{Referente}}</td>
+        <td class="titoli"> Tel.</td>
+        <td class="bordi"> {{Telefono}}</td>
+        <td class="titoli"> Fax </td>
+        <td colspan="2" class="bordi"> {{Fax}}</td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoli">RAPPORTO DI EVENTO RELATIVO A</td>
+        <td colspan="7" class="bordi"> {{Tipo}} </td>
+    </tr>
+    <tr>
+        <td colspan="12" class="spazioverticale"></td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">DATA DELL'EVENTO</td>
+        <td colspan="3" class="bordi mm25">{{Dataevento, italdate}}</td>
+        <td colspan="1" class="titoliRDE">ORA</td>
+        <td colspan="3" class="bordi mm25">{{Oraevento}}</td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">COGNOME E NOME DEI COINVOLTI</td>
+        <td colspan="3" class="bordi mm25">{{Coinvolti}} </td>
+        <td class="titoliRDE">IMPRESA</td>
+        <td colspan="3" class="bordi mm25"> {{Esecutrice}}</td>
+    </tr>
+
+    <tr>
+        <td colspan="5" class="titoliRDE">LUOGO DELL'EVENTO</td>
+        <td colspan="7" class="bordi mm25">{{Luogo}} </td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">PRIME INFORMAZIONI SULL'ACCADUTO</td>
+        <td colspan="7" class="bordi mm25">{{Primeinformazioni}} </td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">DESCRIZIONE DETTAGLIATA DELL'EVENTO (dinamica, tipo di lavoro, messi di lavoro, ecc&hellip;)</td>
+        <td colspan="7" class="bordi mm25">{{Dettaglievento}} </td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">CONSEGUENZE DELL'EVENTO</td>
+        <td colspan="7" class="bordi mm25">{{Conseguenze}} </td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">PRESUMIBILE CAUSA DELL'EVENTO</td>
+        <td colspan="7" class="bordi mm25">{{Causa}} </td>
+    </tr>
+    <tr>
+        <td colspan="5"  class="titoliRDE">L'INCIDENTE/INFORTUNIO E' DA RITENERSI FORTUITO, IMPREVEDIBILE E NON RIPETIBILE</td>
+        <td colspan="7" class="bordi mm25"> {{IsRip}}</td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">SE NO, O SE NON VALUTABILE, INDICARE LE DECISIONI INTRAPRESE PER SCONGIURARNE IL RIPETERSI</td>
+        <td colspan="7" class="bordi mm25">{{Provvedimenti}}</td>
+    </tr>
+    <tr>
+        <td colspan="5" class="titoliRDE">ALLEGATI (VRS, DDS, ecc&hellip;)</td>
+        <td colspan="7" class="bordi mm25">{{allegati}}</td>
+    </tr>
+
+    <tr>
+        <td colspan="12" class="spazioverticale"></td>
+    </tr>
+    <tr>
+        <td colspan="8" class="bordi">PER RICEVUTA, L'IMPRESA AFFIDATARIA:</td>
+        <!-- ATTENZIONE la firma viene eseguita solo alla pubblicazione dopo aver ricevuto lo stesso foglio Stampato e firmato dall'affidataria  -->
+        <td colspan="4" rowspan="4" class="firmacoordinatore bordi">
+            <img SRC=<?php echo '"'.$this->Firma.'"';?> alt="firma" style="width:60mm" border="0">
+        </td>
+    </tr>    
+    <tr>
+        <td colspan="2" class="bordi">SIG.</td>
+        <td colspan="6" class="bordi">{{Login}}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="bordi">IN QUALITA'</td>
+        <td colspan="6" class="bordi">{{Ruolo}} {{RicevutaQual}}</td>
+    </tr>
+    <tr>
+        <td colspan="2" class="bordi">FIRMA</td>
+        <td colspan="6" class="bordi">{{firmadigitale}}</td>
+    </tr>
+
+</table>
+<!-- #Sezione footer1 -->
+<div class="intestazionefooter">
+   <div width="100%">
+       <div style="float:left; width:48%; text-align:left">
+           Report di evento n.{{Protocollo}}
+       </div>
+       <div style="float:right; width:48%; text-align:right">
+           {PAGENO}
+       </div>
+    </div>
+</div>
+<!-- #Sezione footer2 -->
+<div class="intestazionefooter">
+   <img SRC=<?php echo '"'.$this->Foother.'"';?> style="width:200mm" border="0">
+   <br>
+   <div width="100%">
+       <div style="float:left; width:48%; text-align:left">
+           Report di evento n.{{Protocollo}}
+       </div>
+       <div style="float:right; width:48%; text-align:right">
+           {PAGENO}
+       </div>
+    </div>
+</div>
+<!-- #Sezione alleg_title -->
+<div class="logoheader"><img style="width:200mm" BORDER="0" src=<?php echo '"'.$this->Intestazione.'"';?>></div>
+<table border="0" cellpadding="0" CELLSPACING="0" COLS="11" width="200mm">
+	<tr>
+		<td class="titoliAllegati" colspan="11">CONTENUTI STAMPABILI</td>
+	</tr>
+	<tr>
+		<td colspan="11" class="spazioverticale"></td>
+	</tr>
+	<tr>
+		<td colspan="11" class="titoli3"><b><U>SAPGI ELENCO DEI CONTUENUTI IN ALLEGATO</u></b></td>
+	</tr>
+	<tr>
+		<td colspan="11" class="spazioverticale"></td>
+	</tr>
+	<tr>
+		<td colspan="5" class="titoli">Allegati del RDE </td>
+		<td colspan="2" class="bordi">n. {{Protocollo}}</td>
+		<td colspan="2" class="titoli">Data: </td>	
+		<td colspan="2" class="bordi">{{dataDocumento}}</td>
+	</tr>
+	<tr>
+		<td colspan="11" class="spazioverticale"></td>
+	</tr>
+	<tr>
+		<td colspan="11" class="titoli"><b><U>Allegati documento</u></b></td>
+	</tr>
+
+	<tr>
+		<td colspan="1" class="titoli3"></td>
+		<td colspan="8" class="titoli3">Nome del documento</td>
+		<td colspan="2" class="titoli3">Data: </td>
+	</tr> 	  
+<!-- #Sezione alleg_line -->   
+	<tr>
+		<td colspan="1" class="titoli3"></td>
+		<td colspan="8" class="bordi"><a href="/uploads/{{StoreName}}" target="_blank">{{Nome}}</a> </td>
+		<td colspan="2" class="bordi"> </td>	
+	</tr>
+<!-- #Sezione alleg_end -->   
+    <tr>
+        <td style="width:10mm"></td>
+        <td style="width:10mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:20mm"></td>
+        <td style="width:19mm"></td>
+    </tr>
+</table>

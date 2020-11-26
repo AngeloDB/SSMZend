@@ -1,0 +1,41 @@
+<?php
+if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == "edit")
+    {
+    $ggStampa = '/public/' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName() . "/print/id/" . Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
+    }
+?>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+
+//        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Stampa", "<?php // echo $ggStampa; ?>", "l");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+
+    });
+</script>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li>
+            <a href="#GGtabs-1">
+                <?php echo $this->formTitle; ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+        <div id="form">
+            <?php echo $this->form; ?>
+        </div>
+    </div>
+</div>
+
+
+<?php // 
+//echo $this->dojo();
+//$this->headLink()->appendStylesheet($this->baseUrl() . '/styles/styles.css');
+?>
+<!--<div id="form">
+<br /><h1><center><?php echo $this->title; ?></center></h1>
+<br />-->
+<?php
+//echo $this->form . '</div>';

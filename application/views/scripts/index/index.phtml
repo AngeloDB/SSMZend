@@ -1,0 +1,135 @@
+<?php
+$this->layout()->setLayout('mainpageLayout');
+?>
+<div style="clear:both"></div>
+<div id='calendar'></div>
+<?php
+$params = array('title'     => 'Evento', 
+                'autoOpen'  => false,
+                'modal'     => true,
+                'width'     => 1000,
+                'height'    => 490, 
+                'z-index'   => 100);
+
+
+echo $this->dialogContainer("form2container", $this->evForm->render(), 
+        $params, array());
+
+$this->jQuery()->onLoadCaptureStart();?>
+$(document).ready(function() {
+
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+
+    var calendar = $('#calendar').fullCalendar({
+        header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        height: 500,
+        firstHour: 8,
+        selectable: true,
+        selectHelper: true,
+        select: function(start, end, allDay) {
+            oFormObject = document.forms['respform'];
+            clearFormFields(oFormObject);
+            var d1= zeroPad(start.getDate(), 2)+'/'+
+                    zeroPad((start.getMonth()+1), 2)+'/'+start.getFullYear();
+            oFormObject.elements['Data_alternate'].value=d1;
+            var d2= start.getFullYear()+'-'+zeroPad((start.getMonth()+1), 2)+
+                    '-'+zeroPad(start.getDate(), 2);
+            oFormObject.elements['Data'].value=d2;
+            var timeIn=zeroPad(start.getHours(),2)+':'+zeroPad(start.getMinutes(),2);
+            var timeOut=zeroPad(end.getHours(),2)+':'+zeroPad(end.getMinutes(),2);
+            if (timeOut == '00:00') 
+                timeOut='24:00';
+            if (timeOut < timeIn)
+                timeOut=timeIn;
+            oFormObject.elements['OraInizio'].value=timeIn;
+            oFormObject.elements['OraFine'].value=timeOut;
+            $("#form2container").dialog('open');
+            calendar.fullCalendar('unselect');
+        },
+        editable: true,
+        editHelper: true,
+        edit: function(start, end, allDay) {
+            alert('Ciao!');
+//           dijit.byId('formEvento-Data').attr('value', new Date(
+//                start.getFullYear(),
+//                start.getMonth(), start.getDate()));
+//            myDialog.show();
+            $("#form2container").dialog('open');
+            calendar.fullCalendar('unselect');
+        },
+        events: "fullcal/datafeed",
+        eventDrop: function(event, delta) {
+            alert(event.title + ' was moved ' + delta + ' days\n' +
+                '(should probably update your database)');
+        },
+        loading: function(bool) {
+            if (bool) $('#loading').show();
+            else $('#loading').hide();
+        },
+        eventClick: function(calEvent, jsEvent, view) {
+//        alert('Event: ' + calEvent.id);
+//        alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+//        alert('View: ' + view.name);
+        oFormObject = document.forms['respform'];
+        clearFormFields(oFormObject);
+        setEvento(this, calEvent.id);
+        //myDialog.show();
+
+        // change the border color just for fun
+        //$(this).css('border-color', 'red');
+        }
+        
+    });
+});
+
+
+function clearFormFields(oForm)
+{
+    var frm_elements = oForm.elements;
+    for (i = 0; i < frm_elements.length; i++)
+    {
+        field_type = frm_elements[i].type.toLowerCase();
+        switch (field_type)
+        {
+        case "text":
+        case "password":
+        case "textarea":
+        case "hidden":
+            frm_elements[i].value = "";
+            break;
+        case "radio":
+        case "checkbox":
+            if (frm_elements[i].checked)
+            {
+                frm_elements[i].checked = false;
+            }
+            break;
+        case "select-one":
+        case "select-multi":
+            frm_elements[i].selectedIndex = -1;
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+
+function zeroPad(num,count)
+{
+    var numZeropad = num + '';
+    while(numZeropad.length < count) 
+    {
+        numZeropad = "0" + numZeropad;
+    }
+    return numZeropad;
+}
+
+<?php $this->jQuery()->onLoadCaptureEnd();

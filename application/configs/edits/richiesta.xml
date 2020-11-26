@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <richiesta>
+        <title>Qualifiche richieste</title>
+        <edittitle>Modifica qualifiche richieste</edittitle>
+        <newtitle>Nuova qualifica richiesta</newtitle>
+        <parameters>
+            <project_name>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Nome</offset>
+            </project_name>
+            <project_id>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </project_id>
+            <project_step_name>
+                <from>arrdefaultnamespace</from>
+                <array>currStep</array>
+                <offset>Step</offset>
+            </project_step_name>
+        </parameters>
+        <savingalert>1</savingalert>
+        <maintable>richieste</maintable>
+        <currkey>idRichiesta</currkey>
+        <currsql>SELECT * FROM richieste WHERE </currsql>
+<!--        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idMultiQual").multiselect({
+        multiple: false,
+        header: '(info: per selezionare una qualifica cliccare sul nome).',
+        noneSelectedText: 'Qualifica (selezione a checkbox)',
+        uncheckAllText: 'Deseleziona',
+        noneSelectedText: 'Nessuna qualifica selezionata.',
+        selectedText: 'Sono state selezionate # ',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filtra:",
+        placeholder: "ricerca"
+    });
+  
+});  
+
+        </javascript>-->
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formRichieste</name>
+            <elements>
+                <idRichiesta>
+                    <type>hidden</type>
+                </idRichiesta>
+                <DispProgetto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Commessa</label>
+                    <description>{{project_name}}</description> 
+                </DispProgetto> 
+                <Ordine>
+                    <type>text</type>
+                    <label>Ordine</label>
+                    <parameters>
+                        <size>4</size>
+                        <maxlen>10</maxlen>
+                    </parameters>
+                </Ordine>
+               <idProgStep>
+                    <type>select</type>
+                    <label>Attività</label>
+                    <selsql>
+                        SELECT prog_steps.idProgStep AS KeyId, 
+                            CONCAT(aree.Area, " - ", prog_steps.Step) AS Value
+                        FROM prog_steps
+                        JOIN aree ON aree.idArea = prog_steps.idArea
+                        WHERE prog_steps.idProgetto = "{{project_id}}"
+                        ORDER BY aree.Area,  prog_steps.Step
+                    </selsql>
+                </idProgStep>
+                <idQualifica>
+                    <type>select</type>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, 
+                            CONCAT(raggruppamenti.Raggruppamento, " - ", qualifiche.Descrizione) AS Value
+                        FROM qualifiche
+                        JOIN raggruppamenti ON raggruppamenti.idRagg = qualifiche.idRagg
+                    </selsql>
+                </idQualifica>
+<!--                <idContratto>
+                    <type>select</type>
+                    <label>Contratto PW</label>
+                    <selsql>
+                        SELECT contratti.idContratto AS KeyId, 
+                            CONCAT(contratti.Sigla, " - ", contratti.Contratto) AS Value
+                        FROM contratti
+                        ORDER BY contratti.Sigla, contratti.Contratto
+                    </selsql>
+                </idContratto>-->
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </richiesta>
+</edits>

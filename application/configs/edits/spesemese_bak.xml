@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <spesemese>
+        <title></title>
+        <edittitle>Modifica Spesa Mensile</edittitle>
+        <newtitle>Nuova Spesa Mensile </newtitle>
+        <savingalert>1</savingalert>
+        <maintable>spesemese</maintable>
+        <currkey>idSpeseMese</currkey>
+        <currsql>SELECT * FROM spesemese WHERE </currsql>
+<!--        <parameters>
+            <>
+                <from>arrdefaultnamespace</from>
+                <array></array>
+                <offset></offset>
+            </>
+            <>
+                <from>defaultnamespace</from>
+            </>
+            <>
+                <from>cond</from>
+                <type>in</type>
+                <op1>{{}}</op1>
+                <op2>#Tecnico#Administrator</op2>
+            </>            
+            <>
+                <const>1</const>
+            </>
+        </parameters>
+        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: per selezionare una mansione cliccare sul nome).',
+        noneSelectedText: 'Mansioni possibili (selezione a checkbox)',
+        uncheckAllText: 'Deseleziona',
+        noneSelectedText: 'Nessuna mansione selezionata.',
+        selectedText: 'Sono state selezionate # ',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filtra:",
+        placeholder: "ricerca"
+    });
+  
+});  
+
+        </javascript>-->
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formSpesaMese</name>
+            <elements>
+                <idSpeseMese>
+                    <type>hidden</type>
+                </idSpeseMese>
+                <idProgetto>
+                    <type>select</type>
+                    <label>Commessa</label>
+                    <selsql>
+                        SELECT idProgetto AS KeyId, Nome AS Value FROM progetti
+                    </selsql>
+                </idProgetto>
+                <Anno>
+                    <type>text</type>
+                    <label>Anno</label>
+                    <parameters>
+                        <size>4</size>
+                        <maxlen>4</maxlen>
+                    </parameters>
+                </Anno>
+                <Mese>
+                    <type>text</type>
+                    <label>Mese</label>
+                    <parameters>
+                        <size>2</size>
+                        <maxlen>2</maxlen>
+                    </parameters>
+                </Mese>
+                <Cassa>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Cassa</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Cassa>
+                <Storno>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Storno di Cassa</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Storno>
+<!--                <>
+                    <type>linecustom</type>
+                    <description> &lt;h3&gt; Documenti allegati  &lt;/h3&gt;</description> 
+                </>
+                <Allegato>
+                    <type>file</type>
+                    <label>Allegato</label>
+                    <parameters>
+                        <MultiFile>1</MultiFile>
+                        <Size>2000000</Size>
+                    </parameters>
+                </Allegato>-->
+               <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </spesemese>
+</edits>

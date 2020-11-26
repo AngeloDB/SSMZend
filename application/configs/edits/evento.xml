@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <evento>
+        <title>Eventi</title>
+        <edittitle>Modifica evento</edittitle>
+        <newtitle>Nuovo evento</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>eventi</maintable>
+        <currkey>idEvento</currkey>
+        <currsql>SELECT * FROM eventi WHERE </currsql>
+        <parameters>
+            <currProgetto>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Nome</offset>
+            </currProgetto>
+            <currRev>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Revisione</offset>
+            </currRev>
+            <currJobNumber>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>JobNumber</offset>
+            </currJobNumber>
+            <currMainContr>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Sigla</offset>
+            </currMainContr>
+        </parameters>
+        <form>
+            <name>formEventi</name>
+            <elements>
+                <idEvento>
+                    <type>hidden</type>
+                </idEvento>
+                <Evento>
+                    <type>text</type>
+                    <label>Evento</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Evento>
+                <idProgetto>
+                    <type>hidden</type>
+<!--                    <type>select</type>
+                    <label>Commessa</label>
+                    <selsql>
+                        SELECT progetti.idProgetto AS KeyId, progetti.Nome AS Value FROM progetti
+                    </selsql>-->
+                </idProgetto>
+                <DispProgetto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Commessa</label>
+                    <description>{{currProgetto}} ({{currJobNumber}}) {{currMainContr}} - Rev.{{currRev}}</description> 
+                </DispProgetto> 
+                <Data>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Data</Label>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Data>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </evento>
+</edits>

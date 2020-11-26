@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <sendmail>
+        <title>Invia mail</title>
+        <edittitle></edittitle>
+        <newtitle></newtitle>
+        <maintable>dual</maintable>
+        <currkey>0</currkey>
+        <savingalert>1</savingalert>
+        <currsql>SELECT "" AS Destinatario, "" AS Oggetto, "" AS Testo FROM dual WHERE </currsql>-->
+        <parameters>
+        </parameters>
+        <javascript>            
+        </javascript>
+        <mode>1</mode>
+        <form>
+            <name>formSendMail</name>
+            <elements>
+                <destinatario>
+                    <type>text</type>
+                    <label>Destinatario</label>
+                    <parameters>
+                        <size>128</size>
+                        <maxlen>128</maxlen>
+                    </parameters>
+                </destinatario>
+                <oggetto>
+                    <type>text</type>
+                    <label>Oggetto</label>
+                    <parameters>
+                        <size>128</size>
+                        <maxlen>128</maxlen>
+                    </parameters>
+                </oggetto>
+                <testo>
+                    <type>textarea</type>
+                    <label>Testo</label>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </testo>                
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Invia</label>
+                </Conferma>
+            </elements>
+        </form>
+    </sendmail>
+</edits>

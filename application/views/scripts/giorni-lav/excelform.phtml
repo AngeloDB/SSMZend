@@ -1,0 +1,33 @@
+<!-- ********************  External!!!  ******************* 
+Server 
+              action="http://demoitalo2.rdscantieri.eu/test1.php">
+Local 
+              action="/public/out-excel/out-sheet">
+Old 
+              action="http://localhost/test-excel/test1.php">
+New 
+              action="http://localhost/test-spreadsheet/test1.php">
+-->
+
+        <form id="excelForm" name="excelForm"  method="POST" 
+              action="/public/out-excel/out-sheet">
+            <input type="hidden" name="gglavexcel" id="outGGLavExcel"/>
+            <input type="hidden" name="eventi" id="outEventiExcel"/>
+            <input type="hidden" name="status" id="outStatusExcel"/>
+            <?php
+            echo '<input type="hidden" name="mode" id="excelMode"/>'."\n";
+            echo '<input type="hidden" name="totmode" id="totMode"/>'."\n";
+            echo '<input type="hidden" name="commessa" id="outCommessa" value="' .
+                    $this->dataGrid->projData['nomeCommessa'] . '"/>'."\n";
+            echo '<input type="hidden" name="jobnumber" id="outJobNumber" value="' .
+                    $this->dataGrid->projData['jobNumber'] . '"/>'."\n";
+            echo '<input type="hidden" name="impianto" id="outImpianto" value="' .
+                    $this->dataGrid->projData['Impianto'] . '"/>'."\n";
+            echo '<input type="hidden" name="paese" id="outPaese" value="' .
+                    $this->dataGrid->projData['Paese'] . '"/>'."\n";
+            echo '<input type="hidden" name="indirizzo" id="outIndirizzo" value="' .
+                    $this->dataGrid->projData['Indirizzo'] . '"/>'."\n";
+            echo '<input type="hidden" name="revisione" id="outRevisione" value="' .
+                    $this->dataGrid->projData['Revisione'] . '"/>'."\n";
+            ?>            
+        </form>

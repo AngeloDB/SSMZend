@@ -1,0 +1,9 @@
+<div id="aiutoFormDiv">
+<?php
+foreach($this->prevNotes as $currNote)
+    {
+    echo '<strong>'.$currNote['DataOra'].'</strong>&emsp;'.nl2br($currNote['Note']).'</br>';
+    }
+echo $this->form;
+?>    
+</div>

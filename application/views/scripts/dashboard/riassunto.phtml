@@ -1,0 +1,103 @@
+<?php
+//if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == "edit")
+//    {
+    $translate = Zend_Registry::get('translate');
+    $ggStampa = '/public/' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName() . 
+            "/print/id/" . Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
+//    }
+?>
+<script>
+    $(function () {
+        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Print", "<?php echo $ggStampa; ?>", "l");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Close", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+</script>
+<?php
+echo $this->javascript;
+echo $this->javascript2;
+
+$params = array('title' => 'Operazione',
+    'autoOpen' => false,
+    'modal' => true,
+    'width' => 800,
+    'height' => 460,
+    'z-index' => 100);
+
+//echo $this->dialogContainer("form2container", $this->dispForm->render(), $params, array());
+
+$formExitStart = '<div style="float: right">
+            <form name="exitForm" action="' . $this->baseUrl() .
+        '/progetti/list" method="POST">
+                <button name="esci" type="submit"';
+
+$formExitEnd = '><img src="' . $this->baseUrl() . '/images/nao.png" title="Close"
+                    alt="Close">    
+Close
+                </button>
+            </form>
+        </div>';
+
+$formExit1 = $formExitStart . $formExitEnd;
+
+?>
+<div id="form">
+    <?php
+    if ($this->readonly)
+        {
+        $roWarning = '
+    <div id="readonlyExit" style="width: 100%">
+        <div style="float: left">
+            <h3>Sola lettura, non si può pi modificare</h3>
+        </div>' . $formExit1 .
+                '</div>
+    <div class="clear"></div>';
+        $pubWarning = '';
+        }
+    else
+        {
+        $roWarning = '
+    <div id="readonlyExit" style="width: 100%">
+        <div style="float: left"></div>' . $formExit1 .
+                '</div></br></br>';
+        }
+
+
+$this->contractGrid = '
+<div>    
+<div class="buttonLike">
+<a href="'.$this->contrAddLink.'">'.$this->contrAddLabel.'</a>
+</div>
+</div>
+<div style="width:100%; ">'.$this->grid2.'</div>';
+        
+    $riass = '
+    <table border = "0" cellspacing = "2" cellpadding = "2">
+        <tbody>';
+
+//        <thead>
+//        <tr>
+//            <th></th>
+//            <th></th>
+//        </tr>
+//        </thead>
+    
+    foreach ($this->riassArr as $label => $value)
+        {
+        $riass .= '<tr><td>'.$label.'</td><td>'.$value.'</td></tr>';
+        }        
+    $riass .= '
+        </tbody>
+        </table >';
+    
+    $this->tabPane("newstab", $roWarning . $this->form1, array('title' => $translate->_('Commessa')));
+    $this->tabPane("newstab", $roWarning . $this->form2, array('title' => $translate->_('Main Contract info')));
+    $this->tabPane("newstab", $roWarning . $this->contractGrid, array('title' => $translate->_('PW Contracts')));
+    $this->tabPane("newstab", $roWarning . $riass, array('title' => $translate->_('Bilancio')));  // . $this->form
+    $this->tabPane("newstab", $roWarning . $this->grid1, array('title' => $translate->_('Attività')));
+//    $this->tabPane("newstab", $roWarning . $this->gantt1, array('title' => 'Gantt'));
+//    $this->tabPane("newstab", $roWarning . $this->grid2, array('title' => $translate->_('Qualifiche')));
+
+
+    echo $this->tabContainer("newstab", array('selected' => $this->currTab), array('class' => 'tundra'));
+    ?>
+</div>

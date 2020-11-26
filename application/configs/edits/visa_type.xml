@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <visa_type>
+        <title>Tipi di visto</title>
+        <edittitle>Modifica tipo di visto</edittitle>
+        <newtitle>Nuovo tipo di visto</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>tab_visa_types</maintable>
+        <currkey>idVisaType</currkey>
+        <currsql>SELECT * FROM tab_visa_types WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formvisatype</name>
+            <elements>
+                <idVisaType>
+                    <type>hidden</type>
+                </idVisaType>
+                <VisaType>
+                    <type>text</type>
+                    <label>Tipo visto</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>40</maxlen>
+                    </parameters>
+                </VisaType>
+                <Descrizione>
+                    <type>text</type>
+                    <label>Descrizione</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Descrizione>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </visa_type>
+</edits>

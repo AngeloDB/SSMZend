@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <visa_type>
+        <title>Tipi di visto</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/visa-type/new</addlink>
+        <addtitle>Nuovo tipo di visto</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <tab_visa_types>tab_visa_types</tab_visa_types>
+                </aliasname>
+                <fields>
+                    <idVisaType>idVisaType</idVisaType>
+                    <VisaType>VisaType</VisaType>
+                    <Descrizione>Descrizione</Descrizione>
+                    <Note>Note</Note>
+                    <delIco> 
+                        (CASE WHEN COUNT(progetti.idProgetto) > 0 OR 
+                                    COUNT(visti.idVisto) > 0 OR 
+                                    COUNT(locations.idLocation) > 0 
+                            THEN 'del-dis' 
+                            ELSE 'fechar' 
+                        END) 
+                    </delIco>
+                    <delLink> 
+                        (CASE WHEN COUNT(progetti.idProgetto) > 0 OR 
+                                    COUNT(visti.idVisto) > 0 OR 
+                                    COUNT(locations.idLocation) > 0 
+                            THEN '#' 
+                            ELSE CONCAT('/visa-type/delete/id/', 
+                                        tab_visa_types.idVisaType) 
+                        END) 
+                    </delLink>
+                    <delAlert> 
+                        (CASE WHEN COUNT(progetti.idProgetto) > 0 OR 
+                                    COUNT(visti.idVisto) > 0 OR 
+                                    COUNT(locations.idLocation) > 0 
+                            THEN 'alert(''Can`t delete''); return false;' 
+                            ELSE 'return(confirm(''Confirm delete?''));' 
+                        END) 
+                    </delAlert>            
+                </fields>
+            </from>
+            <join id='locations'>
+                <type>left</type>
+                <cond>locations.idVisaType = tab_visa_types.idVisaType</cond>
+                <aliasname>
+                    <locations>locations</locations>
+                </aliasname>
+                <fields>
+                    <numLocations>COUNT(locations.idLocation)</numLocations>
+                </fields>
+            </join>            
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idVisaType = tab_visa_types.idVisaType</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <numProgetti>COUNT(progetti.idProgetto)</numProgetti>
+                </fields>
+            </join>            
+            <join id='visti'>
+                <type>left</type>
+                <cond>visti.idVisaType = tab_visa_types.idVisaType</cond>
+                <aliasname>
+                    <visti>visti</visti>
+                </aliasname>
+                <fields>
+                    <numVisti>COUNT(visti.idVisto)</numVisti>
+                </fields>
+            </join>            
+            <group>
+                tab_visa_types.idVisaType
+            </group>                        
+            <order>tab_visa_types.VisaType</order>                        
+        </select>
+        <updatecolumns>
+            <idVisaType>
+                <hidden>1</hidden>
+            </idVisaType>
+            <numVisti>
+                <hidden>1</hidden>
+            </numVisti>
+            <numLocations>
+                <hidden>1</hidden>
+            </numLocations>
+            <numProgetti>
+                <hidden>1</hidden>
+            </numProgetti>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <VisaType>
+                <position>1</position>
+                <title>Tipo di visto</title>
+            </VisaType>
+            <Descrizione>
+                <position>2</position>
+                <title>Descrizione</title>
+            </Descrizione>
+            <Note>
+                <position>3</position>
+                <title>Note</title>
+            </Note>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /visa-type/edit/id/{{idVisaType}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </visa_type>
+</grids>

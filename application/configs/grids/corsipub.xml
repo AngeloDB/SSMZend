@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <corsipub>
+        <title>Corsi</title>
+<!--        <addlink>/crud/new/edt/documenti</addlink>
+        <addtitle>Nuovo documento</addtitle>-->
+        <select>
+            <from>
+                <aliasname>
+                    <calcorsi>calcorsi</calcorsi>
+                </aliasname>
+                <fields>
+                    <ID_Corso>ID_Corso</ID_Corso>
+                    <DataCorso>DataCorso</DataCorso>
+                    <CodiceNuovo>CodiceNuovo</CodiceNuovo>
+                    <Titolo>Titolo</Titolo>
+                </fields>
+            </from>
+            <where>
+                <from> 
+                    calcorsi.Pubblicato = 1
+                </from>
+<!--                 AND 
+                    calcorsi.DataCorso &gt; LAST_DAY(CURDATE() - INTERVAL 1 MONTH) AND
+                    calcorsi.DataCorso &lt;  LAST_DAY(CURDATE() + INTERVAL 2 MONTH)-->
+            </where>            
+        </select>
+        <updatecolumns>
+            <ID_Corso>
+                <hidden>1</hidden>
+            </ID_Corso>
+            <DataCorso>
+                <title>Inizio</title>
+<!--                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </DataCorso>
+        </updatecolumns>
+        <updateCallbacks>
+            <DataCorso>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{DataCorso}}</params>
+            </DataCorso>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <hidden>1</hidden>
+                <decorator>
+                    /crud/edit/id/{{idAppaltoImpresa}}/edt/appaltiimprese#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </corsipub>
+</grids>

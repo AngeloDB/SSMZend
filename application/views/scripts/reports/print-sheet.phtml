@@ -1,0 +1,176 @@
+<!--<htmlpageheader name="firstpage" style="display:none">-->
+<div id="header1" class="headerContainer">
+    <div class="imgContainer">        
+        <img src="images/logogruppo.png" alt="Logo" height="65" width="310" style="display: block">
+    </div>
+    <!--</div>-->
+    <h3 class="Titoli">
+        <div class="Titolo1">
+            SSM Site Supervision Management
+        </div>
+        <div id="header2" class="Titolo2">
+            <?php
+                $outHtml = echoSpan('  JOB N. '.$this->jobnumber).
+                    echoSpan('  COUNTRY: '.$this->paese).
+//                    echoSpan('  CONS. DATE: '.'').
+                    echoSpan('  FINAL CLIENT: '.$this->commessa).
+//                    echoSpan('  LOCATION: '.$this->indirizzo).
+                    echoSpan('  PLANT TYPE: '.$this->impianto).
+                    echoSpan('  DOCUMENT N.: '.$this->docname);
+                echo $outHtml;
+            ?>
+        </div>
+    </h3>
+</div>
+<!--</htmlpageheader>-->
+
+<htmlpageheader name="otherpages" style="display:none">
+<div id="header3" class="headerContainer">
+    <div class="imgContainer2">        
+        <img src="images/logogruppo.png" alt="Logo" height="33" width="155" style="display: block">
+    </div>
+    <!--</div>-->
+    <h3 class="Titoli">
+<!--        <div class="Titolo1">
+            SSM Site Supervision Management 2	
+        </div>-->
+        <div id="header4" class="Titolo2">
+            <?php
+                $outHtml = echoSpan('  JOB N. '.$this->jobnumber).
+                    echoSpan('  COUNTRY: '.$this->paese).
+                    echoSpan('  CONS. DATE: '.'').
+                    echoSpan('  FINAL CLIENT: '.$this->commessa).
+                    echoSpan('  LOCATION: '.$this->indirizzo).
+                    echoSpan('  PLANT TYPE: '.$this->impianto).
+                    echoSpan('  DOCUMENT N.: '.$this->revisione);
+                echo $outHtml;
+            ?>
+        </div>
+    </h3>
+</div>
+</htmlpageheader>
+
+<!--<htmlpagefooter name="footer1" style="display:none">
+</htmlpagefooter>-->
+<pagefooter name="myFooter1" 
+            content-left="{DATE d/m/Y H:i}" 
+            content-center="SSM Site Supervision Management" 
+            content-right="{PAGENO}-{nbpg}" 
+            footer-style="font-family:sans-serif; font-size:8pt; font-weight:bold; color:#000000;" 
+            footer-style-left="" line="on" />
+
+<!--<sethtmlpageheader name="firstpage" value="on" show-this-page="1" />-->
+<sethtmlpageheader name="otherpages" value="on" />
+
+<sethtmlpagefooter name="myFooter1" value="on" />
+
+
+<div id="table">
+    <table id="main" class="printTable">
+<?php
+    $totColums = 0;
+    echo '<thead><tr>';
+    echo $this->totMode;
+    $tmpLine1 = $this->gglavexcel[0];
+//    $tmpLine1 = ($this->totMode === 'tot') ? $this->gglavexcel[0] : 
+//                            array_slice($this->gglavexcel[0], 0, -$totColums);
+    foreach($tmpLine1 as $header)
+        {
+        $tmpCell=cellAttr($header);
+//        if($tmpCell != '')
+//            {
+            echo '<th'. $tmpCell.'>'.nullValue($header).'</th>'."\n";
+//            }
+        }
+    echo '</tr><tr>';
+//    $tmpLine2 = $this->gglavexcel[0];
+////    $tmpLine2 = ($this->totMode === 'tot') ? $this->gglavexcel[1] : 
+////                            array_slice($this->gglavexcel[1], 0, -$totColums);
+//    foreach ($tmpLine2 as $header)
+//        {
+//        $tmpCell=cellAttr($header);
+////        if($tmpCell != '')
+////            {
+//            echo '<th'. $tmpCell.'>'.nullValue($header).'</th>'."\n";
+////            }
+//        }
+?>
+            </tr>
+        </thead>
+        <tbody>
+<?php
+    foreach (array_slice($this->gglavexcel, 1) as $line)
+        {
+        echo '<tr>';
+//        array_slice($line, 0, -3);
+        $tmpLine3 = $line;
+//        $tmpLine3 = ($this->totMode === 'tot') ? $line : array_slice($line, 0, -$totColums);
+        foreach ($tmpLine3 as $cell)
+            {
+            $tmpCell=cellAttr($cell);
+//            if($tmpCell != '')
+//                {
+                echo '<td'.$tmpCell.'>'.nullValue($cell).'</td>'."\n";
+//                }
+            }
+        echo '</tr>'."\n";
+        }
+    echo '</tbody>';
+?>            
+    </table>
+</div>    
+    
+    
+<?php
+//    echo '<pre>';
+//    print_r($this->gglavexcel);
+//    echo '</pre>';
+
+function nullValue($cellValue)
+    {
+    if($cellValue == '')
+        { 
+        return '&nbsp;';
+        }
+    else
+        {
+        return $cellValue;
+        }    
+    }
+
+function cellAttr($cell)
+    {
+    $outCell = '';
+    $outStyle = '';
+    if(property_exists($cell, 'span'))
+        { 
+        $outCell .= ' colspan="'.$cell->span.'";';
+        }
+    if(property_exists($cell, 'rowSpan'))
+        { 
+        $outCell .= ' rowspan="'.$cell->rowSpan.'";';
+        }
+    if(property_exists($cell, 'color'))
+        { 
+        $outStyle .= 'background-color: '.$cell->color.';';
+        }
+    if(property_exists($cell, 'textColor'))
+        { 
+        $outStyle .= 'color: '.$cell->textColor.';';
+        }
+    if($outStyle != '')
+        { 
+        $outCell .= ' style = "'.$outStyle.'"';
+        }
+    return $outCell;    
+    }
+    
+function echospan($currText)
+    {
+    return '<span style="margin-left: 15px; display: inline;">'.$currText.
+            '</span>';
+    }            
+
+?>
+
+</div>

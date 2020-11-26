@@ -1,0 +1,161 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+?>
+
+});
+
+
+$(document).ready(function(){
+//  var s1 = [2, 6, 7, 10];
+//  var s2 = [7, 5, 3, 4];
+//  var s3 = [14, 9, 3, 8];
+  var toolTip = ['PW', 'Vendor', 'External'];
+  var ticks = <?php echo $this->ticks; ?>;    // make the plot
+  plot3 = $.jqplot('chart3', [
+      <?php echo $this->pw.','.$this->vendor.','.$this->external; ?>            
+            ], {
+    // Tell the plot to stack the bars.
+    stackSeries: true,
+    captureRightClick: true,
+    seriesDefaults:{
+      renderer:$.jqplot.BarRenderer,
+      rendererOptions: {
+          // Put a 30 pixel margin between bars.
+          barMargin: 30,
+          // Highlight bars when mouse button pressed.
+          // Disables default highlighting on mouse over.
+          highlightMouseDown: true   
+      },
+      pointLabels: {show: true}
+    },
+    axes: {
+      xaxis: {
+          ticks: ticks,
+          renderer: $.jqplot.CategoryAxisRenderer
+      },
+      yaxis: {
+        // Don't pad out the bottom of the data range.  By default,
+        // axes scaled as if data extended 10% above and below the
+        // actual range to prevent data points right on grid boundaries.
+        // Don't want to do that here.
+        // padMin: 0
+      }
+    },
+//    legend: {
+//      show: true,
+//      location: 'e',
+//      placement: 'outside'
+//    }      
+    legend: {
+        show: true,
+        location: 'e',
+        placement: 'outsideGrid',
+        renderer: $.jqplot.EnhancedLegendRenderer,
+        rendererOptions: {
+            numberColumns: 1,
+            labels: toolTip,
+            toolTips: toolTip
+        }
+    },
+    cursor:{
+        show: true, 
+        zoom: true
+    }
+});
+  // Bind a listener to the "jqplotDataClick" event.  Here, simply change
+  // the text of the info3 element to show what series and ponit were
+  // clicked along with the data for that point.
+  $('#chart3').bind('jqplotDataClick', 
+    function (ev, seriesIndex, pointIndex, data) {
+      $('#info3').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+    }
+  ); 
+});
+    
+    
+    
+<?php
+//echo "var Planned = ".$this->series['Planned'] .";\n";
+//echo "var Actual = ".$this->series['Actual'] .";\n";
+?>    
+//    var toolTip1 = ['Planned', 'Actual'];
+//    var plot1 = $.jqplot('chart1', [Planned, Actual], {
+//    axes:{
+//        xaxis:{
+//            renderer:$.jqplot.DateAxisRenderer
+//        }
+//    },
+//    legend: {
+//        show: true,
+//        location: 'e',
+//        renderer: $.jqplot.EnhancedLegendRenderer,
+//        rendererOptions: {
+//            numberColumns: 1,
+//            toolTips: toolTip1
+//        }
+//    },
+//    cursor:{
+//        show: true, 
+//        zoom: true
+//    }, 
+//    seriesDefaults: { 
+//        showMarker:false,
+//        pointLabels: { show:true } 
+//      },
+//    series: [
+//                {
+//                label: 'Planned'
+//                },
+//                {
+//                label: 'Actual'
+//                }
+//            ]
+//  });
+//});
+
+function printIt()
+    {
+    $("#chart1").css("position", "relative");
+    var zIndex = 1;
+    $('#chart1 > canvas').each( function(e)
+        {
+        var image = new Image();
+        image.src = this.toDataURL("image/png");
+        $(image).css('position', 'absolute');
+        if(zIndex > 2)
+            {
+            $(image).css('left', '29px');
+            }
+        $(image).css('z-index', zIndex++);
+        $(this).replaceWith(image);
+        });
+    }
+
+</script>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+</script>
+<div id="buttons_wrapper" style="width: 98%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="printIt" class="buttonLike">
+                <a href= "javascript: printIt();">Print</a>
+            </div>
+            <div id="backWorld" class="buttonLike">
+                <a href= "javascript:history.back()">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chart3" style="height:95%; width:98%;"></div>

@@ -1,0 +1,33 @@
+<!-- #Sezione main1 -->
+<div class="logoheader"> 
+    <?php 
+    echo '<img border="0" src="'.$this->Intestazione.'" >';
+//    echo '<img border="0" src="images/logogruppo.jpg" >';
+    ?> 
+</div>
+
+<?php
+$baseAddress = 'http://'.$_SERVER['HTTP_HOST'].$this->baseUrl();
+
+$this->persScheda = '
+<div style="position:relative; min-height: 280px;" >
+  <div style="float:left; width: 170px; height: 200px; margin: 10px; background-color: #ff0000;"> 
+     <img style="width: 170px; height: 200px;" src="/public/uploads/' . $this->currPers['Allegato'] . 
+        '" id = "foto">
+  </div>
+  <h3>
+  <br>
+<ul>
+<li>'.$this->currPers['Nome'].' '.$this->currPers['Cognome'].
+'</li><li>'.$this->currPers['Qualifica'].
+'</li><li>Email: '.$this->currPers['Email'].
+'</li><li>Email 2:'.$this->currPers['Email2'].
+'</li><li>Tel: '.$this->currPers['TelMobile'].
+'</li><li>Tel 2: '.$this->currPers['TelMobileLocal'].
+'</li><li>Company: '.$this->currPers['RagSoc'].
+'</li></ul>
+    </h3>
+';
+$this->persScheda .= "\n</div>";
+echo $this->persScheda;
+?>

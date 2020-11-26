@@ -1,0 +1,32 @@
+/* 
+    Document   : status_clock
+    Created on : 7-mar-2011, 2.27.33
+    Author     : italba
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+fieldset
+{ float: left; padding: 10px 15px; border: 1px solid #6F6F6F; }
+
+hr
+{ border-bottom: 1px solid #6F6F6F; width: 80%; margin: 20px auto; }
+
+dt
+{ font-weight: bold; margin-top: 10px; }
+
+dd
+{ padding: 2px 0; }
+
+.note
+{ font-size: .85em; color: #6F6F6F; font-style: italic; }
+

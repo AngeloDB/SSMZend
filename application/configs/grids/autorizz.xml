@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <autorizz>
+        <title>Autorizzazioni</title>
+<!--        <addlink>/autorizz/new</addlink>
+        <addtitle>Nuovo contratto</addtitle>-->
+        <select>
+            <from>
+                <aliasname>
+                    <utenti>utenti</utenti>
+                </aliasname>
+                <fields>
+                    <utente>CONCAT(utenti.nome, " ", utenti.cognome)</utente>
+                    <id_utente>id_utente</id_utente>
+                </fields>
+            </from>
+            <join id='tab_userlevel'>
+                <cond>tab_userlevel.id_userlevel = utenti.id_userlevel</cond>
+                <aliasname>
+                    <tab_userlevel>tab_userlevel</tab_userlevel>
+                </aliasname>
+                <fields>
+                    <desc_userlevel>desc_userlevel</desc_userlevel>
+                </fields>
+            </join>
+            <join id='autorizz_progetti'>
+                <type>left</type>
+                <cond>autorizz_progetti.id_utente = utenti.id_utente</cond>
+                <aliasname>
+                    <autorizz_progetti>autorizz_progetti</autorizz_progetti>
+                </aliasname>
+                <fields>
+                    <idAutorizzProgetto>idAutorizzProgetto</idAutorizzProgetto>
+                    <Attivo>Attivo</Attivo>
+                    <AttivoImg>IF(Attivo="1", "ico-vtp-1.png", "ico-vtp-2.png")</AttivoImg>
+                    <Note>Note</Note>
+                </fields>
+            </join>
+            <join id='tab_guests'>
+                <cond>tab_guests.Tablename="autorizz_progetti"</cond>
+                <aliasname>
+                    <tab_guests>tab_guests</tab_guests>
+                </aliasname>
+            </join>
+            <join id='tab_hosts'>
+                <cond>tab_hosts.Tablename="progetti"</cond>
+                <aliasname>
+                    <tab_hosts>tab_hosts</tab_hosts>
+                </aliasname>
+            </join>
+            <join id='guesthost'>
+                <type>left</type>
+                <cond>
+                    guesthost.idTab_guest=tab_guests.idTab_guest AND 
+                    guesthost.idTab_host=tab_hosts.idTab_host AND 
+                    guesthost.idGuest=autorizz_progetti.idAutorizzProgetto
+                </cond>
+                <aliasname>
+                    <guesthost>guesthost</guesthost>
+                </aliasname>
+            </join>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idProgetto = guesthost.idHost</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <Commesse>GROUP_CONCAT(progetti.Nome SEPARATOR ", ")</Commesse>
+                </fields>
+            </join>            
+            <group>
+                utenti.id_utente
+            </group>            
+            <where>
+                <from>
+                    tab_userlevel.desc_ul_short LIKE "Project" OR
+                    tab_userlevel.desc_ul_short LIKE "PM-CM"
+                </from>
+            </where>            
+            <order>CONCAT(utenti.cognome, utenti.nome)</order>
+        </select>
+            
+        <updatecolumns>
+            <id_utente>
+                <hidden>1</hidden>
+            </id_utente>
+            <Attivo>      
+                <hidden>1</hidden>
+            </Attivo>
+            <AttivoImg>      
+                <hidden>1</hidden>
+            </AttivoImg>
+            <idAutorizzProgetto>
+                <hidden>1</hidden>
+            </idAutorizzProgetto>
+            <utente>
+                <position>1</position>
+                <title>Utente</title>
+            </utente>
+            <desc_userlevel>
+                <title>Userlevel</title>
+                <position>2</position>
+            </desc_userlevel>
+            <Commesse>
+                <position>3</position>
+                <title>Commesse</title>
+            </Commesse>
+        </updatecolumns>
+<!--        <updateCallbacks>
+            <Status>
+                <class>AutorizzController</class>
+                <function>cbStatus</function>
+                <params>{{Attivo}}</params>
+            </Status>
+            <End></End>
+        </updateCallbacks>        -->
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /autorizz/edit/idutente/{{id_utente}}/id/{{idAutorizzProgetto}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <Status>
+                <position>left</position>
+                <title>Attivo</title>
+                <decorator>
+                    /autorizz/swap-active/idutente/{{id_utente}}/id/{{idAutorizzProgetto}}/attivo/{{Attivo}}/#/images/{{AttivoImg}}#{{Attivo}}
+                </decorator>
+            </Status>
+        </extracolumns>
+    </autorizz>
+</grids>

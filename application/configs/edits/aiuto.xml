@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <aiuto>
+        <title>Aiuto</title>
+        <edittitle>Modifica nota aiuto</edittitle>
+        <newtitle>Nuova nota aiuto</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>aiuto</maintable>
+        <currkey>idAiuto</currkey>
+        <currsql>SELECT * FROM aiuto WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formAiuto</name>
+            <elements>
+                <idAiuto>
+                    <type>hidden</type>
+                </idAiuto>
+                <Controller>
+                    <type>hidden</type>
+                </Controller>
+                <Action>
+                    <type>hidden</type>
+                </Action>
+                <Note>
+                    <label>New</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                    <javascript>
+                        <onReset>
+                            closeHelp(); 
+                            return false;
+                        </onReset>    
+                        <onClick>
+<!--                            debugger;
+                            alert(this.form.id);-->
+                            saveHelp(); 
+                            return false;
+                        </onClick>
+                    </javascript>
+                    <jsreset>
+                        closeHelp(); 
+                        return false;
+                    </jsreset>
+                </Conferma>
+            </elements>
+        </form>
+    </aiuto>
+</edits>

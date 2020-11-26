@@ -1,0 +1,42 @@
+/* */
+.headerContainer {
+    display: flex;
+    width: 100%;
+}
+.imgContainer {
+    float: left;
+    width: 320px;
+}
+.imgContainer2 {
+    float: left;
+    width: 160px;
+}
+.Titoli {
+    flex-grow: 1;
+    display: inline;
+}
+.Titolo1 {
+    font-family: "Trebuchet MS", "Helvetica", "sans-serif", "Arial";
+    font-weight: normal;
+    font-variant: small-caps;
+    color: #4444CC;
+    font-size: 28px;
+    padding-left: 7px;
+}
+.Titolo2 {
+    font-family: "Trebuchet MS", "Helvetica", "sans-serif", "Arial";
+    font-weight: normal;
+    font-style: italic;
+    font-size: 10px;
+    padding-left: 7px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.printTable table, 
+.printTable th,
+.printTable td {
+    border: 1px solid black;
+}

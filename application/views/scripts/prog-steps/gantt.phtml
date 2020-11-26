@@ -1,0 +1,11 @@
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+
+//        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Stampa", "<?php //echo $ggStampa; ?>", "l");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+
+    });
+</script>
+<?php echo $this->gantti; ?>

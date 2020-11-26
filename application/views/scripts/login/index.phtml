@@ -1,0 +1,47 @@
+<?php
+$this->layout()->setLayout('layout-login');
+echo $this->javascript;
+?>
+
+<script>
+<?php
+    $dir = "images/gallery/";
+    $images = '';
+
+    foreach (new DirectoryIterator($dir) as $fileInfo)
+        {
+        if ($fileInfo->isDot())
+            continue;
+        if ($images != '')
+            $images .= ',';
+        $images .= "\n'" . $this->baseUrl() . '/images/gallery/' . 
+                $fileInfo->getFilename() . "'";
+        }
+
+    echo '$.backstretch([' . $images . '], {duration: 5000, fade: 250});';
+?>
+</script>
+
+<div class="outer">
+    <div class="middle">
+        <span class="topTitle"><?php echo $this->cantiere;?></span>
+        <span class="topLogo"></span>
+        <div class="inner">
+
+            <?php
+            if ($this->errorMessage != "")
+                {
+                echo '<p class="error">' . $this->errorMessage . '</p>';
+                }
+            echo $this->loginForm;
+            ?>	
+
+        </div>
+    </div>
+</div>
+
+<!--<div id="finLogin">
+    <div class="margini">
+
+    </div>
+</div>-->

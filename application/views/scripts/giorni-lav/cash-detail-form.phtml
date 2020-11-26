@@ -1,0 +1,79 @@
+<!--Cash Detail form-->
+<div id = "pippo" class="gridHidden">
+    <div id="dettRate" class="childDetail, confirmForm">
+        <div id="titlesDettRate">Titolo</div>
+        <div id="detailSheet" class="tableDetail">            
+            <div id="titles_detail1" class="cashTitlesDetail">
+                Detail
+            </div>            
+            <br>
+            <div id="listDettRate">
+                Lista
+            </div>
+            <br>
+                <?php
+                   echo $this->cashForm;
+                ?>   
+            <br>
+            <button type="submit" id="delDettRate" name="delDettRate" value="delDettRate">
+                <?php
+                   echo '<img src="'.$this->baseUrl() . 
+                        '/images/nao.png" title="Delete" ';
+                ?>   
+                alt="Delete">Delete</button>
+<!--            <button type="submit" id="discDettRate" name="discDettRate" value="discDettRate">
+                <?php
+//                   echo '<img src="'.$this->baseUrl() . 
+//                        '/images/nao.png" title="Discard" ';
+                ?>   
+                alt="Discard">Discard</button>-->
+            <button type="submit" id="confNewRate" name="confNewRate" value="confNewRate">
+                <?php
+                   echo '<img src="'.$this->baseUrl() . 
+                        '/images/plus_red.png" title="Confirm+New" ';
+                ?>   
+                alt="Confirm+New">Confirm+New</button>
+            <button type="submit" id="confDettRate" name="confDettRate" value="confDettRate">
+                <?php
+                   echo '<img src="'.$this->baseUrl() . 
+                        '/images/ok.png" title="Confirm" ';
+                ?>   
+                alt="Confirm">Confirm</button>
+        </div>
+        <div class="cashRightDetail">
+            <div id="titles_detail2" class="cashTitlesDetail">
+                Purchase Orders
+            </div>            
+            <br>
+            <div id="listDettPo">
+                Lista PO
+            </div>
+            <br>
+                <?php
+                   echo $this->poForm;
+                ?>   
+            <br>
+            <button type="submit" id="delDettPo" name="delDettPo" value="delDettPo">
+                <?php
+                   echo '<img src="'.$this->baseUrl() . 
+                        '/images/nao.png" title="Delete P.O." ';
+                ?>   
+                alt="Delete P.O.">Delete P.O.</button>
+            <button type="submit" id="confDettPo" name="confDettPo" value="confDettPo">
+                <?php
+                   echo '<img src="'.$this->baseUrl() . 
+                        '/images/ok.png" title="Confirm P.O." ';
+                ?>   
+                alt="Confirm P.O.">Confirm P.O.</button>
+            <div style="float: right;">
+                
+            <button type="submit" id="discDettPo" name="discDettPo" value="discDettPo">
+                <?php
+                   echo '<img src="'.$this->baseUrl() . 
+                        '/images/ok.png" title="Close" ';
+                ?>   
+                alt="Close">Close</button>
+            </div> 
+        </div>            
+    </div>  
+</div>

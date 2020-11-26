@@ -1,0 +1,82 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+?>
+
+});
+
+$(document).ready(function(){
+<?php
+    $toolTips = '';
+    $plots = '';
+    $allSeries = '';
+    foreach($this->series AS $key=>$line)
+        {
+        if($toolTips != '' || $plots != '' || $allSeries != '') 
+            {
+            $toolTips .= ',';
+            $plots .= ',';            
+            $allSeries .= ',';            
+            }
+        $toolTips .= "'".$line['title']."'";
+        $allSeries .= "{\nlabel: '".$line['title']."'\n}\n";
+        $plots .= $key;
+        echo 'var '.$key.'='.$line['values'] .";\n";
+        }
+    echo "var toolTip1 = [".$toolTips."];\n";
+    echo "var plot1 = $.jqplot('chart1', [".$plots."], {\n";
+?>
+    axes:{
+        xaxis:{
+            renderer:$.jqplot.DateAxisRenderer
+        }
+    },
+    legend: {
+        show: true,
+        location: 'e',
+        renderer: $.jqplot.EnhancedLegendRenderer,
+        rendererOptions: {
+            numberColumns: 1,
+            toolTips: toolTip1
+        }
+    },
+    cursor:{
+        show: true, 
+        zoom: true
+    }, 
+    seriesDefaults: { 
+        showMarker:false,
+        pointLabels: { show:true } 
+      },
+    series: [
+<?php
+echo $allSeries;
+?>
+    ]
+  });
+});
+
+</script>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+</script>
+<div id="buttons_wrapper" style="width: 100%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="backWorld" class="buttonLike">
+                <a href= "javascript:history.back()">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chart1" style="height:95%; width:95%;"></div>

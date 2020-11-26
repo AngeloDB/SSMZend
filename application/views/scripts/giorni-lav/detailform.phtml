@@ -1,0 +1,123 @@
+<!--Detail form-->
+
+
+<form id="detailForm" name="detailForm" action="/">
+<input type="hidden" name="anno" id="dettAnno"/>
+<input type="hidden" name="mese" id="dettMese"/>
+<input type="hidden" name="ric" id="dettRic"/>
+<input type="hidden" name="dett" id="dettDett"/>
+<input type="hidden" name="mode" id="dettMode"/>
+<input type="hidden" name="dett-new" id="dett-new" value=""/>
+<input type="hidden" name="status" id="dettStatus" value= 
+<?php 
+    if($this->title == "Target")
+        {
+        echo '"T"';
+        }
+    else
+        {
+        echo '"A"';        
+        }
+?>
+       />
+</form>
+      
+<div id="parent2Sheet" class="detailSheet">    
+    <div id="childDetailSheet" class="childDetail">
+        <!--<div id="titleDetail" class="headerDetail"></div>-->            
+        <div id="detailSheet" class="tableDetail"></div>  
+        <div class="rightDetail">
+            <div>
+                <div id="titles_detail" class="titlesDetail_1">
+                    Monthly detail
+                </div>    
+                <div id="titles_content" class="titlesDetail">
+                    <!--<span class="clear"></span>-->
+                    <table id="dettInfo" class="dettInfo" cellspacing="20" cellpadding="10">
+    <!--                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>-->
+                        <tbody>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                            <tr>
+                                <td class="clearTd"></td>
+                                <td class="clearTd"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+                <div id="div_dynRes" class="divDynRes">    
+                    <table id="dynres" class="dynRes" cellspacing="20" cellpadding="10">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Contract</th>
+                                <th colspan="2">Total</th>
+                            </tr>
+                            <tr>
+                                <th>Days</th>
+                                <th>Hours</th>
+                                <th>Days</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="drContractDays">0</td>
+                                <td id="drContractHours">0</td>
+                                <td id="drTotalDays">0</td>
+                                <td id="drTotalHours">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>    
+                <div id="buttons_content" class="buttonsDetail">
+                    <button type="button" id="dettConfirm">Confirm</button>
+                    <button type="button" id="dettDiscard">Discard</button>
+                    <button type="button" id="dettClear">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

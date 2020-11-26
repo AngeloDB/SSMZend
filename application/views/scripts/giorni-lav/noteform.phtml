@@ -1,0 +1,25 @@
+<!--Note form-->
+
+<div id="saveNote" class="confirmForm">
+<input type="hidden" name="out-note-new" id="out-note-new" value=""/>
+<input type="hidden" name="out-note-row" id="out-note-row" value=""/>
+<input type="hidden" name="out-note-col" id="out-note-col" value=""/>
+<input type="hidden" name="out-note-ric" id="out-note-ric" value=""/>
+<input type="hidden" name="out-note-year" id="out-note-year" value=""/>
+<input type="hidden" name="out-note-month" id="out-note-month" value=""/>
+<!--<h3>Save New Revision</h3>-->
+<div style="display: inline; float: left; align-items: center; padding-left: 15px; padding-right: 15px;">
+Note: <textarea id="note-cell" name="note-cell" rows="3" cols="80"> </textarea>
+</div>
+<span style="margin-left: 40px;">&nbsp;</span>
+<button type="submit" id="confSaveNote" name="confSaveNote" value="confSaveNote">
+    <?php
+       echo '<img src="'.$this->baseUrl() . '/images/ok.png" title="Confirm" ';
+    ?>   
+    alt="Confirm">Confirm</button>
+<button type="submit" id="discSaveNote" name="discSaveNote" value="discSaveNote">
+    <?php
+       echo '<img src="'.$this->baseUrl() . '/images/nao.png" title="Discard" ';
+    ?>   
+    alt="Discard">Discard</button>
+</div>

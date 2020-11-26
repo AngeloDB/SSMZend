@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <progetto2>
+        <title>Contract info</title>
+        <edittitle>Modify contract info</edittitle>
+        <newtitle>Nuova commessa</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>progetti</maintable>
+        <currkey>idProgetto</currkey>
+        <currsql>SELECT * FROM progetti WHERE </currsql>
+<!--        <parameters>
+            <mode>
+                <from>parameter</from>
+            </mode>
+            <isNew>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>new</op2>
+            </isNew>
+        </parameters>-->
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formProgetto</name>
+            <elements>
+                <idProgetto>
+                    <type>hidden</type>
+                </idProgetto>
+                <ContractNum>
+                    <type>text</type>
+                    <label>Contract Number</label>
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>50</maxlen>
+                    </parameters>
+                </ContractNum>
+                <ContractDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Contract Date</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </ContractDate>
+                <ContractValue>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Contract Value</label>
+                    <parameters>
+                        <size>12,2</size>
+                        <maxlen>14</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </ContractValue>
+                <idTabValuta>
+                    <type>select</type>
+                    <label>Valuta</label>
+                        <!--SELECT idTabValuta AS KeyId, CONCAT(Nome, " - ", CodAlfa)  AS Value-->
+                    <selsql>
+                        SELECT idTabValuta AS KeyId, Nome AS Value
+                        FROM tab_valute
+                        ORDER BY Nome
+                    </selsql>
+                </idTabValuta>
+                <LetterOfCredit>
+                    <type>checkbox</type>
+                    <label>Letter Of Credit</label>
+                </LetterOfCredit>
+                <LCExpiration>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Letter of Credit Expiration</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </LCExpiration>
+                <ContractMD>
+                    <type>text</type>
+                    <label>Contractual Man/days</label>
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>50</maxlen>
+                    </parameters>
+                </ContractMD>
+                <MDPrice>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Man/day Price</label>
+                    <parameters>
+                        <size>10,2</size>
+                        <maxlen>12</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </MDPrice>
+                <Invoicing>
+                    <label>Invoicing</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Invoicing> 
+                <ContractNote>
+                    <label>Contract Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </ContractNote> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </progetto2>
+</edits>

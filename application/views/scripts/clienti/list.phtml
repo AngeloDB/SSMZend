@@ -1,0 +1,32 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+if ($this->printLink != '' && $this->printLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_stampa", "' . $this->printLabel.'", "'.$this->printLink.'", "r");';
+    }
+?>
+    });
+</script>
+<?php
+echo $this->jsGrid;
+?>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li><a href="#GGtabs-1">
+            <?php 
+            $translate = Zend_Registry::get('translate');
+            echo $this->title.' '.$translate->_('(elenco)');
+            ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+<?php echo $this->grid; ?>
+    </div>
+</div>

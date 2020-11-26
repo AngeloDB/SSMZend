@@ -1,0 +1,45 @@
+<br> <br>
+<div class="header">
+<h1>
+<center>
+<?php echo $this->title;?>
+</center>
+</h1>
+</div>
+<a href=<?php echo $this->addLink; ?>>
+<div style="float: left; padding-right: 4px">
+<img src=<?php echo '"'.$this->baseUrl().'/images/plus.png"'; ?>
+     height="16px" width="16px" border="0" >
+</div>
+<div>
+<?php echo $this->addLabel; ?>
+</div>
+</a>
+<br />
+<?php echo $this->grid;?>
+<?php echo '<br>';?>
+<div style="width: 100%">
+<div style="width: 50%;">
+<?php echo $this->form;?>
+</div>
+<div style="float: right">
+<?php echo $this->formFields;?>
+</div>
+</div>
+<?php $this->headScript()->captureStart() ?>
+function submitform(Alias, Join, Table, On)
+{
+document.getElementById('Join').value=Join;
+document.getElementById('Alias').value=Alias;
+document.getElementById('Table').value=Table;
+document.getElementById('On').value=On;
+}
+
+function copyField()
+{
+document.getElementById('On').value=document.getElementById('On').value+
+    document.getElementById('Fields').value;
+return false;
+}
+
+<?php $this->headScript()->captureEnd() ?>

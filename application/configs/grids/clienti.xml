@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <clienti>
+        <title>Clienti</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/clienti/new</addlink>
+        <addtitle>Nuovo cliente</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <clienti>clienti</clienti>
+                </aliasname>
+                <fields>
+                    <idCliente>idCliente</idCliente>
+                    <Nome>Nome</Nome>
+                    <RagSoc>RagSoc</RagSoc>
+                    <Citta>Citta</Citta>
+                    <Indirizzo>Indirizzo</Indirizzo>
+                    <Responsabile>Responsabile</Responsabile>
+                    <Telefono>Telefono</Telefono>
+                    <Email>Email</Email>
+                    <delIco> 
+                        (CASE WHEN COUNT(progetti.idProgetto) > 0 OR 
+                                    COUNT(business_units.idBusinessUnit) > 0 
+                            THEN 'del-dis' 
+                            ELSE 'fechar' 
+                        END) 
+                    </delIco>
+                    <delLink> 
+                        (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                                    COUNT(business_units.idBusinessUnit) > 0 
+                            THEN '#' 
+                            ELSE CONCAT('/clienti/delete/id/', clienti.idCliente)
+                        END) 
+                    </delLink>
+                    <delAlert> 
+                        (CASE WHEN COUNT(progetti.idProgetto) > 0 OR 
+                                    COUNT(business_units.idBusinessUnit) > 0 
+                            THEN 'alert(''Can`t delete''); return false;' 
+                            ELSE 'return(confirm(''Confirm delete?''));' 
+                        END) 
+                    </delAlert>            
+                </fields>
+            </from>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idCliente = clienti.idCliente OR progetti.idClienteFin = clienti.idCliente</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <numProgetti>COUNT(idProgetto)</numProgetti>
+                </fields>
+            </join>            
+            <join id='business_units'>
+                <type>left</type>
+                <cond>business_units.idCliente = clienti.idCliente</cond>
+                <aliasname>
+                    <business_units>business_units</business_units>
+                </aliasname>
+                <fields>
+                    <numBU>COUNT(business_units.idBusinessUnit)</numBU>
+                </fields>
+            </join>            
+            <group>
+                clienti.idCliente
+            </group>                        
+            <order>clienti.RagSoc</order>                        
+        </select>
+        <updatecolumns>
+            <idCliente>
+                <hidden>1</hidden>
+            </idCliente>
+            <numBU>
+                <hidden>1</hidden>
+            </numBU>
+            <numProgetti>
+                <hidden>1</hidden>
+            </numProgetti>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Nome>
+                <title>Nome</title>
+                <position>1</position>
+                <class>width_100</class>
+            </Nome>
+            <RagSoc>
+                <title>Ragione Sociale</title>
+                <position>2</position>
+            </RagSoc>
+            <Citta>
+                <title>Città</title>
+                <position>3</position>
+            </Citta>
+            <Indirizzo>
+                <title>Indirizzo</title>
+                <position>4</position>
+            </Indirizzo>
+            <Responsabile>
+                <title>Responsabile</title>
+                <position>5</position>
+            </Responsabile>
+            <Telefono>
+                <title>Telefono</title>
+                <position>6</position>
+            </Telefono>
+            <Email>
+                <title>Email</title>
+                <position>7</position>
+            </Email>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /clienti/edit/id/{{idCliente}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </clienti>
+</grids>

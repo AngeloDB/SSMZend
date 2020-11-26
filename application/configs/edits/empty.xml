@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <>
+        <title></title>
+        <edittitle>Modifica </edittitle>
+        <newtitle>Nuovo </newtitle>
+        <savingalert>1</savingalert>
+        <maintable></maintable>
+        <currkey></currkey>
+        <currsql>SELECT * FROM  WHERE </currsql>
+        <parameters>
+            <>
+                <from>arrdefaultnamespace</from>
+                <array></array>
+                <offset></offset>
+            </>
+            <>
+                <from>defaultnamespace</from>
+            </>
+            <>
+                <from>cond</from>
+                <type>in</type>
+                <op1>{{}}</op1>
+                <op2>#Tecnico#Administrator</op2>
+            </>            
+            <>
+                <const>1</const>
+            </>
+        </parameters>
+        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: per selezionare una mansione cliccare sul nome).',
+        noneSelectedText: 'Mansioni possibili (selezione a checkbox)',
+        uncheckAllText: 'Deseleziona',
+        noneSelectedText: 'Nessuna mansione selezionata.',
+        selectedText: 'Sono state selezionate # ',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filtra:",
+        placeholder: "ricerca"
+    });
+  
+});  
+
+        </javascript>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name></name>
+            <elements>
+                <>
+                    <type>hidden</type>
+                </>
+                <>
+                    <type>text</type>
+                    <label></label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </>
+                <>
+                    <type>date</type>
+                    <parameters>
+                        <Label></Label>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </>
+                <>
+                    <type>select</type>
+                    <label></label>
+                    <selsql>
+                        SELECT  AS KeyId,  AS Value FROM 
+                    </selsql>
+                </>
+                <>
+                    <type>multiselect</type>
+                    <label>Mans. possibili</label>
+                    <selsql>
+                        SELECT  AS KeyId,  AS Value FROM 
+                    </selsql>
+                    <aiuto></aiuto>                
+                </>                               
+                <>
+                    <type>linecustom</type>
+                    <description> &lt;h3&gt; Documenti allegati  &lt;/h3&gt;</description> 
+                </>
+                <Allegato>
+                    <type>file</type>
+                    <label>Allegato</label>
+                    <parameters>
+                        <MultiFile>1</MultiFile>
+                        <Size>2000000</Size>
+                    </parameters>
+                </Allegato>
+               <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </>
+</edits>

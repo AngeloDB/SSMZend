@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <req_template>
+        <title>Modelli di richiesta personale</title>
+        <addlink>/struttura/new-req</addlink>
+        <addtitle>Nuovo modello di richiesta personale</addtitle>
+        <parameters>
+<!--            <currIdProgetto>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </currIdProgetto>-->
+            <currIdProgStepTemplate>
+                <from>arrdefaultnamespace</from>
+                <array>currStep</array>
+                <offset>idProgStepTemplate</offset>
+            </currIdProgStepTemplate>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <prog_steps_req_template>prog_steps_req_template</prog_steps_req_template>
+                </aliasname>
+                <fields>
+                    <idProgStepReqTemplate>idProgStepReqTemplate</idProgStepReqTemplate>
+                    <idProgStepTemplate>idProgStepTemplate</idProgStepTemplate>
+                    <idQualifica>idQualifica</idQualifica>
+                    <NumReq>NumReq</NumReq>
+                    <Nome>Nome</Nome>
+                </fields>
+            </from>
+<!--            <join id='prog_steps_template'>
+                <cond>prog_steps_template.idProgStepTemplate = prog_steps_req_template.idProgStepTemplate</cond>
+                <aliasname>
+                    <prog_steps_template>prog_steps_template</prog_steps_template>
+                </aliasname>
+                <fields>
+                    <Step>Step</Step>
+                    <idProgTemplate>idProgTemplate</idProgTemplate>
+                </fields>
+            </join>
+            <join id='prog_template'>
+                <cond>prog_template.idProgTemplate = prog_steps_template.idProgTemplate</cond>
+                <aliasname>
+                    <prog_template>prog_template</prog_template>
+                </aliasname>
+                <fields>
+                    <Progetto>Nome</Progetto>
+                </fields>
+            </join>-->
+            <join id='qualifiche'>
+                <cond>qualifiche.idQualifica = prog_steps_req_template.idQualifica</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <Qualifica>Descrizione</Qualifica>
+                </fields>
+            </join>
+            <join></join>
+            <where>
+                <from>
+                    prog_steps_req_template.idProgStepTemplate = "{{currIdProgStepTemplate}}"
+                </from>
+            </where>
+        </select>
+        <updatecolumns>
+            <idProgStepReqTemplate>
+                <hidden>1</hidden>
+            </idProgStepReqTemplate>
+            <idProgStepTemplate>
+                <hidden>1</hidden>
+            </idProgStepTemplate>
+            <idQualifica>
+                <hidden>1</hidden>
+            </idQualifica>
+<!--            <idProgTemplate>
+                <hidden>1</hidden>
+            </idProgTemplate>
+            <Progetto>
+                <title>Progetto</title>
+                <position>1</position>
+            </Progetto>
+            <Step>
+                <title>Step</title>
+                <position>2</position>
+            </Step>-->
+            <Qualifica>
+                <title>Qualifica</title>
+                <position>1</position>
+            </Qualifica>
+            <NumReq>
+                <title>Numero</title>
+                <position>2</position>
+            </NumReq>
+<!--            <Nome>
+                <hidden>1</hidden>
+            </Nome>-->
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /struttura/edit-req/id/{{idProgStepReqTemplate}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </req_template>
+</grids>

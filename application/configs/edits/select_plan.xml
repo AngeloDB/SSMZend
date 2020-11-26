@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <select_plan>
+        <title>Jobs Plan</title>
+        <edittitle>Jobs Plan</edittitle>
+        <newtitle>New Jobs Plan</newtitle>
+        <maintable>dual</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <parameters>
+            <mode>
+                <from>pararr</from>
+            </mode>
+        </parameters>
+        <javascript>
+                
+$(document).ready(function() 
+  {
+//    $.localise("ui.multiselect", 
+//                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+//    $('#idMultiCamp option').prop('selected', true);
+
+
+//    $(function() {
+//        $('.date-picker').datepicker( {
+//            changeMonth: true,
+//            changeYear: true,
+//            showButtonPanel: true,
+//            dateFormat: 'mm/yy',
+//            onClose: function(dateText, inst) { 
+//                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+//                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+//                $(this).datepicker('setDate', new Date(year, month, 1));
+//            },
+//            beforeShow : function(input, inst) {
+//                var datestr;
+//                if ((datestr = $(this).val()).length > 0) {
+//                    year = datestr.substring(datestr.length-4, datestr.length);
+//                    month = jQuery.inArray(datestr.substring(0, datestr.length-5), $(this).datepicker('option', 'monthNamesShort'));
+//                    $(this).datepicker('option', 'defaultDate', new Date(year, month, 1));
+//                    $(this).datepicker('setDate', new Date(year, month, 1));
+//                }
+//            }
+//        });
+//    });
+
+    $("#idMultiJobs").multiselect({
+        multiple: true,
+        header: '(info: Select all required jobs).',
+        noneSelectedText: 'Jobs (checkbox select)',
+        uncheckAllText: 'Uncheck',
+        noneSelectedText: 'No job.',
+        selectedText: '# jobs have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: Select all required qualifications).',
+        noneSelectedText: 'Qualifications (checkbox select)',
+        uncheckAllText: 'Uncheck',
+        noneSelectedText: 'No qualification.',
+        selectedText: '# Qualifications have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiMode").multiselect({
+        multiple: true,
+        header: '(info: Select search mode(s)).',
+        noneSelectedText: 'Searc modes (checkbox select)',
+        uncheckAllText: 'Uncheck',
+        noneSelectedText: 'No search mode.',
+        selectedText: '# Search modes have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+  
+  });  
+
+        </javascript>
+
+<!--    </script>
+    <style>
+    .ui-datepicker-calendar {
+        display: none;
+        }
+    </style>
+</head>
+<body>
+    <label for="startDate">Date :</label>
+    <input name="startDate" id="startDate" class="date-picker" />
+</body>
+            -->  
+                                  
+        <form>
+            <name>seltotals</name>
+            <elements>
+                <id>
+                    <type>hidden</type>
+                </id>
+                <Type>
+                    <type>hidden</type>
+                    <value>mode</value>
+                </Type>
+<!--                <Type>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Order by</label>
+                    <values>
+                        <value id="Supervisors" elem="Supervisors"></value>
+                        <value id="Jobs" elem="Jobs"></value>
+                    </values>
+                </Type>
+                <Days>
+                    <type>checkbox</type>
+                    <label>Days</label>
+                </Days>-->
+                <idMultiJobs>
+                    <type>multiselect</type>
+                    <label>Jobs</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+                    </selsql>
+                    <aiuto>Select all required jobs</aiuto>                
+                </idMultiJobs>                               
+                <idMultiQual>
+                    <type>multiselect</type>
+                    <label>Qualifications</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idQualifica AS KeyId, Descrizione AS Value 
+                        FROM qualifiche 
+                        ORDER BY Descrizione
+                    </selsql>
+                    <aiuto>Select all required qualifications</aiuto>                
+                </idMultiQual>                               
+                <idMultiForn>
+                    <type>multiselect</type>
+                    <label>Suppliers</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idFornPers AS KeyId, RagSoc AS Value 
+                        FROM forn_pers
+                        ORDER BY RagSoc
+                    </selsql>
+                    <aiuto>Select all required suppliers</aiuto>                
+                </idMultiForn>                               
+                <idMultiPers>
+                    <type>multiselect</type>
+                    <label>Supervisors</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idPersonale AS KeyId, CONCAT(Cognome, " ", Nome) AS Value 
+                        FROM personale
+                        ORDER BY Cognome, Nome
+                    </selsql>
+                    <aiuto>Select all required supervisors</aiuto>                
+                </idMultiPers>
+                <startDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Start</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </startDate>                               
+                <endDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>End</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </endDate>                               
+<!--                                        
+                    <type>text</type>
+                    <label>Start</label>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <size>20</size>
+                        <maxlen>40</maxlen>
+                        <class>date-picker</class>                        
+                    </parameters>-->
+<!--                <AnnoIn>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Start Year</label>
+                    <values>
+                        <value id="2010" elem="2010"></value>
+                        <value id="2011" elem="2011"></value>
+                        <value id="2012" elem="2012"></value>
+                        <value id="2013" elem="2013"></value>
+                        <value id="2014" elem="2014"></value>
+                        <value id="2015" elem="2015"></value>
+                        <value id="2016" elem="2016"></value>
+                        <value id="2017" elem="2017"></value>
+                        <value id="2018" elem="2018"></value>
+                        <value id="2019" elem="2019"></value>
+                        <value id="2020" elem="2020"></value>
+                        <value id="2021" elem="2021"></value>
+                        <value id="2022" elem="2022"></value>
+                        <value id="2023" elem="2023"></value>
+                        <value id="2024" elem="2024"></value>
+                        <value id="2025" elem="2025"></value>
+                    </values>
+                </AnnoIn>
+                <MeseIn>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Start Month</label>
+                    <values>
+                        <value id="01" elem="01"></value>
+                        <value id="02" elem="02"></value>
+                        <value id="03" elem="03"></value>
+                        <value id="04" elem="04"></value>
+                        <value id="05" elem="05"></value>
+                        <value id="06" elem="06"></value>
+                        <value id="07" elem="07"></value>
+                        <value id="08" elem="08"></value>
+                        <value id="09" elem="09"></value>
+                        <value id="10" elem="10"></value>
+                        <value id="11" elem="11"></value>
+                        <value id="12" elem="12"></value>
+                    </values>
+                </MeseIn>
+                <AnnoFi>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>End Year</label>
+                    <values>
+                        <value id="2010" elem="2010"></value>
+                        <value id="2011" elem="2011"></value>
+                        <value id="2012" elem="2012"></value>
+                        <value id="2013" elem="2013"></value>
+                        <value id="2014" elem="2014"></value>
+                        <value id="2015" elem="2015"></value>
+                        <value id="2016" elem="2016"></value>
+                        <value id="2017" elem="2017"></value>
+                        <value id="2018" elem="2018"></value>
+                        <value id="2019" elem="2019"></value>
+                        <value id="2020" elem="2020"></value>
+                        <value id="2021" elem="2021"></value>
+                        <value id="2022" elem="2022"></value>
+                        <value id="2023" elem="2023"></value>
+                        <value id="2024" elem="2024"></value>
+                        <value id="2025" elem="2025"></value>
+                    </values>
+                </AnnoFi>
+                <MeseFi>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>End Month</label>
+                    <values>
+                        <value id="01" elem="01"></value>
+                        <value id="02" elem="02"></value>
+                        <value id="03" elem="03"></value>
+                        <value id="04" elem="04"></value>
+                        <value id="05" elem="05"></value>
+                        <value id="06" elem="06"></value>
+                        <value id="07" elem="07"></value>
+                        <value id="08" elem="08"></value>
+                        <value id="09" elem="09"></value>
+                        <value id="10" elem="10"></value>
+                        <value id="11" elem="11"></value>
+                        <value id="12" elem="12"></value>
+                    </values>
+                </MeseFi>-->
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </select_plan>
+</edits>

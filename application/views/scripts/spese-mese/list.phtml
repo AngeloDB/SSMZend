@@ -1,0 +1,49 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Close",
+<?php
+echo '"'.$this->baseUrl().'/giorni-lav/grid-spese/id/'.$this->currId.'/order/", "r");';
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+echo 'macroAddTabsBtn(".tabsul", "btn_tab_po", "Purchase order", "l");';
+?>
+    });
+</script>
+<?php
+echo $this->jsGrid;
+?>
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    ?>
+<!--    <div style="border-top:1px dashed #888">
+        <div style="padding:6px 0 0 0">
+            <div style="padding:3px 4px 0px 4px;background-color:#ddd;border:1px solid #bbb">-->
+                <?php
+//                $str = '<a href="/public/forn-pers/new">';
+//                $str .= '<img alt="' .
+//                        $this->addLabel . '" title="' . $this->addLabel .
+//                        '" src="/public/images/ist_nav/btn_report-nuovo-documento.png" height="40"></a>';
+//                echo $str;
+                ?>
+<!--            </div>
+        </div>
+    </div>-->
+<?php } ?>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li><a href="#GGtabs-1">
+            <?php 
+            $translate = Zend_Registry::get('translate');
+            echo $this->title.' '.$translate->_('(elenco)');
+            ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+<?php echo $this->grid; ?>
+    </div>
+</div>

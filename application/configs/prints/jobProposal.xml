@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : jobProposal.xml
+    Created on : 4 marzo 2010, 14.02
+    Author     : Italo
+    Description:
+        Purpose of the document follows.
+-->
+
+<root>
+    <maintitle>
+        <english>Request of qualified personnel (consultant) in temporary assignment</english>
+        <italiano>Richiesta di personale qualificato (consulenti) in assunzione temporanea</italiano>
+    </maintitle>
+    <general_details>
+        <title>
+            <english>Contract proposal</english>
+            <italiano>Proposta di contratto</italiano>
+        </title>
+        <fields>
+            <field>
+                <fieldname>cliente</fieldname>
+                <english>Our Client</english>
+                <italiano>1. Cliente:</italiano>
+            </field>
+            <field>
+                <fieldname>position</fieldname>
+                <english>Position</english>
+                <italiano>2. Posizione:</italiano>
+            </field>
+            <field>
+                <fieldname>esperienza</fieldname>
+                <english>Experience</english>
+                <italiano>3. Esperienza:</italiano>
+            </field>
+            <field>
+                <fieldname>attivita</fieldname>
+                <english>Activities</english>
+                <italiano>4. Attività:</italiano>
+            </field>
+            <field>
+                <fieldname>target</fieldname>
+                <english>Target</english>
+                <italiano>5. Obiettivo:</italiano>
+            </field>
+            <field>
+                <fieldname>site_org</fieldname>
+                <english>Site organization</english>
+                <italiano>6. Organizzazione del cantiere:</italiano>
+            </field>
+            <field>
+                <fieldname>accomodationreq</fieldname>
+                <english>Accomodation</english>
+                <italiano>7. Sistemazione:</italiano>
+            </field>
+            <field>
+                <fieldname>living</fieldname>
+                <fielddesc>living_desc</fielddesc>
+                <fieldcurr>€</fieldcurr>
+                <english>Living Allowance</english>
+                <italiano>8. Indennità Living:</italiano>
+            </field>
+            <field>
+                <fieldname>localtrasp</fieldname>
+                <fielddesc>localtrasp_desc</fielddesc>
+                <fieldcurr>€</fieldcurr>
+                <english>Local Transportation</english>
+                <italiano>9. Trasporti Locali:</italiano>
+            </field>
+            <field>
+                <fieldname>siteloc</fieldname>
+                <english>Site location</english>
+                <italiano>10. Luogo di lavoro:</italiano>
+            </field>
+            <field>
+                <fieldname>data_inizio</fieldname>
+                <english>Starting date</english>
+                <italiano>11. Inizio attività:</italiano>
+            </field>
+            <field>
+                <fieldname>duration</fieldname>
+                <english>Estim. duration</english>
+                <italiano>12. Durata stimata:</italiano>
+            </field>
+            <field>
+                <fieldname>rotationRdo</fieldname>
+                <fielddesc>turnazione_desc</fielddesc>
+                <english>Rotation</english>
+                <italiano>13. Turnazione:</italiano>
+            </field>
+            <field>
+                <fieldname>week_hoursJob</fieldname>
+                <english>Working time</english>
+                <italiano>14. Ore lavorative:</italiano>
+            </field>
+            <field>
+                <fieldname>inttrasp</fieldname>
+                <fieldcurr>€</fieldcurr>
+                <fielddesc>inttrasp_desc</fielddesc>
+                <english>Internat. Transportation</english>
+                <italiano>15. Trasporti internazionali:</italiano>
+            </field>
+            <field>
+                <fieldname>insurances</fieldname>
+                <english>Insurance</english>
+                <italiano>16. Assicurazioni:</italiano>
+                <ital_value>Oltre alla copertura INAIL provvederemo ad una Assicurazione privata (Morte 207,000 € - Invalidità Permanente 362.000 €)</ital_value>
+            </field>
+            <field>
+                <fieldname>lingue</fieldname>
+                <english>Foreign languages</english>
+                <italiano>17. Lingue straniere:</italiano>
+            </field>
+            <field>
+                <fieldname>tipocontratto</fieldname>
+                <fielddesc>tipo_contratto_desc</fielddesc>
+                <english>Contract Type</english>
+                <italiano>18. Tipo di contratto:</italiano>
+            </field>
+            <field>
+                <fieldname>renum</fieldname>
+                <fieldcurr>€</fieldcurr>
+                <english>Salary proposed</english>
+                <italiano>19. Remunerazione mensile:</italiano>
+            </field>
+            <field>
+                <fieldname>overtime</fieldname>
+                <fielddesc>overtime_desc</fielddesc>
+                <fieldcurr>€</fieldcurr>
+                <english>Overtime rate</english>
+                <italiano>20. Straordinario:</italiano>
+            </field>
+        </fields>
+    </general_details>
+</root>

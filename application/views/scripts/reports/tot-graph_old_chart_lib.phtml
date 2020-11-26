@@ -1,0 +1,137 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+?>
+
+});
+
+
+$(document).ready(function(){
+<?php
+//    $toolTips = '';
+//    $plots = '';
+//    $allSeries = '';
+//    foreach($this->series AS $key=>$line)
+//        {
+//        if($toolTips != '' || $plots != '' || $allSeries != '') 
+//            {
+//            $toolTips .= ',';
+//            $plots .= ',';            
+//            $allSeries .= ',';            
+//            }
+//        $toolTips .= "'".$line['title']."'";
+//        $allSeries .= "{\nlabel: '".$line['title']."'\n}\n";
+//        $plots .= $key;
+//        echo 'var '.$key.'='.$line['values'] .";\n";
+//        }
+//    echo "var toolTip1 = [".$toolTips."];\n";
+//    echo "var plot1 = $.jqplot('chart1', [".$plots."], {\n";
+echo "var Planned = ".$this->series['Planned'] .";\n";
+echo "var Actual = ".$this->series['Actual'] .";\n";
+?>
+    
+    var toolTip1 = ['Planned', 'Actual'];
+    var plot1 = $.jqplot('chart1', [Planned, Actual], {
+    axes:{
+        xaxis:{
+            renderer:$.jqplot.DateAxisRenderer
+        }
+    },
+    legend: {
+        show: true,
+        location: 'e',
+        renderer: $.jqplot.EnhancedLegendRenderer,
+        rendererOptions: {
+            numberColumns: 1,
+            toolTips: toolTip1
+        }
+    },
+    cursor:{
+        show: true, 
+        zoom: true
+    }, 
+    seriesDefaults: { 
+        showMarker:false,
+        pointLabels: { show:true } 
+      },
+    series: [
+                {
+                label: 'Planned'
+                },
+                {
+                label: 'Actual'
+                }
+            ]
+  });
+});
+
+function printIt()
+    {
+    $("#chart1").css("position", "relative");
+    var zIndex = 1;
+    $('#chart1 > canvas').each( function(e)
+        {
+        var image = new Image();
+        image.src = this.toDataURL("image/png");
+        $(image).css('position', 'absolute');
+        if(zIndex > 2)
+            {
+            $(image).css('left', '29px');
+            }
+        $(image).css('z-index', zIndex++);
+        $(this).replaceWith(image);
+        });
+//    var printContents = new $("#chart1");
+//    var myWindow = window.open("", "popup","width=1000,height=600,scrollbars=yes,resizable=yes," +  
+//        "toolbar=no,directories=no,location=no,menubar=no,status=no,left=0,top=0");
+//    var doc = myWindow.document;
+//    doc.open();
+////    $(printContents).find(".tCheckboxes").remove();
+//    var button = "<input type='button' id='btnPrint' value='Print' style='float: right;' onclick='window.print();'/>";
+//    $(printContents).append($(button));
+//    doc.write($(printContents).html());
+//    doc.close();
+    }
+
+</script>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+</script>
+<div id="buttons_wrapper" style="width: 98%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="printIt"class="buttonLike">
+<!--                <a href= "javascript: html2canvas($('#chart1'), {
+                                    onrendered: function(canvas) {
+                                        theCanvas = canvas;
+                                        document.body.appendChild(canvas);
+                                        // Convert and download as image 
+                                        Canvas2Image.saveAsPNG(canvas); 
+                                        $('#img-out').append(canvas);
+                                        // Clean up 
+                                        //document.body.removeChild(canvas);
+                                            });
+                                        });
+                                        ">Print</a>-->
+<!--                <a href= "javascript: $('#chart1').printThis({
+                     importCSS: true, importStyle: true,
+                     header: '<h1>Grafico</h1>'});">Print</a>-->
+                <a href= "javascript: printIt();">Print</a>
+            </div>
+            <div id="backWorld"class="buttonLike">
+                <a href= "javascript:history.back()">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chart1" style="height:95%; width:98%;"></div>

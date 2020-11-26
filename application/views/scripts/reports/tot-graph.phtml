@@ -1,0 +1,208 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+?>
+
+});
+
+
+$(document).ready(function(){
+<?php
+    
+$series = array();
+$data = '[';
+foreach($this->revArr AS $monthKey=>$line)
+    {
+    foreach($line AS $ser=>$val)
+        {
+        if(!array_key_exists($ser, $series))
+            {
+            $series[$ser]= array();
+            }
+        if(!array_key_exists($monthKey, $series[$ser]))
+            {
+            $series[$ser][$monthKey]= 0;
+            }
+        $series[$ser][$monthKey] += $val;
+        }
+    }    
+
+foreach($this->revisions as $revKey=>$line)
+    {
+    $tmpRev = array();
+    $tmpRevContract = array();
+    foreach($line['Values'] as $monthKey=>$val)
+        {
+        $tmpRev[$monthKey]=$val['Totale'];
+        $tmpRevContract[$monthKey]=$val['TotaleContratto'];
+        }
+    $series['Rev'.($revKey-1)] = $tmpRev;
+    $series['Rev'.($revKey-1).'_Contr'] = $tmpRevContract;
+    }    
+
+    
+foreach($series AS $key=>$line)
+    {
+    if($data != '[')
+        {
+        $data .= ',';
+        }
+    $data .= $key;
+    echo 'var '.$key.'= {'."\n";
+    $prog = 0;
+    $currX = '[';
+    $currY = '[';
+    foreach($line AS $x=>$y)
+        {
+        if($currX != '[')
+            {
+            $currX .= ',';
+            $currY .= ',';
+            }
+        $currX .= "'".$x."'";
+        $prog += $y;
+        if($this->wantProg)
+            {
+            $currY .= $prog;
+            }
+        else
+            {
+            $currY .= $y;
+            }
+        };
+    echo "x: ".$currX."],\n";    
+    echo "y: ".$currY."],\n";    
+    echo "type: 'scatter"."',\n";
+    if(substr($key, 0, 3) == "Rev" && substr($key, 0, 4)  != "Rev0")
+        {
+        echo "visible: 'legendonly"."',\n";    
+        }
+    $currName = str_replace("_Contr", " Contr.", $key);    
+    $currName = str_replace("Rev", "Rev ", $currName);    
+    echo "name: '".$currName."'}\n";    
+    }
+    
+echo "var data = ".$data."];\n";
+$i = 0;
+$listProj = '';
+foreach($this->currProj as $key=>$proj)
+    {
+    if($i != 0)
+        {
+        $listProj .= ', ';
+        }
+    if($i++ % 5 == 4)
+        {
+        $listProj .= '<br>';
+        }
+    $listProj .= $proj;    
+    }
+echo "var title = '".$listProj.' <br>Supervisors Man/Days '.
+    ($this->start == '-' ? '' : 'From '.$this->start.' ').
+    ($this->end == '-' ? '' : 'To '.$this->end.' ').
+    ($this->wantProg ? 'Progressive ' : ''). "';\n";
+?>
+                
+    var layout = {
+      title: title,
+      showSendToCloud: false,
+      displayLogo: false,
+      xaxis: {
+        title: 'Year/Month',
+        showgrid: true,
+        zeroline: false
+      },
+      yaxis: {
+        title: 'Man Days',
+        showline: true
+      }
+    };
+
+    var config = {
+       modeBarButtonsToRemove: ['sendDataToCloud'],
+       displaylogo: false
+    };
+        
+    $('#toggleTitle').click(function(){toggleTitle();});
+    $('#printIt').click(function(){printIt();});
+    $('#backWorld').click(function(){history.back();});
+    Plotly.newPlot('chart1', data, layout, config);
+});
+
+//    
+//    $("#chart1").css("position", "relative");
+//    var zIndex = 1;
+//    $('#chart1 > canvas').each( function(e)
+//        {
+//        var image = new Image();
+//        image.src = this.toDataURL("image/png");
+//        $(image).css('position', 'absolute');
+//        if(zIndex > 2)
+//            {
+//            $(image).css('left', '29px');
+//            }
+//        $(image).css('z-index', zIndex++);
+//        $(this).replaceWith(image);
+//        });
+
+function toggleTitle()
+    {
+    if($('.g-gtitle').css('visibility') == 'hidden')
+        {
+        $('.g-gtitle').css('visibility', 'visible');
+        }
+    else
+        {
+        $('.g-gtitle').css('visibility', 'hidden');
+        }
+    }
+
+
+function printIt()
+    {
+    Plotly.toImage($('#chart1'), {format: 'png', width: 800, height: 600}).then(function(dataUrl) {
+    // use the dataUrl
+//        $('#imgToPrint').attr({src: dataUrl});
+        $('#capTitle').printThis({canvas: false});
+        });    
+    }
+
+</script>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+</script>
+<div id="buttons_wrapper" style="width: 98%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="toggleTitle" class="buttonLike">
+                <!--<a href= "javascript: toggleTitle();">Title</a>-->
+                Title
+            </div>
+            <div id="printIt" class="buttonLike">
+                <!--<a href= "javascript: printIt();">Print</a>-->
+                Print
+            </div>
+            <div id="backWorld" class="buttonLike">
+                <!--<a href= "javascript:history.back()">Back</a>-->
+                Back
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chart1" style="height:95%; width:98%;"></div>    
+<!--
+<div id="tmpPrint">
+    <img id="imgToPrint" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"> alt="">
+</div>-->
+
+ <!--style="visibility: hidden"-->

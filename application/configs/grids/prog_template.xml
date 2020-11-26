@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <prog_template>
+        <title>Modelli di progetto</title>
+        <addlink>/struttura/new</addlink>
+        <addtitle>Nuovo modello di progetto</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <prog_template>prog_template</prog_template>
+                </aliasname>
+                <fields>
+                    <idProgTemplate>idProgTemplate</idProgTemplate>
+                    <Nome>Nome</Nome>
+                </fields>
+            </from>
+        </select>
+        <updatecolumns>
+            <idProgTemplate>
+                <hidden>1</hidden>
+            </idProgTemplate>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /struttura/edit/id/{{idProgTemplate}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <Steps>
+                <position>left</position>
+                <title>Steps</title>
+                <decorator>
+                    /struttura/list-steps/id/{{idProgTemplate}}#/images/b-ico-vai.png#Steps
+                </decorator>
+            </Steps>
+        </extracolumns>
+    </prog_template>
+</grids>

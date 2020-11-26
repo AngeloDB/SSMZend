@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <tab_valuta>
+        <title>Valuta</title>
+        <edittitle>Modifica valuta</edittitle>
+        <newtitle>Nuova valuta</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>tab_valute</maintable>
+        <currkey>idTabValuta</currkey>
+        <currsql>SELECT * FROM tab_valute WHERE </currsql>
+        <form>
+            <name>formtabvalute</name>
+            <elements>
+                <idTabValuta>
+                    <type>hidden</type>
+                </idTabValuta>
+                <Nome>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Paese - Valuta</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Nome>
+                <CodAlfa>
+                    <type>text</type>
+                    <label>Codice ISO</label>
+                    <parameters>
+                        <size>3</size>
+                        <maxlen>25</maxlen>
+                    </parameters>
+                </CodAlfa>
+                <Simbolo>
+                    <type>text</type>
+                    <label>Simbolo</label>
+                    <parameters>
+                        <size>8</size>
+                        <maxlen>25</maxlen>
+                    </parameters>
+                </Simbolo>
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </tab_valuta>
+</edits>

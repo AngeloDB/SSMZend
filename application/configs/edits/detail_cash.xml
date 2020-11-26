@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <detail_cash>
+        <title>Cash Detail</title>
+        <edittitle>Cash Detail</edittitle>
+        <newtitle>New Cash Detail</newtitle>
+        <maintable>dual</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <javascript>
+                
+// $(document).ready(function() 
+//  {
+//  });
+
+        </javascript>
+                                  
+        <form>
+            <name>cashdett</name>
+            <elements>
+                <idSpeseMese>
+                    <type>hidden</type>
+                </idSpeseMese>
+                <idProgetto>
+                    <type>hidden</type>
+                </idProgetto>
+                <idRichiesta>
+                    <type>hidden</type>
+                </idRichiesta>
+                <Anno>
+                    <type>hidden</type>
+                </Anno>
+                <Mese>
+                    <type>hidden</type>
+                </Mese>
+                <idTipoSpesa>
+                    <type>select</type>
+                    <label>Tipo spesa</label>
+                    <selsql>
+                        SELECT idTabTipoSpesa AS KeyId, Descrizione AS Value FROM tab_tipospesa
+                    </selsql>
+                </idTipoSpesa>
+                <DescTipoSpesa>
+                    <type>text</type>
+                    <label>Altro tipo spesa</label>
+                    <parameters>
+                        <size>20</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </DescTipoSpesa>
+                <Importo>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Importo</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Importo>
+<!--                <spacer2>
+                    <type>custom</type>
+                    <parameters>
+                        <type> </type>
+                    </parameters>
+                    <label> </label>
+                    <description> </description> 
+                </spacer2>-->
+                <Storno>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Storno</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Storno>
+                <Riferimento>
+                    <type>date</type>
+                    <!--<notempty>true</notempty>-->
+                    <parameters>
+                        <Label>Riferimento spesa</Label>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+               </Riferimento>
+               <Fattura>
+                    <type>text</type>
+                    <label>Fattura</label>
+                    <parameters>
+                        <size>20</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+               </Fattura>
+               <Ordine>
+                    <type>hidden</type>
+<!--                    <label>Order</label>
+                    <parameters>
+                        <size>20</size>
+                        <maxlen>80</maxlen>
+                    </parameters>-->
+               </Ordine>
+<!--                <Conferma>
+                    <type>submit</type>
+                    <label>Conferma</label>
+                </Conferma>-->
+            </elements>
+        </form>
+    </detail_cash>
+</edits>

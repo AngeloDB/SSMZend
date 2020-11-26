@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <utenti>
+        <title>Utenti</title>
+        <addlink>/crud/new/edt/utenti</addlink>
+        <addtitle>Nuovo utente</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <utenti>utenti</utenti>
+                </aliasname>
+                <fields>
+                    <id_utente>id_utente</id_utente>
+                    <nome>nome</nome>
+                    <cognome>cognome</cognome>
+                    <interno>interno</interno>
+                    <cellulare>cellulare</cellulare>
+                    <email>email</email>
+                    <id_userlevel>id_userlevel</id_userlevel>
+                    <note>note</note>
+                </fields>
+            </from>
+            <join id='tab_userlevel'>
+                <cond>tab_userlevel.id_userlevel = utenti.id_userlevel</cond>
+                <aliasname>
+                    <tab_userlevel>tab_userlevel</tab_userlevel>
+                </aliasname>
+                <fields>
+                    <Tipo>Titolo</Tipo>
+                </fields>
+            </join>
+            <join id='login'>
+                <type>left</type>
+                <cond>login.id_utente = utenti.id_utente</cond>
+                <aliasname>
+                    <login>login</login>
+                </aliasname>
+                <fields>
+                    <Username>GROUP_CONCAT(login.username SEPARATOR ", ")</Username>
+                </fields>
+            </join>
+            <group>
+                utenti.id_utente
+            </group>
+            <order>CONCAT(utenti.cognome, utenti.nome)</order>            
+        </select>
+        <updatecolumns>
+            <id_utente>
+                <hidden>1</hidden>
+            </id_utente>
+            <id_userlevel>
+                <hidden>1</hidden>
+            </id_userlevel>
+            <nome>
+                <position>1</position>
+                <title>Nome</title>
+            </nome>
+            <cognome>
+                <position>2</position>
+                <title>Cognome</title>
+            </cognome>
+            <interno>
+                <position>3</position>
+                <title>Interno</title>
+            </interno>
+            <email>
+                <position>4</position>
+                <title>Email</title>
+            </email>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /crud/edit/id/{{id_utente}}/edt/utenti#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </utenti>
+</grids>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <importfile>
+        <title>Import corsi</title>
+        <edittitle>Import corsi</edittitle>
+        <newtitle>Nuovo import corsi</newtitle>
+        <maintable>dual</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <form>
+            <name>formImport</name>
+            <elements>
+                <id>
+                    <type>hidden</type>
+                </id>
+                <csvfile>
+                    <type>simplefile</type>
+                    <label>File</label>
+                    <parameters>
+                        <MultiFile>1</MultiFile>
+                        <Size>2000000</Size>
+                    </parameters>
+                </csvfile>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </importfile>
+</edits>

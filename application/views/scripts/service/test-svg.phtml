@@ -1,0 +1,265 @@
+<style>
+#drawing{
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 90%;
+}
+</style>
+
+<script>    
+
+    getMonths = function(startDate, endDate){
+        var resultList = [];
+        var date = new Date(startDate.getTime());
+//        var endDate = new Date(endDate);
+        var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        while (date <= endDate)
+        {
+            var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+
+            //get first and last day of month
+            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            resultList.push({
+                month:monthNameList[date.getMonth()],
+                year:date.getFullYear(),
+                str:stringDate,
+                first:firstDay,
+                last:lastDay,
+            });
+            date.setMonth(date.getMonth() + 1);
+        }
+        return resultList;
+    }
+    
+    var draw;
+    var startPeriod = new Date(2018, 0, 1);
+    var endPeriod = new Date(2022, 0, 1);
+    var visMode = 'Months';
+    var rows = [];
+    var columns = [];
+//    var modeButton;
+
+
+function redraw() {
+    draw.clear();
+    columns = [];
+    rows = [];
+    var drawHeight = $("#drawing").height();
+    var drawWidth = $("#drawing").width();
+    var titleHeight = 50;
+    var textMargin = 2;
+    var gridMargin = 5;
+    var gridTitle1Height = 15;
+    var gridTitle2Height = 15;
+    var gridLabel = 300;
+    var gridRow = 25;
+    var gridStartY = titleHeight + gridMargin;
+    var gridStartX = gridMargin;
+    var gridHeight = drawHeight -titleHeight -(gridMargin*2);
+    var gridWidth = drawWidth - (gridMargin * 2);
+    var gridCol = 35;
+
+    // Grid container
+    draw.rect(gridWidth, gridHeight).x(gridStartX).y(gridStartY)
+            .stroke({ color: '#000', opacity: 0.6, width: 0.5 }).fill('none');
+    // Title
+    draw.line(0, titleHeight, drawWidth, titleHeight)
+            .stroke({ color: '#000', opacity: 0.6, width: 0.5 });
+//    text.tspan("Meno  Giorni  Più").x(textMargin)
+//            .y(titleHeight-textMargin);
+
+    draw.image(baseUrl+'/images/arrow-left.png', 
+                titleHeight - gridMargin,
+                titleHeight - gridMargin)
+         .x(gridMargin).y(0)
+         .click(function() {
+              goLeft();
+            });
+
+    var modeButton = draw.text("")
+            .tspan(visMode).x(titleHeight)
+            .y(titleHeight-gridMargin*2)
+            .click(function() {
+              switchMode(visMode);
+            });
+
+    draw.image(baseUrl+'/images/arrow-right.png', 
+                titleHeight - gridMargin,
+                titleHeight - gridMargin)
+         .x(drawWidth-titleHeight).y(0)
+         .click(function() {
+              goRight();
+            });
+    
+    var text = draw.text("");
+    text.build(true);
+    text.tspan("Anno").x(gridMargin+textMargin)
+            .y(gridStartY+gridTitle1Height-textMargin);
+    text.tspan("Mesi").x(gridMargin+textMargin)
+            .y(gridStartY+gridTitle1Height+gridTitle2Height-textMargin);
+     // Grid titles separator
+    draw.line(gridStartX+gridLabel, gridStartY+gridTitle1Height, 
+                gridStartX+gridWidth, gridStartY+gridTitle1Height)
+            .stroke({ color: '#000', opacity: 0.6, width: 0.6 });
+    draw.line(gridStartX, gridStartY+gridTitle1Height+gridTitle2Height, 
+                gridStartX+gridWidth, gridStartY+gridTitle1Height+gridTitle2Height)
+            .stroke({ color: '#000', opacity: 0.6, width: 1 });
+    // Grid label separator
+    draw.line(gridStartX+gridLabel, gridStartY, gridStartX+gridLabel, 
+                gridStartY+gridHeight)
+            .stroke({ color: '#000', opacity: 0.6, width: 1 });
+    // Grid rows lines
+    var j=0;
+    for(var i=gridStartY+gridTitle1Height+gridTitle2Height+gridRow; i<gridStartY+gridHeight; i+=gridRow)
+        {
+        draw.line(gridStartX, i, gridStartX+gridWidth, i)
+                .stroke({ color: '#000', opacity: 0.6, width: 0.5 });
+        rows.push({
+            order: j++,
+            position: i,
+            label: "Label "+j
+            });
+        }
+    // Grid rows labels 
+    var maxRows = rows.length;
+    rows.forEach(function(row,i){
+        text.tspan(row.label).x(gridMargin+textMargin).y(row.position-textMargin);
+        });
+    // Grid column lines months
+    for(var i=gridStartX+gridMargin+gridLabel+gridCol; i<gridStartX+gridWidth; i+=gridCol)
+        {
+        draw.line(i, gridStartY+gridTitle1Height, i, gridStartY+gridHeight)
+                .stroke({ color: '#000', opacity: 0.6, width: 0.3 });
+        columns.push({
+            position: i,
+            label: "",
+            year: "",
+            month: "",
+            day: ""
+            });
+        }
+    var maxCols = columns.length;
+    var mos = getMonths(startPeriod, endPeriod);
+
+    if(visMode == 'Months')
+        {
+        // Months
+        columns.forEach(function(col,i){
+            columns[i].year = mos[i].year;
+            columns[i].month = mos[i].month;
+            columns[i].day = 1;
+            text.tspan(mos[i].month).x(col.position+gridStartX-gridCol)
+                    .y(gridStartY+gridTitle1Height+gridTitle2Height-textMargin);
+            if(mos[i].month == "Jan"){
+                text.tspan(mos[i].year).x(col.position+gridStartX-gridCol)
+                        .y(gridStartY+gridTitle1Height-textMargin);
+                draw.line(col.position-gridCol, gridStartY, col.position-gridCol, gridStartY+gridHeight)
+                        .stroke({ color: '#000', opacity: 0.6, width: 0.6 });
+                }        
+            });
+        }
+    else
+        {
+        // Days
+        var currDay = 1;
+        var currMonth = 0;
+        columns.forEach(function(col,i){
+            columns[i].year = mos[i].year;
+            columns[i].month = mos[i].month;
+            columns[i].day = currDay;
+            text.tspan(currDay).x(col.position+gridStartX-gridCol)
+                    .y(gridStartY+gridTitle1Height+gridTitle2Height-textMargin);
+            if(currDay == 1){
+                text.tspan(mos[currMonth].month + ' ' +mos[currMonth].year)
+                        .x(col.position+gridStartX-gridCol)
+                        .y(gridStartY+gridTitle1Height-textMargin);
+                draw.line(col.position-gridCol, gridStartY, col.position-gridCol, gridStartY+gridHeight)
+                        .stroke({ color: '#000', opacity: 0.6, width: 0.6 });
+                }        
+            currDay++;
+            if(currDay > mos[currMonth].last.getDate()){
+                currMonth++;
+                currDay = 1;
+                }            
+            });
+        }    
+    draw.rect(gridCol, gridRow).x(columns[0].position-gridCol).y(rows[0].position-gridRow)
+            .stroke({ color: '#000', opacity: 0.6, width: 0.5 }).fill('#f06');
+    draw.rect(gridCol, gridRow).x(columns[4].position-gridCol).y(rows[7].position-gridRow)
+            .stroke({ color: '#000', opacity: 0.6, width: 0.5 }).fill('#00ff66');
+    }
+
+    
+    function goRight() {
+        startPeriod = new Date(startPeriod.setMonth(startPeriod.getMonth()+1));
+        endPeriod = new Date(endPeriod.setMonth(endPeriod.getMonth()+1));
+        redraw();
+    }
+    
+    function goLeft() {
+        startPeriod = new Date(startPeriod.setMonth(startPeriod.getMonth()-1));
+        endPeriod = new Date(endPeriod.setMonth(endPeriod.getMonth()-1));
+        redraw();
+    }
+    
+    function switchMode(currMode) {
+        if(currMode == 'Months') {
+            visMode = 'Days';
+            }
+        else {    
+            visMode = 'Months';
+            }            
+        redraw();
+    }
+
+
+    $(function () {
+    // initialize SVG.js
+    draw = SVG('drawing');
+    redraw();
+    });
+    
+    
+    
+    
+
+//    var getMonths = function(startDate, endDate){
+//        var resultList = [];
+//        var date = new Date(startDate);
+//        var endDate = new Date(endDate);
+//        var monthNameList = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+//
+//        while (date <= endDate)
+//        {
+//            var stringDate = monthNameList[date.getMonth()] + " " + date.getFullYear();
+//
+//            //get first and last day of month
+//            var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+//            var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+//
+//            resultList.push({
+//                month:monthNameList[date.getMonth()],
+//                year:date.getFullYear(),
+//                str:stringDate,
+//                first:firstDay,
+//                last:lastDay,
+//            });
+//            date.setMonth(date.getMonth() + 1);
+//        }
+//
+//        return resultList;
+//    };
+//
+    
+    
+    
+</script>
+
+<!--<div id="divMonths">
+    <span>Meno</span>
+    <span>Più</span>
+</div>-->
+<div id="drawing"></div>

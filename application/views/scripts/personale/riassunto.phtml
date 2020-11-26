@@ -1,0 +1,249 @@
+<?php
+    $translate = Zend_Registry::get('translate');
+    $ggStampa = $this->baseUrl().'/dashboard/print/id/'.$this->currPers['idPersonale']; 
+?>
+<script>    
+    $(function () {
+//        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Print", "<?php echo $ggStampa; ?>", "r");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Close", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+
+    var firstPass = 1;
+    
+    $(document).ready(function()
+    {
+        var ganttData = <?php echo $this->ganttData; ?> ;
+
+        $("#newstab").tabs({activate: function(event, ui) 
+            {
+            if(firstPass == 1)
+                {
+                firstPass = 0;
+                $(".gantt").gantt({source: ganttData, 
+                    itemsPerPage: 15, 
+                    navigate: 'scroll',
+                    scale: 'months', 
+                    maxScale: 'months', 
+                    minScale: 'days'});
+//                    onAddClick: function (data) { alert('Hey!');return; },
+                }
+            }
+        });
+        
+        $("#RotateImg").click(function() {
+            rotateImgPers();
+        });
+        
+        $('#cropbox').Jcrop(
+                {
+                    onChange: showCoords,
+                    onSelect: showCoords,
+//                    aspectRatio: 0.7734375
+                }, function() {
+            jcrop_api = this;
+            bounds = jcrop_api.getBounds();
+            boundx = bounds[0];
+            boundy = bounds[1];
+
+        });
+        
+        $("#prova1").click(function(){
+            alert('Here!');
+        });
+        
+        $("#CurrAllegato").val("<?php echo $this->currPers['Allegato']; ?>");
+        $("#CurrStoreName").val("<?php echo $this->currPers['StoreName']; ?>");
+        $("#CurrIdAllegato").val("<?php echo $this->currPers['idAllegato']; ?>");
+        $("#CurrImgHeight").val($("#cropbox").height());
+        $("#CurrImgWidth").val($("#cropbox").width());
+        $("#NaturalImgHeight").val($("#cropbox").get(0).naturalHeight);
+        $("#NaturalImgWidth").val($("#cropbox").get(0).naturalWidth);
+        $("#CurrImgRotation").val("0");
+        });
+    //	function showPreview(coords)
+    //	{
+    //		
+    //	};
+    // Simple event handler, called from onChange and onSelect
+    // event handlers, as per the Jcrop invocation above
+    function showCoords(c)
+        {
+        $('#x1').val(c.x);
+        $('#y1').val(c.y);
+        $('#x2').val(c.x2);
+        $('#y2').val(c.y2);
+        $('#w').val(c.w);
+        $('#h').val(c.h);
+        };
+
+    function rotateImgPers()
+        {
+        $("#CurrImgRotation").val((90+parseInt($("#CurrImgRotation").val())) % 360);    
+        $("#persImg").rotate(parseInt($("#CurrImgRotation").val()));
+        }
+            
+    function testPrint()
+        {
+        $('#outGantt').attr('value', $("#view-content").html());
+        $("#printForm").submit();
+        }
+
+
+
+</script>
+<?php //echo $this->render('/personale/index.phtml'); ?>
+<?php
+echo $this->js1;
+echo $this->js2;
+echo $this->js3;
+echo $this->js4;
+
+$params = array('title' => 'Operazione',
+    'autoOpen' => false,
+    'modal' => true,
+    'width' => 800,
+    'height' => 460,
+    'z-index' => 100);
+
+$formExitStart = '<div style="float: right">
+            <form name="exitForm" action="' . $this->baseUrl() .
+        '/personale/list/mode/'.$this->listMode.'" method="POST">
+                <button name="esci" type="submit"';
+
+$formExitEnd = '> <img src="' . $this->baseUrl() . '/images/nao.png" title="Close"
+                    alt="Close">    
+Close
+                </button>
+            </form>
+        </div>';
+
+$formExit1 = $formExitStart . $formExitEnd;
+
+echo '<div id="form">';
+if ($this->readonly)
+    {
+    $roWarning = '
+<div id="readonlyExit" style="width: 100%">
+    <div style="float: left">
+        <h3>Sola lettura, non si può più modificare</h3>
+    </div>' . $formExit1 .
+'</div>
+<div class="clear"></div>';
+    $pubWarning = '';
+    }
+else
+    {
+    $roWarning = '
+<div id="readonlyExit" style="width: 100%">
+    <div style="float: left"></div>' . $formExit1 .
+            '</div></br></br>';
+    }
+
+$riass = '';
+
+$baseAddress = 'http://'.$_SERVER['HTTP_HOST'].$this->baseUrl();
+
+$this->persScheda = '
+<div class="buttonLike">
+<a href="'.$this->baseUrl().'/personale/print/id/'.$this->currPers['idPersonale'].'">Print PDF</a>
+</div>
+<div class="buttonLike">
+<a href="'.$this->baseUrl().'/personale/print-jpeg/id/'.$this->currPers['idPersonale'].'">Print JPEG</a>
+</div>
+<div style="position:relative; min-height: 280px;" >
+  <div style="float:left; width: 170px; height: 200px; margin: 10px; background-color: #ff0000;"> 
+     <img style="width: 170px; height: 200px;" src="/public/uploads/' . $this->currPers['Allegato'] . 
+        '" id = "foto">
+  </div>
+  <h3>
+  <br>
+<ul>
+<li>'.$this->currPers['Nome'].' '.$this->currPers['Cognome'].
+'</li><li>'.$this->currPers['Qualifica'].
+'</li><li>Email: '.$this->currPers['Email'].
+'</li><li>Email 2:'.$this->currPers['Email'].
+'</li><li>Tel: '.$this->currPers['TelMobile'].
+'</li><li>Tel 2: '.$this->currPers['TelMobileLocal'].
+'</li><li>Company: '.$this->currPers['RagSoc'].
+'</li></ul>
+    </h3>
+<div style "width:100%; position: absolute; height: 20px; border: none; bottom: 0; right: 0;  left: 0; ">
+';
+if($this->precPersId > 0)
+    {
+    $this->persScheda .= '<a href="'.$baseAddress.'/personale/riassunto/id/'.
+            $this->precPersId.'/seltab/0"><img src="'.$this->baseUrl().'/images/back.png" alt="<--"></a>';
+    }
+else
+    {
+    $this->persScheda .= '<img src="'.$this->baseUrl().'/images/back-dis.png" alt="<--" '.
+            "onClick=\"alert('Nessuna scheda precedente!')\">";
+    }    
+if($this->nextPersId > 0)
+    {
+    $this->persScheda .= '<a href="'.$baseAddress.'/personale/riassunto/id/'.
+            $this->nextPersId.'/seltab/0"><img src="'.$this->baseUrl().'/images/forward.png" alt="-->"></a>';
+    }
+else
+    {
+    $this->persScheda .= '<img src="'.$this->baseUrl().'/images/forward-dis.png" alt="<--" '.
+            "onClick=\"alert('Nessuna scheda successiva!')\">";
+    }    
+$this->persScheda .= "\n</div></div>\n";
+
+$this->persFoto = '<div style="min-height: 450px;">
+    <div id="persImg" style="display: inline; max-height: 400px; max-width: 300px; position: relative; float: left; margin-right: 60px; margin-left: 60px">
+        <img src="'.$this->baseUrl().'/uploads/' . $this->currPers['Allegato']. '"
+         id = "cropbox"  style="max-height: 400px; max-width: 300px;">
+    </div>
+    <div id="form" style="margin-left: 50px; display: inline; width: 700px; position: relative; align: top;">'.$this->fotoForm.'
+    </div>                    
+</div>';
+
+
+$this->visaGrid = '
+<div>    
+<div class="buttonLike">
+<a href="'.$this->visaAddLink.'">'.$this->visaAddLabel.'</a>
+</div>
+</div>
+<div style="width:100%; ">'.$this->visaGrid.'</div>';
+
+$this->rateGrid = '
+<div>    
+<div class="buttonLike">
+<a href="'.$this->rateAddLink.'">'.$this->rateAddLabel.'</a>
+</div>
+</div>
+<div style="width:100%; ">'.$this->rateGrid.'</div>';
+
+$this->storyGrid = '
+<div style="width:100%; ">'.$this->storyGrid.'</div>';
+
+$this->gantt1 = '
+<div class="buttonLike">
+<a href="#" id="testPrint" onClick="testPrint();">Print</a>
+<form id="printForm" name="printForm" action="' . $this->baseUrl() .
+    '/personale/print-gantt' . '" method="POST" title="Close" alt="Close">
+<input type="hidden" name="outgantt" id="outGantt"/>
+</form>
+</div>
+<div id="view-content">
+<div class="gantt">a</div>
+</div>';
+
+$spacer = "<br><br><br><br><br><br><br><br><br><br>&nbsp;";
+
+$this->tabPane("newstab", $roWarning . $this->persScheda, array('title' => $translate->_('Scheda')));
+$this->tabPane("newstab", $roWarning . $this->persForm1 . $spacer, array('title' => $translate->_('Generale')));
+$this->tabPane("newstab", $roWarning . $this->persForm2 . $spacer, array('title' => $translate->_('Personale')));
+$this->tabPane("newstab", $roWarning . $this->persFoto, array('title' => $translate->_('Fototessera')));
+$this->tabPane("newstab", $roWarning . $this->passForm . $spacer, array('title' => $translate->_('Passaporto')));  // . $this->form
+$this->tabPane("newstab", $roWarning . $this->visaGrid, array('title' => $translate->_('Visti')));
+$this->tabPane("newstab", $roWarning . $this->rateGrid, array('title' => 'Rates'));
+$this->tabPane("newstab", $roWarning . $this->storyGrid, array('title' => 'Jobs List'));
+$this->tabPane("newstab", $roWarning . $this->gantt1, array('title' => 'Jobs Plan'));
+
+echo $this->tabContainer("newstab", array("activate" => "function(event, ui) {}",
+            'selected' => $this->currTab), array('class' => 'tundra'));
+echo '</div>';

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <valuta>
+        <title>Qualifiche</title>
+        <edittitle>Modifica valuta</edittitle>
+        <newtitle>Nuova valuta</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>valute</maintable>
+        <currkey>idValuta</currkey>
+        <currsql>SELECT * FROM valute WHERE </currsql>
+        <form>
+            <name>formvalute</name>
+            <elements>
+                <idValuta>
+                    <type>hidden</type>
+                </idValuta>
+                <Country_Currency>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Paese - Valuta</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Country_Currency>
+                <Currency_Code>
+                    <type>text</type>
+                    <label>Codice ISO</label>
+                    <parameters>
+                        <size>3</size>
+                        <maxlen>25</maxlen>
+                    </parameters>
+                </Currency_Code>
+                <Font_Arial_Unicode_MS>
+                    <type>text</type>
+                    <label>Simbolo</label>
+                    <parameters>
+                        <size>8</size>
+                        <maxlen>25</maxlen>
+                    </parameters>
+                </Font_Arial_Unicode_MS>
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </valuta>
+</edits>

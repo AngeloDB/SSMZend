@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <inv_service>
+        <title>Servizi da fatturare</title>
+        <edittitle>Modifica servizio da fatturare</edittitle>
+        <newtitle>Nuovo servizio da fatturare</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>tab_contr_md</maintable>
+        <currkey>IdTabContrMd</currkey>
+        <currsql>SELECT * FROM tab_contr_md WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>forminvserv</name>
+            <elements>
+                <IdTabContrMd>
+                    <type>hidden</type>
+                </IdTabContrMd>
+                <Opzione>
+                    <type>text</type>
+                    <label>Opzione</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Opzione>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </inv_service>
+</edits>

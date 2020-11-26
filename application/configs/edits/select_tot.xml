@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <select_tot>
+        <title>Totals</title>
+        <edittitle>Totals</edittitle>
+        <newtitle>New Total</newtitle>
+        <maintable>dual</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <javascript>
+                
+$(document).ready(function() 
+  {
+    $.localise("ui.multiselect", 
+                {language: "en", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+//    $('#idMultiCamp option').prop('selected', true);
+
+    $("#idMultiJobs").multiselect({
+//        multiple: true,
+        noneSelectedText: 'Jobs (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No job.',
+        selectedText: '# jobs have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiQual").multiselect({
+//        multiple: true,
+        noneSelectedText: 'Qualifications (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No qualification.',
+        selectedText: '# Qualifications have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiSearch").multiselect({
+//        multiple: true,
+        noneSelectedText: 'Search modes (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No search mode.',
+        selectedText: '# Search modes have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiPW").multiselect({
+//        multiple: true,
+        noneSelectedText: 'Search modes (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No search mode.',
+        selectedText: '# Search modes have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+            
+//    setMulti($("#idMultiJobs"));
+//    setMulti($("#idMultiQual"));
+//    setMulti($("#idMultiMode"));
+//    setMulti($("#idMultiPW"));
+
+  });  
+
+            
+function setMulti(currId)
+    {
+    currId.multiselect({
+        multiple: true,
+//        header: '(info: Select search mode(s)).',
+        noneSelectedText: 'Search modes (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Uncheck',
+        noneSelectedText: 'No search mode.',
+        selectedText: '# Search modes have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+        }).multiselectfilter({
+            label: "Filter:",
+            placeholder: "search"
+        });
+    }            
+            
+        </javascript>
+        <form>
+            <name>seltotals</name>
+            <elements>
+                <id>
+                    <type>hidden</type>
+                </id>
+                <Days>
+                    <type>checkbox</type>
+                    <label>Days</label>
+                </Days>
+                <idMultiJobs>
+                    <type>multiselect</type>
+                    <label>Jobs</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+                    </selsql>
+                    <aiuto>Select all required jobs</aiuto>                
+                </idMultiJobs>                               
+                <idMultiQual>
+                    <type>multiselect</type>
+                    <label>Qualifications</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idQualifica AS KeyId, Descrizione AS Value 
+                        FROM qualifiche 
+                        ORDER BY Descrizione
+                    </selsql>
+                    <aiuto>Select all required qualifications</aiuto>                
+                </idMultiQual>                               
+                <idMultiSearch>
+                    <type>multiselect</type>
+                    <notempty>true</notempty>
+                    <label>Search Mode</label>
+                    <selsql>
+                        SELECT           "MCpw"      AS KeyId, "Contract Paul Wurth"       AS Value 
+                        UNION ALL SELECT "MCvend"    AS KeyId, "Contract Vendor"           AS Value
+                        UNION ALL SELECT "MCnotAss"  AS KeyId, "Contract Not Assigned"     AS Value
+                        UNION ALL SELECT "MCcons"    AS KeyId, "Contract Consultants"      AS Value
+                        UNION ALL SELECT "pwoe"      AS KeyId, "Paul Wurth Other Entities" AS Value
+                        UNION ALL SELECT "vend"      AS KeyId, "Other Vendor"              AS Value
+                        UNION ALL SELECT "pwPartner" AS KeyId, "Paul Wurth Partner"        AS Value
+                            FROM contratti
+                            ORDER BY KeyId
+                    </selsql>
+                    <aiuto>Select all required search modes</aiuto>                
+                </idMultiSearch>
+                <idMultiPW>
+                    <type>multiselect</type>
+                    <notempty>true</notempty>
+                    <label>Search Mode</label>
+                    <selsql>
+                        SELECT idContratto AS KeyId, 
+                               CONCAT(Sigla, " ", Contratto) AS Value 
+                        FROM contratti
+                        ORDER BY Sigla, Contratto
+                    </selsql>
+                    <aiuto>Select all required qualifications</aiuto>                
+                </idMultiPW>                               
+                <startDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Start</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </startDate>                               
+                <endDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>End</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </endDate>                               
+<!--                <AnnoIn>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Start Year</label>
+                    <values>
+                        <value id="2010" elem="2010"></value>
+                        <value id="2011" elem="2011"></value>
+                        <value id="2012" elem="2012"></value>
+                        <value id="2013" elem="2013"></value>
+                        <value id="2014" elem="2014"></value>
+                        <value id="2015" elem="2015"></value>
+                        <value id="2016" elem="2016"></value>
+                        <value id="2017" elem="2017"></value>
+                        <value id="2018" elem="2018"></value>
+                        <value id="2019" elem="2019"></value>
+                        <value id="2020" elem="2020"></value>
+                        <value id="2021" elem="2021"></value>
+                        <value id="2022" elem="2022"></value>
+                        <value id="2023" elem="2023"></value>
+                        <value id="2024" elem="2024"></value>
+                        <value id="2025" elem="2025"></value>
+                    </values>
+                </AnnoIn>
+                <MeseIn>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Start Month</label>
+                    <values>
+                        <value id="01" elem="01"></value>
+                        <value id="02" elem="02"></value>
+                        <value id="03" elem="03"></value>
+                        <value id="04" elem="04"></value>
+                        <value id="05" elem="05"></value>
+                        <value id="06" elem="06"></value>
+                        <value id="07" elem="07"></value>
+                        <value id="08" elem="08"></value>
+                        <value id="09" elem="09"></value>
+                        <value id="10" elem="10"></value>
+                        <value id="11" elem="11"></value>
+                        <value id="12" elem="12"></value>
+                    </values>
+                </MeseIn>
+                <AnnoFi>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>End Year</label>
+                    <values>
+                        <value id="2010" elem="2010"></value>
+                        <value id="2011" elem="2011"></value>
+                        <value id="2012" elem="2012"></value>
+                        <value id="2013" elem="2013"></value>
+                        <value id="2014" elem="2014"></value>
+                        <value id="2015" elem="2015"></value>
+                        <value id="2016" elem="2016"></value>
+                        <value id="2017" elem="2017"></value>
+                        <value id="2018" elem="2018"></value>
+                        <value id="2019" elem="2019"></value>
+                        <value id="2020" elem="2020"></value>
+                        <value id="2021" elem="2021"></value>
+                        <value id="2022" elem="2022"></value>
+                        <value id="2023" elem="2023"></value>
+                        <value id="2024" elem="2024"></value>
+                        <value id="2025" elem="2025"></value>
+                    </values>
+                </AnnoFi>
+                <MeseFi>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>End Month</label>
+                    <values>
+                        <value id="01" elem="01"></value>
+                        <value id="02" elem="02"></value>
+                        <value id="03" elem="03"></value>
+                        <value id="04" elem="04"></value>
+                        <value id="05" elem="05"></value>
+                        <value id="06" elem="06"></value>
+                        <value id="07" elem="07"></value>
+                        <value id="08" elem="08"></value>
+                        <value id="09" elem="09"></value>
+                        <value id="10" elem="10"></value>
+                        <value id="11" elem="11"></value>
+                        <value id="12" elem="12"></value>
+                    </values>
+                </MeseFi>-->
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </select_tot>
+</edits>

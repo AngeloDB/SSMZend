@@ -1,0 +1,159 @@
+<style>
+    .chartTitleClass {
+        background: #FFFFFF;
+    }
+
+    #visualization {
+        box-sizing: border-box;
+        width: 100%;
+        height: 600px;
+      }
+
+    .timeline-time-axis{
+        background: white;
+      }
+    .timeline-odd {
+        background-color: #e3e3e3;
+      }
+    .timeline-even {
+        background-color: white;
+      }
+    .timeline-labelset .timeline-label{
+        background-color: white;
+      }
+/*    .timeline-panel .timeline-background{
+        background-color: #e3e3e3;
+      }*/
+</style>
+
+<div id="buttons_wrapper" style="width: 98%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="printIt" class="buttonLike">
+                <a href= "javascript: toggleTitle();">Title</a>
+            </div>
+            <div id="printIt" class="buttonLike">
+                <a href= "javascript: printIt();">Print</a>
+            </div>
+            <div id="backWorld" class="buttonLike">
+                <a href= "javascript:history.back()">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toPrint"> 
+    <h3>
+        <div id="chartTitle" class="chartTitleClass">
+<?php echo implode('<br>',$this->titles); ?> 
+        </div>        
+    </h3>            
+<div id="visualization"></div>
+</div>        
+
+
+
+<?php
+//    echo $this->inlineScript()->prependFile($this->baseUrl().'/bower_components/moment/min/moment.min.js')
+//                              ->prependFile($this->baseUrl().'/bower_components/vis/dist/vis.js')
+
+    echo $this->inlineScript()->prependFile($this->baseUrl().'/node_modules/moment/min/moment.min.js')
+                              ->prependFile($this->baseUrl().'/node_modules/timeline-plus/dist/timeline.min.js')
+                              ->prependFile($this->baseUrl().'/bower_components/print-this/print-this.js');
+
+?>
+
+
+<script>
+    var now = moment().minutes(0).seconds(0).milliseconds(0);
+    var itemCount = 60;
+    // create a data set with groups
+    var groups = new timeline.DataSet();
+    var items = new timeline.DataSet();
+<?php echo $this->resVis;?>    
+    
+   // create visualization
+    var container = document.getElementById('visualization');
+    var options = {
+    zoomMin: 864000000,    
+    zoomMax: 315569520000, 
+    zoomKey: 'ctrlKey',
+    zoomable: true,
+    groupOrder: 'content',  // groupOrder can be a property name or a sorting function
+    maxHeight: '600px',
+    verticalScroll: false,
+    horizontalScroll: false,
+    cluster: false,
+    stack: false,
+    stackSubgroups: true,
+    margin: {
+        item : {
+            horizontal : 0
+            }
+        }
+    };
+    var timeline = new timeline.Timeline(container, items, groups, options);
+    
+    $(document).keypress(function(e) {
+      if(e.which == 39) {
+        // right pressed
+        }
+      if(e.which == 37) {
+        // left pressed
+        }
+      if(e.which == 38) {
+        // up pressed
+        }
+      if(e.which == 40) {
+        // down pressed
+        }
+      if(e.which == 107 || e.which == 171) {
+        // + pressed
+        }
+      if(e.which == 109 || e.which == 173) {
+        // - pressed
+        }
+      if(e.which == 33) {
+        // pgup pressed
+        }
+      if(e.which == 34) {
+        // pgdown pressed
+        }
+    });
+
+function printIt()
+    {
+    var options = {
+        debug: false,               // show the iframe for debugging
+        importCSS: true,            // import parent page css
+        importStyle: true,         // import style tags
+        printContainer: false,       // print outer container/$.selector
+        loadCSS: <?php echo "[\"".$this->baseUrl().'/styles/styles.css'."\", ".
+                            "\"".$this->baseUrl().'/node_modules/timeline-plus/dist/timeline.min.css'."\", ".
+                            "\"".$this->baseUrl().'/styles/giorni_lav_grid.css'."\", ".     
+                            "\"".$this->baseUrl().'/styles/style-print-timeline.css'."\"]"; ?> , 
+        pageTitle: $('#chartTitle').html(),              // add title to print page
+        removeInline: false,        // remove inline styles from print elements
+        removeInlineSelector: "",  // custom selectors to filter inline styles. removeInline must be true
+        printDelay: 999,            // variable print delay
+        header: null,               // prefix to html
+        footer: null,               // postfix to html
+        base: false,                // preserve the BASE tag or accept a string for the URL
+        formValues: true,           // preserve input/form values
+        canvas: false,              // copy canvas content
+        doctypeString: '',       // enter a different doctype for older markup
+        removeScripts: false,       // remove script tags from print content
+        copyTagClasses: true,      // copy classes from the html & body tag
+        beforePrintEvent: null,     // function for printEvent in iframe
+        beforePrint: null,          // function called before iframe is filled
+        afterPrint: null            // function called before iframe is removed
+        };    
+    $('#visualization').printThis(options);
+    }
+
+function toggleTitle()
+    {
+    $('#chartTitle').toggle();
+    }
+</script>
+

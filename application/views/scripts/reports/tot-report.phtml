@@ -1,0 +1,143 @@
+<?php
+if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == "edit")
+    {
+    $ggStampa = '/public/' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName() . "/print/id/" . Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
+    }
+?>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+
+//        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Stampa", "<?php // echo $ggStampa; ?>", "l");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+
+        $('#expMs-Excel2').click(function(){callExcel()});
+        $('#expPDF').click(function(){callPdf(); });
+        $('#expGraph').click(function(){callTotGraph(); });
+
+    });
+    
+            
+    function callExcel()
+        {
+//        saveAll();
+        $('#outTotExcel').attr('value', saveGrid());            
+//        $('#excelForm').attr('action', '/public/out-excel/out-sheet');
+//        $('#excelForm').attr('target', '');
+        $("#exitForm").submit();
+        }
+
+    function callPdf()
+        {
+//        saveAll();
+        $('#outTotExcel').attr('value', saveGrid());            
+        $('#exitForm').attr('action', '/public/reports/print-sheet');
+//        $('#excelForm').attr('target', '');
+        $("#exitForm").submit();
+        }
+        
+    function callTotGraph(mode, tot)
+        {
+        $('#outTotExcel').attr('value', saveGrid());            
+        $('#exitForm').attr('action', '/public/reports/tot-rep-graph');
+        $("#exitForm").submit();
+        }
+        
+    function saveGrid()
+        {
+        var data = Array();
+        data[0] = Array();
+        var rowCount = 0;
+        $('#totGrid').find('thead tr').children('th').each(function(i)
+            {
+            data[0][i] = $(this).text();
+            });
+        rowCount ++;
+        var bodyStart = rowCount;
+        $('#totGrid').find('tbody tr').each(function (i, v) 
+            {
+            data[i + bodyStart] = Array();
+            $(this).children('td').each(function (ii, vv) 
+                {
+                data[i +  bodyStart][ii] = $(this).text();
+                });
+            rowCount++;    
+            });
+        $('#totGrid').find('tfoot tr').each(function (i, v) 
+            {
+            data[i + rowCount] = Array();
+            $(this).children('td').each(function (ii, vv) 
+                {
+                data[i + rowCount][ii] = $(this).text();
+                });
+            });
+        return JSON.stringify(data);
+        }
+
+    function saveAll()
+        {
+        $('#outGGLav').attr('value', saveGrid());
+        $('#outGGLavTot').attr('value', saveTot());            
+        $('#outGGLavTotContr').attr('value', saveInvTot());            
+        $('#outGGLavAllTot').attr('value', calcAllRates());            
+        $('#outGGLavTotValGrid').attr('value', JSON.stringify(valGrid));            
+        $('#outStatus').attr('value', saveStatus());
+        }
+    
+    
+</script>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li>
+            <a href="#GGtabs-1">
+                <?php echo $this->formTitle; ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+        <div id="form">
+            <?php echo $this->form; ?>
+        </div>
+        <!--<div id="HeaderPlanning" class="headPlan">-->
+            <div id="HeaderPlanning-1">
+                <form id="exitForm" name="exitForm"
+                <?php
+                echo ' action="'.$this->baseUrl().'/reports/out-excel' . '" ';
+                ?>
+                       method="POST">
+            <?php if($this->totGrid != '') { ?>    
+                <div id="buttons_wrapper" style="width: 100%; overflow: hidden; ">
+                    <div id="buttons_content">
+                        <div class="dropdown">
+                            <button type="button" id="outExcel" class="dropbtn">Export</button>
+                            <div class="dropdown-content">
+                                <a href="#" id="expMs-Excel2">Ms-Excel</a>
+                                <!--<a href="#" id="expMs-Excel2-T">Ms-Excel+Totals</a>-->
+                                <a href="#" id="expPDF">PDF</a>                    
+                                <a href="#" id="expGraph">Total Graphs</a>                    
+                                <!--<a href="#" id="expPDF-T">PDF+Totals</a>-->                    
+                            </div>
+                        </div>
+                        <span style="margin-left: 55px; display: inline;">&nbsp;</span>
+                        <input type="hidden" name="outTotExcel" id="outTotExcel" value="" style="display: inline;"/>
+                        <div style="float: right; display: inline;">
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>    
+                </form>
+            </div>
+        <!--</div>-->
+        <div id="parentSheet" class="parentGrid">
+            <div id="spreadSheet" class="mainGridPos">        
+                <?php echo $this->totGrid; ?>    
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</br>
+</br>
+</br>

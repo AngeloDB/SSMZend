@@ -1,0 +1,100 @@
+@charset "utf-8";
+/* CSS Document */
+BODY, DIV, TABLE, THEAD, TBODY, TFOOT, TR, TH, TD, P {
+	"Times New Roman", Courier, Garamond, serif;
+	font-size:8pt;
+	margin: 0mm;
+	padding: 0mm;
+	vertical-align: top;
+}
+table {
+	border-collapse: collapse;
+	margin:0mm;
+	padding:0mm;
+}
+td {
+	padding: 1mm;
+	margin:0px;
+	vertical-align: top;
+}
+td.titoliAllegati{
+	font-size: 6mm;
+    font-style: italic;
+    font-weight: bold;
+    color: #000;
+    text-align:center;
+	vertical-align: middle;
+    border: 0.2mm solid black;
+}
+td.titoliheader, td.titoli, td.titoliminuscolo, td.stitoli, td.titoli2, td.titoli2left, td.titoli3, td.titoli3left {
+	font-size: 3mm;
+	font-style: italic;
+	font-weight: bold;
+	color: #000;
+	text-align:center;
+	border: 0.1mm solid black;
+	vertical-align:top;
+}
+td.titoliheader { background-color: #CFC; }
+td.titoli {
+	background-color: #CFC;
+	text-transform: uppercase;
+}
+td.titoliminuscolo {
+	background-color: #CFC;
+}
+td.stitoli { border: 0.1mm solid black; }
+td.titoli2 {
+	background-color: #FFFF99;
+	text-transform: uppercase;
+}
+td.titoli2left, td.titoli3left {
+	text-align: left;
+	background-color: #FFFF99;
+	font-size:1.0em;
+	font-weight: normal;
+	font-style: normal;
+}
+td.titoli3left {
+	background-color: #fff;
+}
+td.stitoli3 {
+	background-color: #71FFFF;
+	border: 0.1mm solid black;
+}
+td.titoli4 {
+    font-size: 7pt;
+	font-style: italic;
+	font-weight: none;
+	color: #000;
+	text-align:center;
+	border: 0.1mm solid black;
+	vertical-align:top;
+}
+td.spazioverticale, td.spazioverticalefiletto {
+	height: 2mm;
+	border-left: 0.1mm solid #FFF;
+	border-right: 0.1mm solid #FFF;
+}
+td.spazioverticalefiletto {
+	border-top: 1px solid #000;
+}
+.firmacoordinatore {
+	/*background-image: url(../images/romeo/firmacoordinatore.jpg) no-repeat right center;*/
+
+}
+.intestazioneheader {
+	/*background-image: url(../images/romeo/logoheader.jpg) no-repeat center top ;*/
+	border:0.1mm solid #fff;
+	text-align:center
+}
+.intestazionefooter {
+	/*background-image: url(../images/romeo/logofooter.jpg) no-repeat center top;*/
+	text-align:center;
+}
+.firmacoordinatore { text-align:right; }
+.firmaresponsabile, .logoheader { text-align:center; }
+td.nobordi { border:0.1mm solid #fff; }
+td.bordi { border:0.1mm solid #000; }
+td.mod,td.modright {font-size: 6pt;}
+td.modright{text-align: right;}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <cliente>
+        <title>Clienti</title>
+        <edittitle>Modifica cliente</edittitle>
+        <newtitle>Nuovo cliente</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>clienti</maintable>
+        <currkey>idCliente</currkey>
+        <currsql>SELECT * FROM clienti WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formClienti</name>
+            <elements>
+                <idCliente>
+                    <type>hidden</type>
+                </idCliente>
+                <Nome>
+                    <type>text</type>
+                    <label>Nome</label>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>128</maxlen>
+                    </parameters>
+                </Nome>
+                <RagSoc>
+                    <type>text</type>
+                    <label>Ragione Sociale</label>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </RagSoc>
+                <Responsabile>
+                    <type>text</type>
+                    <label>Responsabile</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Responsabile>
+                <Citta>
+                    <type>text</type>
+                    <label>Città</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Citta>
+                <Indirizzo>
+                    <type>text</type>
+                    <label>Indirizzo</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Indirizzo>
+                <Email>
+                    <type>text</type>
+                    <label>Email</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Email>
+                <Telefono>
+                    <type>text</type>
+                    <label>Telefono</label>
+                    <parameters>
+                        <size>36</size>
+                        <maxlen>36</maxlen>
+                    </parameters>
+                </Telefono>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </cliente>
+</edits>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <inv_services>
+        <title>Servizi da fatturare</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/inv-services/new</addlink>
+        <addtitle>Nuovo servizio da fatturare</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <tab_contr_md>tab_contr_md</tab_contr_md>
+                </aliasname>
+                <fields>
+                    <IdTabContrMd>IdTabContrMd</IdTabContrMd>
+                    <Opzione>Opzione</Opzione>
+                    <Note>Note</Note>
+                    <delIco> (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                        COUNT(pw_contratti.idPwContratto) > 0
+                        THEN 'del-dis' ELSE 'fechar' END) 
+                    </delIco>
+                    <delLink> (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                        COUNT(pw_contratti.idPwContratto) > 0
+                        THEN '#' ELSE CONCAT('/inv-services/delete/id/', 
+                          tab_contr_md.IdTabContrMd) END) 
+                    </delLink>
+                    <delAlert> (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                        COUNT(pw_contratti.idPwContratto) > 0
+                        THEN 'alert(''Can`t delete''); return false;' 
+                        ELSE 'return(confirm(''Confirm delete?''));' END) 
+                    </delAlert>            
+                </fields>
+            </from>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.IdTabContrMd = tab_contr_md.IdTabContrMd</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <numProgetti>COUNT(progetti.idProgetto)</numProgetti>
+                </fields>
+            </join>            
+            <join id='pw_contratti'>
+                <type>left</type>
+                <cond>pw_contratti.IdTabContrMd = tab_contr_md.IdTabContrMd</cond>
+                <aliasname>
+                    <pw_contratti>pw_contratti</pw_contratti>
+                </aliasname>
+                <fields>
+                    <numPwContratti>COUNT(pw_contratti.idPwContratto)</numPwContratti>
+                </fields>
+            </join>            
+            <join></join>
+            <group>
+                tab_contr_md.IdTabContrMd
+            </group>                        
+            <order>tab_contr_md.Opzione</order>                        
+        </select>
+        <updatecolumns>
+            <IdTabContrMd>
+                <hidden>1</hidden>
+            </IdTabContrMd>
+            <numProgetti>
+                <hidden>1</hidden>
+            </numProgetti>
+            <numPwContratti>
+                <hidden>1</hidden>
+            </numPwContratti>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Opzione>
+                <title>Opzione</title>
+            </Opzione>
+            <Note>
+                <title>Note</title>
+            </Note>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /inv-services/edit/id/{{IdTabContrMd}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </inv_services>
+</grids>

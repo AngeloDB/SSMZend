@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <personale>
+        <parameters>
+            <mode>
+                <from>pararr</from>
+            </mode>
+<!--            <modeExt>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>ext</op2>
+            </modeExt>
+            <modeInt>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>int</op2>
+            </modeInt>-->
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <if>
+            <cond>{{modeExt}}</cond>
+            <iftrue>
+                <title>Personale esterno grid</title>
+                <addlink>/personale/new/mode/ext</addlink>
+            </iftrue>
+            <iffalse>                    
+            </iffalse>
+        </if>
+        <title>Personale all grid</title>
+        <addlink>/personale/new/mode/all</addlink>
+<!--        <if>
+            <cond>{{modeInt}}</cond>
+            <iftrue>                    
+                <title>Personale interno grid</title>
+                <addlink>/personale/new/mode/int</addlink>
+            </iftrue>
+            <iffalse>                    
+                <title>Personale (tutto) grid</title>
+                <addlink>/personale/new/mode/all</addlink>
+            </iffalse>
+        </if>-->
+        <addtitle>Nuovo personale</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <personale>personale</personale>
+                </aliasname>
+                <fields>
+                    <idPersonale>idPersonale</idPersonale>
+                    <Nome>Nome</Nome>
+                    <Cognome>Cognome</Cognome>
+                    <Email>Email</Email>
+                    <TelMobile>TelMobile</TelMobile>
+                </fields>
+            </from>
+            <join id='forn_pers'>
+                <type>left</type>
+                <cond>forn_pers.idFornPers = personale.idFornPers</cond>
+                <aliasname>
+                    <forn_pers>forn_pers</forn_pers>
+                </aliasname>
+                <fields>
+                    <RagSoc>RagSoc</RagSoc>
+                    <TipoSoc>Tipo</TipoSoc>
+                </fields>
+            </join>
+            <join id='passaporti'>
+                <type>left</type>
+                <cond>passaporti.idPersonale = personale.idPersonale</cond>
+                <aliasname>
+                    <passaporti>passaporti</passaporti>
+                </aliasname>
+                <fields>
+                    <idPass>idPass</idPass>
+                    <Numero>Numero</Numero>
+                    <Scadenza>Scadenza</Scadenza>
+                    <ggScadenza>DATEDIFF(Scadenza, NOW())</ggScadenza>
+<!--                    <Semaforo>
+                        CASE 
+                            WHEN DATEDIFF(Scadenza, NOW()) &gt; 30 NOW() THEN "doc_status_8.png"
+                            WHEN DATEDIFF(Scadenza, NOW()) &lt; 30 AND
+                                       DATEDIFF(Scadenza, NOW()) &gt; 15 THEN "doc_status_2.png"
+                            ELSE "doc_status_1.png" 
+                        END
+                    </Semaforo>-->
+<!--                     (CASE WHEN DATEDIFF(Scadenza, NOW()) &gt; 30 THEN 'rgb(255,255,255)' ELSE 
+                            (CASE WHEN DATEDIFF(Scadenza, NOW()) &lt; 30 AND
+                                       DATEDIFF(Scadenza, NOW()) &gt; 15 THEN 'rgb(255,255,0)' ELSE 'rgb(255,0,0)' 
+                                END)
+                            END)
+                    </colScadenza>-->
+<!--                    <colScadenza>
+                        CONCAT(' &lt;span style "background-color: ',
+                            (CASE WHEN DATEDIFF(Scadenza, NOW()) &gt; 30 THEN 'rgb(255,255,255)' ELSE 
+                            (CASE WHEN DATEDIFF(Scadenza, NOW()) &lt; 30 AND
+                                       DATEDIFF(Scadenza, NOW()) &gt; 15 THEN 'rgb(255,255,0)' ELSE 'rgb(255,0,0)' 
+                                END)
+                            END),';" &gt;', Scadenza, '&lt;/span&gt;')
+                    </colScadenza>-->
+                </fields>
+            </join>
+            <join id='qualifiche'>
+                <type>left</type>
+                <cond>qualifiche.idQualifica = personale.idQualifica</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <Qualifica>Descrizione</Qualifica>
+                </fields>
+            </join>
+            <join id='jobs'>
+                <type>left</type>
+                <cond>jobs.idPersonale = personale.idPersonale</cond>
+                <aliasname>
+                    <jobs>jobs</jobs>
+                </aliasname>
+                <fields>
+                    <numJobs>COUNT(idJob)</numJobs>
+                    <delIco> (CASE WHEN COUNT(jobs.idJob) > 0 THEN 'del-dis' ELSE 'fechar' END) </delIco>
+                    <delLink> (CASE WHEN COUNT(jobs.idJob) > 0 THEN '#' ELSE CONCAT('/personale/delete/id/', personale.idPersonale) END) </delLink>
+                    <delAlert> (CASE WHEN COUNT(jobs.idJob) > 0 THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) </delAlert>
+                </fields>
+            </join>
+            <join></join>
+            <group>
+                personale.idPersonale
+            </group>
+<!--            <if>
+                <cond>{{modeExt}}</cond>
+                <iftrue>
+                    <where>
+                        <from>
+                        forn_pers.Tipo IN("C","V")                   
+                        </from>
+                    </where>                        
+                </iftrue>
+                <iffalse>                    
+                <if>
+                    <cond>{{modeInt}}</cond>
+                    <iftrue>                    
+                    <where>
+                        <from>
+                        forn_pers.Tipo NOT IN("C","V")                   
+                        </from>
+                    </where>                        
+                    </iftrue>
+                    <iffalse>                    
+                    <where>
+                        <from>
+                        TRUE                            
+                        </from>
+                    </where>                        
+                    </iffalse>
+                </if>
+                </iffalse>
+            </if>-->
+            <order>CONCAT(TipoSoc,Cognome)</order>
+        </select>
+        <updatecolumns>
+            <numJobs>
+                <hidden>1</hidden>
+            </numJobs>
+            <ggScadenza>
+                <hidden>1</hidden>
+            </ggScadenza>
+            <idPersonale>
+                <hidden>1</hidden>
+            </idPersonale>
+            <idPass>
+                <hidden>1</hidden>
+            </idPass>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Nome>
+                <title>Nome</title>
+                <position>1</position>
+            </Nome>
+            <Cognome>
+                <title>Cognome</title>
+                <position>2</position>
+            </Cognome>
+            <Qualifica>
+                <title>Qualifica</title>
+                <position>3</position>
+            </Qualifica>
+            <Email>
+                <title>Email</title>
+                <position>4</position>
+            </Email>
+            <TelMobile>
+                <title>Telefono</title>
+                <position>5</position>
+            </TelMobile>
+            <Numero>
+                <title>Passaporto</title>
+                <position>6</position>
+            </Numero>
+            <Scadenza>
+                <position>7</position>
+                <title>Scadenza</title>
+<!--                <format>date</format>
+                <style>{{colScadenza}}</style>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Scadenza>
+            <RagSoc>
+                <title>Fornitore</title>
+                <position>8</position>
+            </RagSoc>
+            <TipoSoc>
+                <title>Type</title>
+                <position>9</position>
+            </TipoSoc>
+        </updatecolumns>
+        <updateCallbacks>
+            <Scadenza>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Scadenza}}</params>
+            </Scadenza>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Riass>
+                <position>left</position>
+                <title>Dettaglio</title>
+                <decorator>
+                    /personale/riassunto/id/{{idPersonale}}/seltab/0#/images/viewIcon.png#Dettaglio
+                </decorator>
+            </Riass>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+<!--            <Semaforo>
+                <title></title>
+                <print>0</print>
+                <position>left</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <decorator>
+                    &lt;img src = "/public/images/{{Semaforo}}" 
+                        alt="{{Semaforo}}" border="0"&gt;&lt;/img&gt;
+                </decorator>
+            </Semaforo>            -->
+        </extracolumns>
+    </personale>
+</grids>

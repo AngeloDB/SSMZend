@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <schemalav>
+        <title>Schema lavoro</title>
+<!--        <parameters>
+        </parameters>-->
+        <addlink>/schemalav/new</addlink>
+        <addtitle>Nuovo schema lavoro</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <tab_schemi_lav>tab_schemi_lav</tab_schemi_lav>
+                </aliasname>
+                <fields>
+                    <idTabSchemiLav>idTabSchemiLav</idTabSchemiLav>
+                    <descSchemaLav>descSchemaLav</descSchemaLav>
+                    <oreSett>oreSett</oreSett>
+                    <oreMese>oreMese</oreMese>
+                    <ggSett>ggSett</ggSett>
+                    <ggMese>ggMese</ggMese>
+                </fields>
+            </from>
+        </select>
+        <updatecolumns>
+            <idTabSchemiLav>
+                <hidden>1</hidden>                
+            </idTabSchemiLav>
+            <descSchemaLav>
+                <title>Descrizione</title>
+                <position>1</position>                
+            </descSchemaLav>
+            <oreSett>
+                <title>Ore sett.</title>
+                <position>2</position>                
+            </oreSett>
+            <oreMese>
+                <title>Ore mese</title>
+                <position>3</position>                
+            </oreMese>
+            <ggSett>
+                <title>Giorni sett.</title>
+                <position>4</position>                
+            </ggSett>
+            <ggMese>
+                <title>Giorni mese</title>
+                <position>5</position>                
+            </ggMese>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /schemalav/edit/id/{{idTabSchemiLav}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </schemalav>
+</grids>

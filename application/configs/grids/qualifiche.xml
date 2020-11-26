@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <qualifiche>
+        <title>Qualifiche</title>
+        <addlink>/qualifiche/new</addlink>
+        <addtitle>Nuova qualifica</addtitle>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <idQualifica>idQualifica</idQualifica>
+                    <Descrizione>Descrizione</Descrizione>
+                    <tarOrariaBase>tarOrariaBase</tarOrariaBase>
+                    <tarGgBase>tarGgBase</tarGgBase>
+                    <delIco> (CASE WHEN MAX(contratti_forn_pers.idQualifica) > 0 OR 
+                                        MAX(personale.idQualifica) > 0 OR 
+                                        MAX(pers_forn_pers.idQualifica) > 0 OR 
+                                        MAX(richieste.idQualifica) > 0 OR 
+                                        MAX(supervisori.idQualifica) > 0 
+                                THEN 'del-dis' 
+                                ELSE 'fechar' END) 
+                    </delIco>
+                    <delLink> (CASE WHEN MAX(contratti_forn_pers.idQualifica) > 0 OR 
+                                        MAX(personale.idQualifica) > 0 OR 
+                                        MAX(pers_forn_pers.idQualifica) > 0 OR 
+                                        MAX(richieste.idQualifica) > 0 OR 
+                                        MAX(supervisori.idQualifica) > 0 
+                                THEN '#' 
+                                ELSE CONCAT('/qualifiche/delete/id/', qualifiche.idQualifica) END) 
+                    </delLink>
+                    <delAlert> (CASE WHEN MAX(contratti_forn_pers.idQualifica) > 0 OR 
+                                        MAX(personale.idQualifica) > 0 OR 
+                                        MAX(pers_forn_pers.idQualifica) > 0 OR 
+                                        MAX(richieste.idQualifica) > 0 OR 
+                                        MAX(supervisori.idQualifica) > 0 
+                                THEN 'alert(''Can`t delete''); return false;' 
+                                ELSE 'return(confirm(''Confirm delete?''));' END) 
+                                <!--ELSE 'return(''{{aclReadonly}}'' == ''1'' ? alert(''Can`t delete'') != null: confirm(''Confirm delete?''));' END)--> 
+                    </delAlert>
+                </fields>
+            </from>
+            <join id='raggruppamenti'>
+                <cond>raggruppamenti.idRagg = qualifiche.idRagg</cond>
+                <aliasname>
+                    <raggruppamenti>raggruppamenti</raggruppamenti>
+                </aliasname>
+                <fields>
+                    <Raggruppamento>Raggruppamento</Raggruppamento>
+                </fields>
+            </join>
+            <join>
+                <type>left</type>
+                <cond>contratti_forn_pers.idQualifica = qualifiche.idQualifica</cond>
+                <aliasname>
+                    <contratti_forn_pers>contratti_forn_pers</contratti_forn_pers>
+                </aliasname>
+            </join>
+            <join>
+                <type>left</type>
+                <cond>personale.idQualifica = qualifiche.idQualifica</cond>
+                <aliasname>
+                    <personale>personale</personale>
+                </aliasname>
+            </join>
+            <join>
+                <type>left</type>
+                <cond>pers_forn_pers.idQualifica = qualifiche.idQualifica</cond>
+                <aliasname>
+                    <pers_forn_pers>pers_forn_pers</pers_forn_pers>
+                </aliasname>
+            </join>
+            <join>
+                <type>left</type>
+                <cond>richieste.idQualifica = qualifiche.idQualifica</cond>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+            </join>
+            <join>
+                <type>left</type>
+                <cond>supervisori.idQualifica = qualifiche.idQualifica</cond>
+                <aliasname>
+                    <supervisori>supervisori</supervisori> 
+                </aliasname>
+            </join>
+            <join></join>
+            <group>
+                qualifiche.idQualifica
+            </group>                        
+            <order>CONCAT(raggruppamenti.Raggruppamento, qualifiche.Descrizione)</order>
+        </select>
+        <updatecolumns>
+            <idQualifica>
+                <hidden>1</hidden>
+            </idQualifica>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Raggruppamento>
+                <position>1</position>
+                <title>Raggruppamento</title>
+            </Raggruppamento>
+            <Descrizione>
+                <position>2</position>
+                <title>Qualifica</title>
+            </Descrizione>
+            <tarGgBase>
+                <position>3</position>
+                <title>Tariffa giornaliera di base</title>
+                <format>currency</format>
+                <class>width_120</class>
+                <format>
+                    <locale>it-IT</locale>
+                </format>
+            </tarGgBase>
+            <tarOrariaBase>
+                <position>4</position>
+                <title>Tariffa oraria di base</title>
+                <format>currency</format>
+                <class>width_120</class>
+                <format>
+                    <options>it-IT</options>
+                </format>
+            </tarOrariaBase>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /qualifiche/edit/id/{{idQualifica}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+        <!--                    <linkheight>
+                                    28
+                            </linkheight>-->
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </qualifiche>
+</grids>

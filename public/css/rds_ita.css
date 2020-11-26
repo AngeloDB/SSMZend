@@ -1,0 +1,84 @@
+/* 
+    Document   : rds
+    Created on : 16-feb-2012, 16.05.53
+    Author     : italba
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+BODY, DIV, TABLE, THEAD, TBODY, TFOOT, TR, TH, TD, P {
+    font-family:"Arial";
+    font-size:x-small;
+}
+table {
+    font-family: sans-serif;
+    border-collapse: collapse;
+    margin:0mm;
+    padding:0mm;
+}
+td {
+    padding: 1mm;
+    vertical-align: middle;
+}
+td.redcell { border: 3mm solid red; }
+td.redcell2 { border: 2mm solid red; }
+/* */
+
+td.titoliheader, td.titoli, td.stitoli, td.titoli2, td.titoli3 {
+    font-size: 3mm;
+    font-style: italic;
+    font-weight: bold;
+    color: #000;
+    text-align:center;
+    border: 0.5px solid black;
+}
+td.titoliheader { background-color: #CFC; }
+td.titoli {
+    background-color: #CFC;
+    text-transform: uppercase;
+}
+td.stitoli { border: 0.5px solid black; }
+td.titoli2 {
+    background-color: #FFFF00;
+    text-transform: uppercase;
+}
+td.stitoli3 {
+    background-color: #71FFFF;
+    border: 0.5px solid black;
+}
+td.spazioverticale {
+    height: 4mm;
+    border-left: 0.5px solid #FFF;
+    border-right: 0.5px solid #FFF;
+}
+.firmaresponsabile { /*	background-image: url(aaa);
+        background-repeat: no-repeat;
+        background-position: right center;
+        height: 86px;*/
+}
+.intestazioneheader {
+    background-image: url(logoheader.jpg);
+    background-repeat: no-repeat;
+    background-position: center top;
+    height: 86px;
+    width:857px;
+    border:0.5px solid #fff;
+}
+.intestazionefooter { /*	background-image: url(aaa);
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 86px;
+        width:857px;*/
+}
+.firmacoordinatore {
+    text-align:right; 
+}
+.firmaresponsabile, .logoheader {
+    text-align:center; 
+}
+td.nobordi { border:0.5px solid #fff; }
+td.bordi { border:0.5px solid #000; }

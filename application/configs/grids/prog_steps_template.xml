@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <prog_steps_template>
+        <title>Modello steps di progetto</title>
+        <addlink>/struttura/new-step</addlink>
+        <addtitle>Nuovo modello di step di progetto</addtitle>
+        <parameters>
+            <currIdProgTemplate>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgTemplate</offset>
+            </currIdProgTemplate>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <prog_steps_template>prog_steps_template</prog_steps_template>
+                </aliasname>
+                <fields>
+                    <idProgStepTemplate>idProgStepTemplate</idProgStepTemplate>
+                    <idProgTemplate>idProgTemplate</idProgTemplate>
+                    <Step>Step</Step>
+                </fields>
+            </from>
+<!--            <join id='prog_template'>
+                <cond> prog_template.idProgTemplate = prog_steps_template.idProgStepTemplate </cond>
+                <aliasname>
+                    <prog_template>prog_template</prog_template>
+                </aliasname>
+                <fields>
+                    <NomeProg>Nome</NomeProg>
+                </fields>
+            </join>-->
+            <join></join>
+        </select>
+        <updatecolumns>
+            <idProgStepTemplate>
+                <hidden>1</hidden>
+            </idProgStepTemplate>
+            <idProgTemplate>
+                <hidden>1</hidden>
+            </idProgTemplate>
+<!--            <NomeProg>
+                <title>Progetto</title>
+                <position>1</position>
+            </NomeProg>-->
+            <Step>
+                <title>Step</title>
+                <position>1</position>
+            </Step>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /struttura/edit-step/id/{{idProgStepTemplate}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <Richieste>
+                <position>left</position>
+                <title>Richieste</title>
+                <decorator>
+                    /struttura/list-req/id/{{idProgStepTemplate}}#/images/bkg-loginico.png#Steps
+                </decorator>
+            </Richieste>
+        </extracolumns>
+    </prog_steps_template>
+</grids>

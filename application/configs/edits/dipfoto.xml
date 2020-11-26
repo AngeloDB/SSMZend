@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <dipfoto>
+        <mode>readonly</mode>
+        <title>Fototessera</title>
+        <edittitle>Modifica fototessera</edittitle>
+        <newtitle>Nuova fototessera</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>personale</maintable>
+        <currkey>idPersonale</currkey>
+        <currsql>SELECT * FROM personale WHERE </currsql>
+        <javascript>
+            function loadedFoto(fileField)
+                {
+                var fileCounter=1;
+                var modelId='todel_'+fileField.id;
+                var elem = document.getElementById('formDipendenti').elements;
+                for(var i = 0; i &lt; elem.length; i++)
+                    {
+                    if(elem[i].id.substr(0, modelId.length) == modelId)
+                        {
+                        if(elem[i].value.substr(0, 1) == "+")
+                            fileCounter++;
+                        }
+                    }
+                if(fileCounter &gt; document.getElementById("maxfiles_"+fileField.id).value)
+                    {
+                    alert("Troppi files!");
+                    var oldInput = fileField;
+                    var newInput = document.createElement('input');
+                    newInput.id  = oldInput.id;
+                    newInput.type = oldInput.type;
+                    newInput.name = oldInput.name;
+                    newInput.size = oldInput.size;
+                    newInput.class = oldInput.class;
+                    newInput.onchange = function(){loadedFoto(newInput);};
+                    oldInput.parentNode.replaceChild(newInput, oldInput); 
+                    }
+//                document.getElementById("foto").getElementsByTagName("img")[0].src = 
+//                    "/uploads/"+fileField.value;
+                }
+        </javascript>
+        <form>
+            <name>formDipendenti</name>
+            <elements>
+                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>
+                <x1>
+                    <type>hidden</type>
+                </x1>
+                <y1>
+                    <type>hidden</type>
+                </y1>
+                <x2>
+                    <type>hidden</type>
+                </x2>
+                <y2>
+                    <type>hidden</type>
+                </y2>
+                <w>
+                    <type>hidden</type>
+                </w>
+                <h>
+                    <type>hidden</type>
+                </h>
+                <NaturalImgHeight>
+                    <type>hidden</type>
+                </NaturalImgHeight>
+                <NaturalImgWidth>
+                    <type>hidden</type>
+                </NaturalImgWidth>
+                <CurrImgHeight>
+                    <type>hidden</type>
+                </CurrImgHeight>
+                <CurrImgWidth>
+                    <type>hidden</type>
+                </CurrImgWidth>
+                <CurrImgRotation>
+                    <type>hidden</type>
+                </CurrImgRotation>
+                <CurrIdAllegato>
+                    <type>hidden</type>
+                </CurrIdAllegato>
+                <CurrAllegato>
+                    <type>hidden</type>
+                </CurrAllegato>
+                <CurrStoreName>
+                    <type>hidden</type>
+                </CurrStoreName>
+
+                <RotateImg>
+                    <type>button</type>
+                    <label>Rotate</label>
+                </RotateImg>
+                <Nome>
+                    <type>text</type>
+                    <label>Nome</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                        <readonly>true</readonly>
+                    </parameters>
+                </Nome>
+                <Cognome>
+                    <type>text</type>
+                    <label>Cognome</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                        <readonly>true</readonly>
+                    </parameters>
+                </Cognome>
+                <FotodivisioneAiuto>
+                        <type>linecustom</type>
+                        <parameters>
+                                <type>h3</type>
+                        </parameters>
+                        <description>&lt;h4 style="padding:8px;" class="infosuriga"&gt;Caricare in allegato fototessera; file in formato JPG ( 35mm x 45mm )&lt;/h4&gt;</description> 
+                </FotodivisioneAiuto> 
+<!--                <FototesseraAiuto>
+                         <label>Fototessera</label>
+                         <type>custom</type>
+                    <description> 
+&lt;div id="foto"&gt;
+    &lt;img src="/public/images/question.jpg" width="100" height="100" alt="" /&gt;
+&lt;/div&gt;
+&lt;h4 class=""&gt;  &lt;/h4&gt;
+                    </description> 
+		</FototesseraAiuto>--> 
+                <Fototessera>
+                    <type>file</type>
+                    <label>File</label>
+                    <parameters>
+                        <MultiFile>1</MultiFile>
+                        <Size>500000</Size>
+<!--                        <Extensions>jpg</Extensions>-->
+                    </parameters>
+                    <javascript>
+                        <onChange>
+                            loadedFoto(this);
+                        </onChange>
+                    </javascript>
+                </Fototessera>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </dipfoto>
+</edits>

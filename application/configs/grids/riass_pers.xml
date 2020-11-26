@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <riass_pers>
+        <title>Personale di progetto</title>
+<!--        <addlink>/richieste/new</addlink>
+        <addtitle>Nuova richiesta di personale</addtitle>-->
+        <parameters>
+            <currIdProgetto>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </currIdProgetto>
+<!--            <currIdProgStep>
+                <from>arrdefaultnamespace</from>
+                <array>currStep</array>
+                <offset>idProgStep</offset>
+            </currIdProgStep>-->
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <idRichiesta>idRichiesta</idRichiesta>
+                    <idQualifica>idQualifica</idQualifica>
+                    <idProgStep>idProgStep</idProgStep>
+                    <idPersonale>idPersonale</idPersonale>
+                    <salOrario>salOrario</salOrario>
+                    <salGG>salGG</salGG>
+                </fields>
+            </from>
+            <join id='prog_steps'>
+                <cond>prog_steps.idProgStep = richieste.idProgStep</cond>
+                <aliasname>
+                    <prog_steps>prog_steps</prog_steps>
+                </aliasname>
+                <fields>
+                    <Step>Step</Step>
+                    <Inizio>Inizio</Inizio>
+                    <Fine>Fine</Fine>
+                </fields>
+            </join>
+<!--            <join id='progetti'>
+                <cond>progetti.idProgetto = prog_steps.idProgetto</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <Progetto>Nome</Progetto>
+                </fields>
+            </join>-->
+            <join id='qualifiche'>
+                <cond>qualifiche.idQualifica = richieste.idQualifica</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <Qualifica>Descrizione</Qualifica>
+                </fields>
+            </join>
+            <join id='tab_schemi_lav'>
+                <type>left</type>
+                <cond>tab_schemi_lav.idTabSchemiLav = richieste.idTabSchemiLav</cond>
+                <aliasname>
+                    <tab_schemi_lav>tab_schemi_lav</tab_schemi_lav>
+                </aliasname>
+                <fields>
+                    <descSchemaLav>descSchemaLav</descSchemaLav>
+                </fields>
+            </join>
+            <join id='personale'>
+                <type>left</type>
+                <cond>personale.idPersonale = richieste.idPersonale</cond>
+                <aliasname>
+                    <personale>personale</personale>
+                </aliasname>
+                <fields>
+                    <Lavoratore>CONCAT(personale.Nome, " ", personale.Cognome)</Lavoratore>
+                </fields>
+            </join>
+            <join id='forn_pers'>
+                <type>left</type>
+                <cond>forn_pers.idFornPers = personale.idFornPers</cond>
+                <aliasname>
+                    <forn_pers>forn_pers</forn_pers>
+                </aliasname>
+                <fields>
+                    <RagSoc>RagSoc</RagSoc>
+                </fields>
+            </join>
+            <join></join>
+            <where>
+                <from>
+                    prog_steps.idProgetto = "{{currIdProgetto}}"
+                </from>
+            </where>
+        </select>
+        <updatecolumns>
+            <idRichiesta>
+                <hidden>1</hidden>
+            </idRichiesta>
+            <idQualifica>
+                <hidden>1</hidden>
+            </idQualifica>
+            <idProgStep>
+                <hidden>1</hidden>
+            </idProgStep>
+            <idPersonale>
+                <hidden>1</hidden>
+            </idPersonale>
+<!--            <Progetto>
+                <title>Progetto</title>
+                <position>1</position>
+            </Progetto>-->
+            <Qualifica>
+                <title>Qualifica</title>
+                <position>1</position>
+            </Qualifica>
+            <descSchemaLav>
+                <title>Orario</title>
+                <position>2</position>                
+            </descSchemaLav>
+            <salOrario>
+                <title>salOrario</title>
+                <position>3</position>                
+            </salOrario>
+            <salGG>
+                <title>salGG</title>
+                <position>4</position>                
+            </salGG>
+            <RagSoc>
+                <title>Fornitore</title>
+                <position>5</position>
+            </RagSoc>
+            <Step>
+                <title>Step</title>
+                <position>6</position>
+            </Step>
+            <Inizio>
+                <title>Inizio</title>
+                <position>7</position>
+<!--                <class>colonnadata</class>
+                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Inizio>
+            <Fine>
+                <title>Fine</title>
+                <position>8</position>
+<!--                <class>colonnadata</class>
+                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Fine>            
+            <Lavoratore>
+                <title>Personale</title>
+                <position>9</position>
+            </Lavoratore>
+<!--            <Nome>
+                <title>Nome</title>
+                <position>3</position>
+            </Nome>
+            <Cognome>
+                <title>Cognome</title>
+                <position>4</position>
+            </Cognome>-->
+        </updatecolumns>
+        <updateCallbacks>
+            <Inizio>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Inizio}}</params>
+            </Inizio>
+            <Fine>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Fine}}</params>
+            </Fine>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /richieste/edit/id/{{idRichiesta}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </riass_pers>
+</grids>

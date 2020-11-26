@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <utenti>
+        <title>Utenti</title>
+        <edittitle>Modifica Utenti</edittitle>
+        <newtitle>Nuovo Utente</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>utenti</maintable>
+        <currkey>id_utente</currkey>
+        <currsql>SELECT * FROM utenti WHERE </currsql>
+        <form>
+            <name>formUtenti</name>
+            <elements>
+                <id_utente>
+                    <type>hidden</type>
+                </id_utente>
+<!--                <id_utenteAiuto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;h4 class="infosuriga"&gt; I dati personali inseriti nella scheda consentono di identificare il soggetto  &lt;br /&gt; per le attività nell'ambito del cantiere e la creazione delle login personali relative &lt;/h4&gt; </description> 
+                </id_utenteAiuto>                 -->
+<!--                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>-->
+                <cognome>
+                    <type>text</type>
+                    <label>Cognome</label>
+                    <notempty>true</notempty>                    
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </cognome>
+                <nome>
+                    <type>text</type>
+                    <label>Nome</label>
+                    <notempty>true</notempty>                    
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </nome>
+                <id_userlevel>
+                    <type>select</type>
+                    <label>Ruolo</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT id_userlevel AS KeyId, Titolo AS Value
+                        FROM tab_userlevel
+                    </selsql>
+                </id_userlevel>
+<!--                <id_userlevelAiuto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;h4 class="aiutosuriga"&gt; Selezionare il ruolo specifico per l'identificazione corretta del soggetto nell'ambito del cantiere &lt;/h4&gt; </description> 
+                </id_userlevelAiuto>                -->
+                <email>
+                    <type>text</type>
+                    <label>Email</label>
+                    <!--<notempty>true</notempty>-->                    
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </email>
+<!--                <emailAiuto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;h4 class="aiutosuriga"&gt; Specificare l'email personale associata al ruolo selezionato per l'invio delle comunicazioni ufficiali &lt;/h4&gt; </description> 
+                </emailAiuto>                -->
+                <interno>
+                    <type>text</type>
+                    <label>Interno</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>40</maxlen>
+                    </parameters>
+                </interno>
+                <cellulare>
+                    <type>text</type>
+                    <label>Cellulare</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>40</maxlen>
+                    </parameters>
+                </cellulare>
+                <note>
+                    <type>textarea</type>
+                    <label>Note</label>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </note>
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </utenti>
+</edits>

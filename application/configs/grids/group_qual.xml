@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <group_qual>
+        <title>Gruppi qualifiche</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/group-qual/new</addlink>
+        <addtitle>Nuovo gruppo qualifiche</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <raggruppamenti>raggruppamenti</raggruppamenti>
+                </aliasname>
+                <fields>
+                    <idRagg>idRagg</idRagg>
+                    <NumRagg>NumRagg</NumRagg>
+                    <Raggruppamento>Raggruppamento</Raggruppamento>
+                    <Note>Note</Note>
+                    <delIco> 
+                        (CASE WHEN COUNT(qualifiche.idQualifica) > 0 
+                            THEN 'del-dis' 
+                            ELSE 'fechar' 
+                        END) 
+                    </delIco>
+                    <delLink> 
+                        (CASE WHEN COUNT(qualifiche.idQualifica) > 0 
+                            THEN '#' 
+                            ELSE CONCAT('/group-qual/delete/id/', raggruppamenti.idRagg)
+                        END) 
+                    </delLink>
+                    <delAlert> 
+                        (CASE WHEN COUNT(qualifiche.idQualifica) > 0 
+                            THEN 'alert(''Can`t delete''); return false;' 
+                            ELSE 'return(confirm(''Confirm delete?''));' END) 
+                    </delAlert>            
+                </fields>
+            </from>
+            <join id='qualifiche'>
+                <type>left</type>
+                <cond>qualifiche.idRagg = raggruppamenti.idRagg</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <numQual>COUNT(qualifiche.idQualifica)</numQual>
+                </fields>
+            </join>            
+            <join></join>            
+            <group>
+                raggruppamenti.idRagg
+            </group>                        
+            <order>raggruppamenti.NumRagg</order>                        
+        </select>
+        <updatecolumns>
+            <idRagg>
+                <hidden>1</hidden>
+            </idRagg>
+            <numQual>
+                <hidden>1</hidden>
+            </numQual>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <NumRagg>
+                <position>1</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <title>Num. ragg.</title>
+                    <!--&lt;div style="max-width: 50px;"&gt;Numero&lt;/div&gt;-->
+            </NumRagg>
+            <Raggruppamento>
+                <position>2</position>
+                <title>Gruppo</title>
+            </Raggruppamento>
+            <Note>
+                <position>3</position>
+                <title>Note</title>
+            </Note>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /group-qual/edit/id/{{idRagg}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </group_qual>
+</grids>

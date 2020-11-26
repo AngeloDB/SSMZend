@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <login>
+        <title>Login</title>
+        <edittitle>Modifica login</edittitle>
+        <newtitle>Nuovo login</newtitle>
+        <maintable>login</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT * FROM login WHERE </currsql>
+        <form>
+            <name>formLogin</name>
+            <elements>
+                <id>
+                    <type>hidden</type>
+                </id>
+<!--                <id_utenteAiuto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;h4 class="infosuriga"&gt; Selezionare il nominativo e il ruolo per il quale si intende attivare le credenziali di accesso personale al sistema &lt;br /&gt;  L'associazione tra nominativo e ruolo effettuata tramite la funzione utenti stabilisce i diritti di accesso al sistema della nuova login &lt;/h4&gt; </description> 
+                </id_utenteAiuto>                -->
+                <id_utente>
+                    <type>hidden</type>
+<!--                    <type>select</type>
+                    <readonly>true</readonly>
+                    <label>Utenti</label>
+                    <selsql>
+                        SELECT utenti.id_utente AS KeyId, 
+                            CONCAT(nome, " ", cognome, " - ", Titolo) AS Value
+                        FROM utenti
+                            JOIN tab_userlevel ON tab_userlevel.id_userlevel=utenti.id_userlevel
+                    </selsql>-->
+                </id_utente>                
+                <username>
+                    <type>text</type>
+                    <label>Username</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </username>
+                <password1>
+                    <type>password</type>
+                    <label>Password</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </password1>
+                <password2>
+                    <type>password</type>
+                    <label>Ripete password</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </password2>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </login>
+</edits>

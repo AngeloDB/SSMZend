@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <req_template>
+        <title>Modello di richiesta di personale</title>
+        <edittitle>Modifica modello di richiesta di personale</edittitle>
+        <newtitle>Nuovo modello di richiesta di personale</newtitle>
+        <parameters>
+            <project_name>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Nome</offset>
+            </project_name>
+            <project_step_name>
+                <from>arrdefaultnamespace</from>
+                <array>currStep</array>
+                <offset>Step</offset>
+            </project_step_name>
+        </parameters>
+        <savingalert>1</savingalert>
+        <maintable>prog_steps_req_template</maintable>
+        <currkey>idProgStepReqTemplate</currkey>
+        <currsql>SELECT * FROM prog_steps_req_template WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formReqTemplate</name>
+            <elements>
+                <idProgStepReqTemplate>
+                    <type>hidden</type>
+                </idProgStepReqTemplate>
+<!--                <idProgStepTemplate>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Step progetto</label>
+                    <selsql>
+                        SELECT prog_steps_template.idProgStepTemplate AS KeyId, prog_steps_template.Step AS Value
+                        FROM prog_steps_template   
+                    </selsql>
+                </idProgStepTemplate>-->
+                <DispProgetto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Progetto</label>
+                    <description>{{project_name}}</description> 
+                    <!--<description> &lt;h4 class="aiutosuriga"&gt; Identificare il soggetto referente, se diverso dal referente d'impresa, per il DDS in oggetto &lt;/h4&gt;</description>--> 
+                </DispProgetto> 
+                <DispStep>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Step</label>
+                    <description>{{project_step_name}}</description> 
+                    <!--<description> &lt;h4 class="aiutosuriga"&gt; Identificare il soggetto referente, se diverso dal referente d'impresa, per il DDS in oggetto &lt;/h4&gt;</description>--> 
+                </DispStep> 
+                <idQualifica>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, qualifiche.Descrizione AS Value
+                        FROM qualifiche
+                    </selsql>
+                </idQualifica>
+                <NumReq>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Numero</label>
+                    <parameters>
+                        <size>4</size>
+                        <maxlen>10</maxlen>
+                    </parameters>
+                </NumReq>
+                <Nome>
+                    <type>text</type>
+                    <label>Descrizione</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Nome>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </req_template>
+</edits>

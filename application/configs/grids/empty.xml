@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <>
+        <title></title>
+        <addlink>//new</addlink>
+        <addtitle>Nuova </addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <></>
+                </aliasname>
+                <fields>
+                    <></>
+                    <Semaforo>
+                        CASE 
+                            WHEN Inizio &gt; NOW() THEN "doc_status_8.png"
+                            WHEN Fine &lt; NOW() THEN "doc_status_2.png"
+                            ELSE "doc_status_1.png" 
+                        END
+                    </Semaforo>
+                </fields>
+            </from>
+            <join id=''>
+                <type>left</type>
+                <cond> = </cond>
+                <aliasname>
+                    <></>
+                </aliasname>
+                <fields>
+                    <></>
+                </fields>
+            </join>
+            <join>
+            </join>
+        </select>
+        <updatecolumns>
+            <>
+                <hidden>1</hidden>
+            </>
+            <Semaforo>
+                <title>Semaforo</title>
+                <position>1</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <decorator>
+                    &lt;img src="/public/images/{{Semaforo}}" 
+                        alt="{{Semaforo}}" border="0"&gt;&lt;/img&gt;
+                </decorator>
+            </Semaforo>            
+            <>
+                <title></title>
+                <position>2</position>
+            </>
+        </updatecolumns>
+        <extracolumns>
+            <>
+                <position>left</position>
+                <title></title>
+                <decorator>
+                    /controller/action/id/{{id}}#/images/#Alt
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </progetti>
+</grids>

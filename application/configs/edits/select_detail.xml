@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <select_detail>
+        <title>Man/Days Detail</title>
+        <edittitle>Man/Days Detail</edittitle>
+        <newtitle>New Man/Days Detail</newtitle>
+        <maintable>dual</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <javascript>
+                
+$(document).ready(function() 
+  {
+//    $.localise("ui.multiselect", 
+//                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+//    $('#idMultiCamp option').prop('selected', true);
+
+    $("#idMultiJobs").multiselect({
+        multiple: true,
+        header: '(info: Select all required jobs).',
+        noneSelectedText: 'Jobs (checkbox select)',
+        uncheckAllText: 'Uncheck',
+        noneSelectedText: 'No job.',
+        selectedText: '# jobs have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+  
+  });  
+
+        </javascript>
+                                  
+        <form>
+            <name>seltotals</name>
+            <elements>
+                <id>
+                    <type>hidden</type>
+                </id>
+                <idMultiJobs>
+                    <type>multiselect</type>
+                    <label>Jobs</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+                    </selsql>
+                    <aiuto>Select all required jobs</aiuto>                
+                </idMultiJobs>                               
+                <startDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Start</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </startDate>                               
+                <endDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>End</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </endDate>                               
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </select_detail>
+</edits>

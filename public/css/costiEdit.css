@@ -1,0 +1,20 @@
+/* 
+    Document   : costiEdit
+    Created on : 11-mar-2010, 17.06.38
+    Author     : Italo
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+body {background:white; text-align:center;}
+ div#contenitore {background:white; width:900px; margin:0 auto; text-align:left;}
+  div#header {background:white; height:5em;}
+   h1 {color:white; text-align:right; padding:1em 1em 0 0; font-family:Georgia, serif;}
+  div#colsx {background:yellow;float:left; padding:10px;}
+  div#coldx {background:red;float:left; padding:10px; border-left:2px solid white;}
+  div#footer {background:white; clear:left; border-top:3px solid #4A2C3E; text-align:center; }

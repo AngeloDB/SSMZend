@@ -1,0 +1,1625 @@
+<script>
+//    $(function () {
+//    $("#GGtabs").tabs();
+<?php
+//if ($this->addLink != '' && $this->addLabel != '')
+//    {
+//    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel . '", "' . $this->addLink . '", "l");';
+//    }
+//echo 'macroAddTabsBtn(".ui-tabs-nav", "esci", "Close", "1", "r");';
+//echo "\n});\n";
+echo "var currStatus = ".json_encode($this->currStatus).";\n"; 
+echo 'var projTitle = "'.$this->projTitle.'";'."\n";
+echo 'var projContractMD = "'.$this->dataGrid->projData['contractMD'].'";'."\n";
+echo $this->jsData;
+?>
+    var spreadTable, max;
+    var concurrents;
+    $(document).ready(function () {
+        spreadTable = $('#spreadSheet').find('table');
+        max = {
+                y: spreadTable.find('tr').length,
+                x: spreadTable.parent().find('th').length
+            };
+        alignGrids();
+        spreadTable.heavyTable({
+                xPosition: 6,
+                yPosition: 3
+            });
+        dettTable = $('#detailSheet').find('table');
+           
+        $('#CashGrid').click(function(){
+            window.location=<?php echo '"'.$this->baseUrl().
+                    '/spese-mese/list/id/'.$this->currId.'"';?> + 
+                                "/ym/-/ric/";
+        });
+            
+
+        $("#esci").click(function () {
+            if(document.activeElement.getAttribute('id') == "esci")
+                {
+                $('<div id=\'warningSave\' title=\'Saving...\'  class=\'centeredWarning\'></div>').dialog({
+//                            autoOpen: false,
+//                            title: "myDialog",
+//                            modal: true,
+//                            width: "800",
+                        hide: { effect: "fade", duration: 2000 } //put the fade effect
+                    });
+                saveAll();
+                $('#outAjax').attr('value', '1');                    
+                var outForm = $('#exitForm').serialize();
+                var phpUrl=baseUrl+'/giorni-lav/savegrid';
+                request = $.ajax({
+                    url: phpUrl,
+                    type: "post",
+                    data: outForm,
+                    success: function(result){
+                        $('#warningSave').html('<br><h3>Ok!</h3>')
+                        $("#warningSave").fadeOut(1000, function(){
+                            $(this).dialog('close').delay(2000).remove();
+                            });  
+                        }  
+                    });
+                }
+                return false;    
+            });
+            
+
+        $("#NewRev").click(function () {
+                toggleSaveTot(this);
+                return false;
+            });
+
+        $('input[type=radio][name=groupDisp]').change(function() {
+            if (this.value == 'Target') {
+                $('#spreadSheet').find('table').dispTarget();
+                }
+            else if (this.value == 'Effettivo') {
+                $('#spreadSheet').find('table').dispEff();
+                }
+            });
+                        
+<?php
+echo "    $('#gestReq').click(function(){window.location=" . '"' .
+ $this->baseUrl() . '/area/list/id/' . $this->currId . '"' .
+ "; return true;});\n";
+echo "    $('#Eventi').click(function(){window.location=" . '"' .
+ $this->baseUrl() . '/eventi/list/id/' . $this->currId . '"' .
+ "; return true;});\n";
+?>
+
+        $('#dispQualification').click(function(){toggleColumn(1, this);});
+        $('#dispSupervisor').click(function(){toggleColumn(2, this);});
+        $('#dispPersonnel_Company').click(function(){toggleColumn(3, this);});
+        $('#dispContract_Company').click(function(){toggleColumn(4, this);});
+        $('#dispZoom').click(function(){toggleZoom(this);});
+        $('#dispTotals').click(function(){toggleTotals(this);});
+        $('#dispZero').click(function(){toggleZero(this);});
+
+        $('#Save_Tot').click(function(){toggleSaveTot(this)});
+        $('#confSaveTot').click(function(){
+            if(confirm('Confirm New Revision?'))
+                {
+                callExcelOut("totals");
+                }
+            else
+                {
+                callOut("nototals");
+                }
+            });
+        $('#discSaveTot').click(function(){callOut("nototals")});
+        $('#confSaveNote').click(function(){callNoteOut()});
+        $('#discSaveNote').click(function(){$("#saveNote").dialog("close");});
+        $('#orderGrid').change(function(){
+            saveAll();
+            $('#orderBy').attr('value', this.value);
+            $("#exitForm").submit();
+            });
+        $('#dettConfirm').click(function(){confirmDetail('keep');});
+        $('#dettClear').click(function(){confirmDetail('clear');});
+        $('#dettDiscard').click(function(){discardDetail();});
+        $('#discDettRev').click(function(){closeDettRev();});
+        $('#outExcel').click(function(){callExcel('plan');});
+        $('#expJSON').click(function(){fnExport('json', 'false'); });
+        $('#expXML').click(function(){fnExport('xml', 'false'); });
+        $('#expPNG').click(function(){fnExport('png', 'false'); });
+        $('#expCSV').click(function(){fnExport('csv', 'false'); });
+        $('#expTXT').click(function(){fnExport('txt', 'false'); });
+        $('#expSQL').click(function(){fnExport('sql', 'false'); });
+        $('#expMS-Word').click(function(){fnExport('doc', 'false'); });
+        $('#expMs-Excel').click(function(){callExcel('plan')});
+        $('#expMs-Excel2').click(function(){callExcel('plan')});
+        $('#expMs-Excel2-T').click(function(){callExcel('plan', 'tot')});
+        $('#expMs-Powerpoint').click(function(){fnExport('powerpoint', 'false'); });
+        $('#expPDF').click(function(){callPdf('plan'); });
+        $('#expPDF-T').click(function(){callPdf('plan', 'tot'); });
+//        $('#expPDF').click(function(){fnExport('pdf', 'true'); });
+        $('#spreadSheet').scroll(function(){alignGrids(); alignEventLabels(); });
+        $('#Actual').click(function(){callOut("eff", "", "")});
+        $('#Cash').click(function(){callOut("cash", "", "")});
+        $('#TestTot').click(function(){calcAllRates()});
+        $('#riassGrid').click(function(){callOut("riass", "", "")});
+        $('#graphTotals').click(function(){callOut("graph-tot", "", "")});
+        $('#graphProg').click(function(){callOut("graph-prog", "", "")});
+        alignGrids();
+        alignEvents();
+        alignEventLabels();
+        $("#totSheet").removeClass("gridHidden");
+        setViewMode(currStatus);
+        $(window).resize(function() {alignGrids(); alignEventLabels(); });
+
+        var isSyncingLeftScroll = false;
+        var isSyncingRightScroll = false;
+        var leftDiv = document.getElementById('spreadSheet');
+        var rightDiv = document.getElementById('totSheet');
+
+        leftDiv.onscroll = function() {
+                if (!isSyncingLeftScroll) {
+                isSyncingRightScroll = true;
+                rightDiv.scrollTop = this.scrollTop;
+          }
+          isSyncingLeftScroll = false;
+        }
+
+        rightDiv.onscroll = function() {
+                if (!isSyncingRightScroll) {
+                isSyncingLeftScroll = true;
+                leftDiv.scrollTop = this.scrollTop;
+          }
+          isSyncingRightScroll = false;
+        }
+
+
+<?php
+    echo 'startDetail('.
+            json_encode($this->dataGrid->Contract).', '.
+            json_encode($this->dataGrid->DayTypes).');';
+?>    
+                    
+        pingPlan("start");
+        window.setInterval(pingPlan, 20000);
+        
+        $("#saveTotals").dialog({
+          autoOpen: false,
+          closeOnEscape: false,
+          open: function(event, ui) { 
+              $(".ui-dialog-titlebar-close").hide(); 
+          },
+          width: "auto",
+          title: "Revisions",
+          show: {
+              effect: "blind",
+              duration: 100
+          },
+          hide: {
+              effect: "blind",
+              duration: 100
+            }
+        });
+        
+        $("#dettRev").dialog({
+          autoOpen: false,
+          closeOnEscape: false,
+          open: function(event, ui) { 
+              $(".ui-dialog-titlebar-close").hide(); 
+          },
+          width: "auto",
+          title: "Revision detail",
+          show: {
+              effect: "blind",
+              duration: 100
+          },
+          hide: {
+              effect: "blind",
+              duration: 100
+            }
+        });
+
+        $("#saveNote").dialog({
+          autoOpen: false,
+          closeOnEscape: false,
+          open: function(event, ui) { 
+              $(".ui-dialog-titlebar-close").hide(); 
+          },
+          width: "auto",
+          title: "Save Note",
+          show: {
+              effect: "blind",
+              duration: 100
+          },
+          hide: {
+              effect: "blind",
+              duration: 100
+            }
+        });
+
+        $( function() {
+            $('#spreadSheet, .events-label-space').tooltip({
+                  content: function (callback) {
+                      callback($(this).prop('title'));
+                          }
+                      });
+        });
+        
+        $('.ui-dialog-buttonset').mouseover(function() {
+            $(this).removeClass("ui-state-hover");
+            event.stopPropagation();
+            });
+    
+        $(":button.ui-dialog-titlebar-close").mouseover(function() {
+            $(this).removeClass("ui-state-hover");
+            event.stopPropagation();
+            });
+ 
+<?php
+    if($this->concurrents != 'OK')
+        {
+        echo "concurrents = '".$this->concurrents."';\n".
+             "openAlert(concurrents);\n";   
+//             "$('<div id=\\'alertConcurrents\\' title=\\'Alert\\'>'+concurrents+'</div>').dialog();\n".
+//                "$('#warningConcurrents').css('visibility', 'visible');\n".
+//                "$('.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close').css('display', 'none');\n".
+//                "$('#alertConcurrents').click(function(){\$(this).dialog('close');});\n";
+        }
+?>    
+    });
+    
+    function openAlert(concurrents)
+        {
+        $("<div id='alertConcurrents' title='Alert'>"+concurrents+'</div>').dialog();
+        $('#warningConcurrents').css('visibility', 'visible');
+        $('.ui-button.ui-corner-all.ui-widget.ui-button-icon-only.ui-dialog-titlebar-close').css('display', 'none');
+        $('#alertConcurrents').click(function() {
+            $(this).dialog('close');
+            $(this).remove();
+            });
+        }
+    
+    function pingPlan(modePar)
+        {
+        modePar = typeof modePar !== 'undefined' ? modePar : 'timer';    
+        phpUrl=baseUrl+'/giorni-lav/ping-plan';
+        request=$.post(phpUrl, {mode: modePar, act: 'Plan'})
+            .done(function(data) {
+            });
+        }
+
+
+    function callExcelOut(outMode)
+        {
+        $('#outMode').attr('value', outMode);        
+        $('#note-totals').attr('value', 
+            $('#note-totals-hidden')[0].value);        
+        $('#outAjax').attr('value', '1');                    
+        saveAll();
+        var outForm = $('#exitForm').serialize();
+        var phpUrl=baseUrl+'/giorni-lav/savegrid';
+        request = $.ajax({
+            url: phpUrl,
+            type: "post",
+            data: outForm,
+            success: function(result){
+                newRev(result);    
+                if(outMode === 'totals')
+                    {
+                    callExcel('plan'); 
+                    }
+                $('#NewRev').removeClass('button_red');
+//                $("#saveTotals").addClass("gridHidden");
+                $("#saveTotals").dialog("close");
+                },
+            error: function(request, status, err) 
+                {
+                alert(err+' '+request.responseText);
+                }                
+            });
+        }
+
+    function newRev(rev)
+        {
+            alert('new rev. '+rev);
+        $('h3.STitolo').text('<?php echo $this->arrTitleRev['Title']; ?>' +' Rev.'+rev);
+//        var srcTarget = '- Target -';    
+//        var currTxt = $('#barra-header-info H3').text();    
+////        var currTxt = $('#barra-header-info').text();    
+//        currRevPos = currTxt.search(srcTarget) + srcTarget.length;
+//        $('#barra-header-info H3').text(currTxt.substr(0, currRevPos)+' Rev.'+rev);
+        }
+    
+    function callOut(outMode, outId, outId2)
+        {
+        if (outMode == "pers" && !(outId2 > 0))
+            {
+        <?php
+            $translate = Zend_Registry::get('translate');
+            echo 'alert("'.$translate->_('Non si può inserire un supervisor senza qualifica').'");';
+        ?>
+            return false;
+            }
+        $('#outMode').attr('value', outMode);
+        $('#outPar').attr('value', outId);
+        $('#outPar2').attr('value', outId2);
+        saveAll();
+        $("#exitForm").submit();
+        }
+        
+    function saveTot()
+        {
+        var totData = Array();   
+        $('#totGrid').children('td').each(function(i)
+            {
+            totData[i] = parseInt($(this).text());
+            });
+        return JSON.stringify(totData);            
+        }
+        
+    function saveInvTot()
+        {
+        var totData = Array();   
+        $('#totInvGrid').children('td').each(function(i)
+            {
+            totData[i] = parseInt($(this).text());
+            });
+        return JSON.stringify(totData);            
+        }
+                
+    function callExcel(mode, tot)
+        {
+        if(tot === undefined) 
+            {
+            tot = "no";
+            }    
+        saveAll();
+        $('#excelMode').attr('value', mode);
+        $('#totMode').attr('value', tot);
+        $('#outGGLavExcel').attr('value', saveGridExcel());            
+        $('#outEventiExcel').attr('value', saveEventiExcel());            
+        $('#outStatusExcel').attr('value', saveStatus());            
+        $('#excelForm').attr('action', '/public/out-excel/out-sheet');
+        $('#excelForm').attr('target', '');
+        $("#excelForm").submit();
+        }
+        
+    function callPdf(mode, tot)
+        {
+        if(tot === undefined) 
+            {
+            tot = "no";
+            }
+        saveAll();
+        $('#excelMode').attr('value', mode);
+        $('#totMode').attr('value', tot);
+        $('#outGGLavExcel').attr('value', saveGridExcel());            
+        $('#outEventiExcel').attr('value', saveEventiExcel());            
+        $('#outStatusExcel').attr('value', saveStatus());            
+        $('#excelForm').attr('action', '/public/out-excel/print-sheet');
+        $('#excelForm').attr('target', '_blank');
+        $("#excelForm").submit();
+        }
+        
+    function saveEventiExcel()
+        {
+        var data = Array();
+<?php
+    $i = 0;
+    echo 'data = Array();';
+    foreach ($this->dataGrid->eventData as $line)
+        {
+        $currLine = '';
+        foreach ($line as $key => $value)
+            {
+            $currLine .= $key.': "'.$value.'",';
+            }
+        echo 'data['.$i++.']={'.substr($currLine, 0, -1).'};';
+        }
+?>        
+        return JSON.stringify(data);
+        }
+        
+    function saveGrid()
+        {
+        var data = Array();
+        data[0] = Array();
+        $('#singleTitle').children('th').each(function(i)
+            {
+            data[0][i] = $(this).text();
+            });
+        $('#planGrid').find('tbody tr').each(function (i, v) 
+            {
+            if ($(this).children('td:first').text() === 
+                <?php echo '"' . $this->totLabel .'"'; ?> )
+                {
+                return false;
+                }
+            data[i + 1] = Array();
+            $(this).children('td').each(function (ii, vv) 
+                {
+                if($(this).hasClass('gridEvid'))
+                    {
+                    data[i + 1][ii] = $(this).text();
+                    }
+                else if($(this).hasClass('gridNote'))
+                    {
+                    data[i + 1][ii] = 'N';
+                    }
+                else
+                    {
+                    data[i + 1][ii] = 'X';
+                    }
+//                data[i + 1][ii] = ($(this).hasClass('gridEvid') || $(this).hasClass('gridNote')) ? $(this).text() : 'X';
+                });
+            });
+        return JSON.stringify(data);
+        }
+
+    function saveAll()
+        {
+        $('#outGGLav').attr('value', saveGrid());
+        $('#outGGLavTot').attr('value', saveTot());            
+        $('#outGGLavTotContr').attr('value', saveInvTot());            
+        $('#outGGLavAllTot').attr('value', calcAllRates());            
+        $('#outGGLavTotValGrid').attr('value', JSON.stringify(valGrid));            
+        $('#outStatus').attr('value', saveStatus());
+        }
+
+    function toggleZero(currButton)
+        {
+        if ($(currButton).hasClass('button_red'))
+            {
+            $(currButton).removeClass('button_red');
+            $('#spreadSheet tr').each(function()
+                {
+                $(this).find('.gridEvidDis, .gridLockedDis').each(function()
+                    {
+                    if($(this).text() == 'X' || $(this).text() == '0')                        {
+                        $(this).addClass('gridTextHidden');
+                        }
+                    });
+                });
+            }
+        else
+            {
+            $(currButton).addClass('button_red');
+            $('#spreadSheet tr').each(function()
+                {
+                $(this).find('.gridEvidDis, .gridLockedDis').each(function()
+                    {
+                    if($(this).text() == 'X' || $(this).text() == '0')
+                        {
+                        $(this).removeClass('gridTextHidden');
+                        }
+                    });
+                });
+            }
+        alignGrids();
+        alignEvents();
+        alignEventLabels();
+        return false;
+        }
+        
+    function toggleTotals(currButton)
+        {
+//        if ($(currButton).hasClass('button_red'))
+//            {
+//            $(currButton).removeClass('button_red');
+            $("#totSheet").addClass("gridHidden");
+//            }
+//        else
+//            {
+//            $(currButton).addClass('button_red');
+//            $("#totSheet").removeClass("gridHidden");
+//            }
+        alignGrids();
+        alignEvents();
+        alignEventLabels();
+        return false;
+        }
+        
+    function toggleSaveTot(currButton)
+        {
+        if ($(currButton).hasClass('button_red'))
+            {
+            $(currButton).removeClass('button_red');
+//            $("#saveTotals").addClass("gridHidden");
+            alignGrids();
+            alignEvents();
+            alignEventLabels();
+            $("#saveTotals").dialog("close");
+            }
+        else
+            {
+            $(currButton).addClass('button_red');
+//            $("#saveTotals").removeClass("gridHidden");
+            $("#saveTotals").dialog("open");
+            }
+        return false;
+        }
+        
+    function callDetail(currRev)
+        {
+        var phpUrl=baseUrl+'/giorni-lav/disp-dett-rev/id/'+currRev;
+        var outForm='';
+        request = $.ajax({
+            url: phpUrl,
+            type: "post",
+            data: outForm,
+            success: function(result){
+                $("#listDettRev").html(result);
+                $("#dettRev").dialog("open");
+                },  
+            error: function(request, status, err) 
+                {
+                alert(err+' '+request.responseText);
+                }                
+            });
+        return false;
+        }
+
+    function closeDettRev()
+        {
+        $("#dettRev").dialog("close");
+        }
+    
+    function alignGrids()
+    {
+    var currTable = document.getElementById("planGrid");
+    var totTable = document.getElementById("planTotGrid");
+    
+    for (var i = 0, row; row = currTable.rows[i], totRow = totTable.rows[i]; i++)
+        {
+        currHeight = row.offsetHeight;
+        $(totRow).css('height', currHeight + 'px');
+        }
+
+    for (var i = 0, row; row = currTable.tHead.rows[i], totRow = totTable.tHead.rows[i]; i++)
+        {
+        var maxRow = row.childElementCount;    
+        var maxTotRow = totRow.childElementCount;  
+        var startRow = maxRow - maxTotRow;
+        for (var j=0; j<maxTotRow; j++)
+            {
+            $(totRow.children[j]).css('width', (row.children[startRow+j].offsetWidth -5) + 'px');
+            }
+        }
+//    var lastVisibleRow = $('#planGrid tbody tr:visible:last');
+//    var lastVisibleCell = $(lastVisibleRow).find('td:visible:last');
+    var lastTitleRow = $('#planGrid thead tr:not(.hiddenTitle):first');
+    var lastTitleCell = lastTitleRow.find('th.sticky-cell:visible:last');
+    currTotPos.x1 = getElementPosition(lastTitleCell[0]).x + lastTitleCell[0].offsetWidth;    
+    currTotPos.x2 = getElementPosition(totTable).x;
+    if(currTotPos.x2 < currTotPos.x1)
+        {
+        currTotPos.x2 = $('#parentSheet').width()+$('#parentSheet').offset().left;
+        }
+    currTotPos.y1 = getElementPosition(lastTitleRow[0]).y + lastTitleRow[0].offsetHeight;
+    currTotPos.y2 = getElementPosition($('#parentSheet')[0]).y + $('#parentSheet')[0].offsetHeight;
+    $('#planTotGrid').css('height', ($('#planGrid').height())+'px');
+//    $('#totSheet').css('visibility', 'visible');
+    }
+
+    function isReadOnly()
+    {
+    <?php echo 'return '.($this->readonly=='1' ? 'true;' : 'false;');?>
+    }
+    
+</script>
+<?php
+echo $this->jsGrid;
+?>
+<iframe id="txtArea1" style="display:none"></iframe>
+
+<div id="HeaderPlanning" class="headPlan">
+    <div id="HeaderPlanning-1">
+        <form id="exitForm" name="exitForm"
+        <?php
+        echo ' action="' . $this->baseUrl() .
+        '/giorni-lav/savegrid' . '" ';
+        ?>
+               method="POST">
+               <!--method="POST" title="Close" alt="Close">-->
+        <div id="buttons_wrapper" style="width: 100%; overflow: hidden; ">
+            <div id="buttons_content">
+                <button type="button" id="gestReq">Phases</button>
+                <div class="dropdown alignDropdowns">
+                    <button type="button" id="outExcel" class="dropbtn">Export</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="expMs-Excel2">Ms-Excel</a>
+                        <!--<a href="#" id="expMs-Excel2-T">Ms-Excel+Totals</a>-->
+                        <a href="#" id="expPDF">PDF</a>                    
+                        <!--<a href="#" id="expPDF-T">PDF+Totals</a>-->                    
+                    </div>
+                </div>
+                <span style="margin-left: 55px; display: inline;">&nbsp;</span>
+                <button type="button" id="Eventi">Milestones</button>
+                <span style="margin-left: 15px; display: inline;">&nbsp;</span>
+                <div class="dropdown alignDropdowns">
+                    <button type="button" id="visMode" class="dropbtn">Display</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="dispQualification" class="button_red">Qualification</a>
+                        <a href="#" id="dispSupervisor" class="button_red">Supervisor</a>    
+                        <a href="#" id="dispPersonnel_Company" class="button_red">Personnel Company</a>
+                        <a href="#" id="dispContract_Company" class="button_red">Contract Company</a>
+                        <a href="#" id="dispZoom" class="button_red">Month/Year</a>
+                        <!--<a href="#" id="dispZero" class="button_red">Zero Cells</a>-->
+                        <!--<a href="#" id="dispTotals" class="button_red">Totals</a>-->
+                    </div>
+                </div>
+                <span style="margin-left: 55px; display: inline;">&nbsp;</span>
+                <span style="margin-left: 15px; display: inline;">Order by:</span>
+                <select name="orderGrid" id="orderGrid" style="display: inline;">
+                    <?php
+                    echo checkOpt('', '', $this->currOrder);
+                    echo checkOpt('Qualification', '1', $this->currOrder);
+                    echo checkOpt('Supervisor', '2', $this->currOrder);
+                    echo checkOpt('Personnel Company', '3', $this->currOrder);
+                    echo checkOpt('Activity', '4', $this->currOrder);
+                    ?>
+                </select>            
+                <span style="margin-left: 20px; display: inline;">&nbsp;</span>
+                <button type="button" id="riassGrid">Contract</button>
+                <span style="margin-left: 20px; display: inline;">&nbsp;</span>
+                <!--<button type="button" id="graphTot">Graph</button>-->
+                <div class="dropdown">
+                    <button type="button" id="outGraph" class="dropbtn alignDropdowns">Graph</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="graphTotals">Totals</a>
+                        <a href="#" id="graphProg">Progressive</a>                    
+                    </div>
+                </div>
+                <span style="margin-left: 80px; display: inline;">&nbsp;</span>
+                <button type="button" id="Planning" class="button_red">Planning</button>
+                <button type="button" id="Actual">Actual</button>
+                <button type="button" id="Cash">Cash</button>
+                <button type="button" id="CashGrid">$</button>
+                <span style="margin-left: 20px; display: inline;">&nbsp;</span>
+                <button type="button" id="NewRev">Revisions</button>
+                
+                <span style="margin-left: 40px; display: inline;">&nbsp;</span>
+                <span id="warningConcurrents" class="warningConcurrents" 
+                      onClick = "openAlert(concurrents);">
+                      <!--onClick = "$('<div title=\'Alert\'>'+concurrents+'</div>').dialog();">-->
+                    <img src= 
+                        <?php 
+                        echo '"'.$this->baseUrl().'/images/warning_icon.png"'; 
+                        ?>                         
+                        title="Warning concurrent users" 
+                        alt="Warning concurrent users">Concurrent users!
+                </span>
+                <span style="margin-left: 5px; display: inline;">&nbsp;</span>
+                    <?php 
+                    if($this->readonly)
+                        {
+                        echo '<span id="readonlyImg" class="readonlyImg"> '.
+                             '<img src= "'.$this->baseUrl().'/images/lock2.png" '.
+                             'title="Readonly" alt="Readonly">Readonly!</span>';
+                        }
+                    ?>                         
+                
+                        <!--onClick = "alert(concurrents);"--> 
+                <div style="float: right; display: inline;">
+                    <?php
+                    echo '<input type="hidden" name="outajax" id="outAjax" value=""/>';
+                    echo '<input type="hidden" name="gglav" id="outGGLav"/>'."\n";
+                    echo '<input type="hidden" name="gglavtot" id="outGGLavTot"/>'."\n";
+                    echo '<input type="hidden" name="gglavtotcontr" id="outGGLavTotContr"/>'."\n";
+                    echo '<input type="hidden" name="gglavalltot" id="outGGLavAllTot"/>'."\n";
+                    echo '<input type="hidden" name="gglavtotvalgrid" id="outGGLavTotValGrid"/>'."\n";
+                    echo '<input type="hidden" name="status" id="outStatus"/>'."\n";
+                    echo '<input type="hidden" name="currid" id="currId" value="' . $this->currId . '"/>'."\n";
+                    echo '<input type="hidden" name="currrel" id="currRel" value="' . $this->currRel . '"/>'."\n";
+                    echo '<input type="hidden" name="mode" id="currMode" value="plan"/>'."\n";
+                    echo '<input type="hidden" name="outmode" id="outMode" value=""/>'."\n";
+                    echo '<input type="hidden" name="outpar" id="outPar" value=""/>'."\n";
+                    echo '<input type="hidden" name="outpar2" id="outPar2" value=""/>'."\n";
+                    echo '<input type="hidden" name="orderby" id="orderBy" value=""/>'."\n";
+                    echo '<input type="hidden" name="note-totals" id="note-totals" value=""/>'."\n";
+                    echo '<input type="hidden" name="datakeys" id="datakeys" value="' .
+                            $this->keys . '"/>'."\n";
+                    echo '<input type="hidden" name="keys" value="' . $this->keys . '"/>'."\n";
+                    echo '<input type="hidden" name="gridlen" value="' . $this->gridLen . '"/>'."\n";
+                    echo '<input type="hidden" name="refactual" value="' . $this->currReference . '"/>'."\n";
+                    echo '<input type="hidden" name="refcash" value="' . $this->currCashReference . '"/>'."\n";
+                    echo '<input type="hidden" name="refmonth" value="' . $this->currRefMonth . '"/>'."\n";
+                    echo '<input type="hidden" name="refyear" value="' . $this->currRefYear . '"/>'."\n";
+                    echo '<button type="submit" id="esci" name="esci" value="esci"><img src="' .
+                            $this->baseUrl() . '/images/ok.png' .
+                    '" title="Confirm" alt="Confirm">Confirm</button>'."\n";
+                    echo '<button type="submit" id="annulla" name="annulla" value="annulla"><img src="' .
+                            $this->baseUrl() . '/images/nao.png' .
+                    '" title="Discard" alt="Discard">Discard</button>'."\n";
+                    ?>
+                </div>
+            </div>
+            <div id="cleared"></div>
+            <div id="cleared"></div>
+            <div class="events-label-space">
+                <?php
+                foreach ($this->dataGrid->eventData as $key => $line)
+                    {
+                    echo '<div class="events-label-div" title="' . $line['Note'] . 
+                            '" id="label-ev-' . $line['evGGYY'] . '-' . $line['idEvento'] . "\">\n";
+                    echo '<div class="events-label">' . $line['Evento'] . "</div>\n</div>\n";
+                    }
+                echo '<div class="events-label-div" id="label-ev-' . 
+                        $this->currRefMonth.'-'.$this->currRefYear . "\">\n";
+                echo '<div class="hiddenTitle">Reference ' . $this->currRefMonth.'/'.
+                        $this->currRefYear . "</div>\n</div>\n";
+                ?>
+            </div>    
+            <div id="form" style="height: 0px;">
+                <input type="hidden" name="idPersonale" value="1" id="idPersonale" >
+            </div>
+        </div>
+        </form>
+        <?php
+        echo $this->render('giorni-lav/excelform.phtml');
+        ?>        
+    </div>
+<!--    <div id="GGtabs-2" style="width: 100%">
+    </div>-->
+</div>
+<div id="parentSheet" class="parentGrid">
+    <div id="spreadSheet" class="sticky-table sticky-ltr-cells sticky-headers mainGridPos">        
+        <?php
+        $calcGrids = makeGrid($this->dataGrid, $this->currStatus, $this->title);
+//        $calcGrids = makeGrid($this->dataGrid, $this->currRefMonth, $this->currRefYear, $this->currStatus);
+        echo $calcGrids['mainGrid'] . $calcGrids['evGrid'];
+        ?>
+    </div>
+    <!--<div id="totSheet" class="sticky-table sticky-ltr-cells sticky-headers totGridPos gridHidden">-->
+    <div id="totSheet" class="sticky-table sticky-ltr-cells sticky-headers totGridPos">
+        <?php
+        echo $calcGrids['totGrid'];
+        ?>                
+    </div>
+    <!--<span class="clear"></span>-->
+    <script type="text/javascript">
+<?php
+echo $calcGrids['labelsVar'] . $calcGrids['alignFunct'];
+?>
+    </script>        
+</div>
+
+<?php
+echo $this->render('giorni-lav/detailform.phtml');
+?>        
+    
+<div class="gridHidden">
+        
+<div id="saveTotals" class="confirmForm">
+    <br>
+    <div id="listRev">
+        <?php
+           echo $this->revGrid;
+        ?>   
+    </div>
+    <br>
+    <br>
+    <h3>Save New Revision</h3>
+    <input type="hidden" name="out-totals" id="out-totals" value=""/>
+    <div style="display: inline; float: left; align-items: center; padding-left: 15px; padding-right: 15px;">
+    Note: <textarea id="note-totals-hidden" name="note-totals-hidden" rows="3" cols="80"></textarea>
+    </div>
+    <span style="margin-left: 40px;">&nbsp;</span>
+    <button type="submit" id="confSaveTot" name="confSaveTot" value="confSaveTot">
+        <?php
+           echo '<img src="'.$this->baseUrl() . 
+                '/images/ok.png" title="Confirm" ';
+        ?>   
+        alt="Confirm">Confirm</button>
+    <button type="submit" id="discSaveTot" name="discSaveTot" value="discSaveTot">
+        <?php
+           echo '<img src="'.$this->baseUrl() . 
+                '/images/nao.png" title="Discard" ';
+        ?>   
+        alt="Discard">Discard</button>
+</div>
+        
+<div id="dettRev" class="confirmForm">
+    <br>
+    <div id="listDettRev">
+    </div>
+    <br>
+    <br>
+    <button type="submit" id="discDettRev" name="discDettRev" value="discDettRev">
+        <?php
+           echo '<img src="'.$this->baseUrl() . 
+                '/images/nao.png" title="Discard" ';
+        ?>   
+        alt="Discard">Discard</button>
+</div>
+        
+<?php
+echo $this->render('giorni-lav/noteform.phtml');
+?>        
+
+</div>
+<?php
+
+function checkOpt($label, $currVal, $currOrder)
+    {
+    if ($currVal == $currOrder)
+        {
+        return('<option value="' . $currVal . '" label="' . $label . 
+                '" selected="selected">' . $label . '</option>' . "\n");
+        }
+    else
+        {
+        return('<option value="' . $currVal . '" label="' . $label . 
+                '">' . $label . '</option>' . "\n");
+        }
+    }
+    
+function makeGrid($dataGrid, $currStatus, $title)
+    {
+    reset($dataGrid->currData);
+    $firstData = current($dataGrid->currData);
+    reset($firstData['Data']);
+    $firstMonthYear = current(array_keys($firstData['Data']));
+    $monthYear = explode('/', $firstMonthYear);
+    $yearCount = 0;
+    $currYear = $monthYear[1];
+    $rowYear = '<th colspan="';
+    $rowMonth = '';
+    $rowMonthYear = '';
+    $refColumn = 0;
+    $countRefColumn = 0;
+    $currRefMonth = sprintf("%02d", $dataGrid->projData['MeseRef']);
+    $currRefYear = $dataGrid->projData['AnnoRef']; 
+    $classRef = ' class="gridReference"';
+    foreach ($firstData['Data'] as $key => $value)
+        {
+        $monthYear = explode('/', $key);
+        if($monthYear[0] == $currRefMonth && $monthYear[1] == $currRefYear)
+            {
+            $classRef = '';
+            $refColumn = $countRefColumn;
+            }
+        $countRefColumn++;
+        if ($currYear != $monthYear[1])
+            {
+            $rowYear .= $yearCount . '">' . $currYear . "</th>\n<th colspan=\"";
+            $currYear = $monthYear[1];
+            $yearCount = 0;
+            }
+        $yearCount++;
+        $rowMonth .= '<th id="dt-' . $monthYear[0] . '-' . $monthYear[1] . '"' . 
+                $classRef . '>' . $monthYear[0] . "</th>\n";
+        $rowMonthYear .= '<th id="' . $monthYear[0] . '-' . $monthYear[1] . '"' . 
+                $classRef . '>' . $key . "</th>\n";
+        }
+    $rowYear .= $yearCount . '">' . $currYear . "</th>\n";
+    if($currStatus->my)
+        {
+        $singleMod = "hiddenTitle";
+        $double1Mod = "";
+        $double2Mod = "";
+        }
+    else
+        {
+        $singleMod = "";
+        $double1Mod = "hiddenTitle";
+        $double2Mod = "hiddenTitle";
+        }
+//  Single title    
+    $grid = '<table id="planGrid" align="top" cellspacing="0" cellpadding="0">
+<thead>
+<tr id="singleTitle" class="sticky-row '.$singleMod.'">
+<th class="sticky-cell">Phase/Activity</th>
+<th class="sticky-cell">Qualification</th>
+<th class="sticky-cell">Supervisor</th>
+<th class="sticky-cell">Personnel Company</th>
+<th class="sticky-cell lastGridTitle">Contract Company</th>
+' . $rowMonthYear . '<th>Contr.Days</th<th>Tot.Days</th>
+<th class="gridHidden" >Tot.Rate</th>
+<th class="gridHidden" >Tot.PM</th>
+<th class="gridHidden" >Total</th>
+</tr>
+';
+    $gridTot = '<table id="planTotGrid" class="totGridTable" align="center" cellspacing="0" cellpadding="0">
+<thead>
+<tr id="singleTotTitle" class="sticky-row '.$singleMod.'">
+<th>Contr.Days</th><th>Tot.Days</th>
+<th class="gridHidden" >Tot.Rate</th>
+<th class="gridHidden" >Tot.PM</th>
+<th class="gridHidden" >Total</th>
+</tr>
+';
+
+// Dual title
+// First row
+
+    $grid .= '
+<tr id="dualTitle1" class="sticky-row visibleTitle '.$double1Mod.'">
+<th class="sticky-cell" rowspan="2">Phase/Activity</th>
+<th class="sticky-cell" rowspan="2">Qualification</th>
+<th class="sticky-cell" rowspan="2">Supervisor</th>
+<th class="sticky-cell" rowspan="2">Personnel Company</th>
+<th class="sticky-cell lastGridTitle" rowspan="2">Contract Company</th>' . "\n" .
+            $rowYear . '<th rowspan="2">Contr.Days</th><th rowspan="2">Tot.Days</th>
+<th class="gridHidden" rowspan="2">Tot.Rate</th>
+<th class="gridHidden" rowspan="2">Tot.PM</th>
+<th class="gridHidden" rowspan="2">Total</th>
+</tr>' . "\n";
+    $gridTot .= '<tr id="dualTotTitle1" class="sticky-row visibleTitle '.$double1Mod.'">
+<th rowspan="2">Contr.Days</th><th rowspan="2">Tot.Days</th>
+<th class="gridHidden" rowspan="2">Tot.Rate</th>
+<th class="gridHidden" rowspan="2">Tot.PM</th>
+<th class="gridHidden" rowspan="2">Total</th>
+</tr>' . "\n";
+
+// Second row
+    $grid .= "<tr id=\"dualTitle2\" class=\"sticky-row visibleTitle2 " .
+            $double2Mod."\">\n" . $rowMonth . "</thead>\n<tbody>\n";
+    $gridTot .= "<tr id=\"dualTotTitle2\" class=\"sticky-row visibleTitle2 " .
+            $double2Mod."\">\n</thead>\n<tbody>\n";
+
+// Body
+    $numLabelCols = 5;
+    $months = array_keys($firstData['Data']);
+    $numMonths = count($months);
+    $lastVisibleCol = $numMonths > 12 ? $numMonths : 12;
+    $currAct = '';
+    $currStep = '';
+    $currLineInv = '';
+    $currLineContr = '';
+    $rowCounter = 0;
+    $valGrid = "var valGrid = {";
+    $TotArray = array();
+    $dataRows = '';
+    $labelRows = '';
+    $allCounter = 0;
+    $colCount = 0;
+    foreach ($months as $currMonth)
+        {
+        $TotArray[$currMonth] = array('totGG'=>0, 'invGG'=>0, 
+            'totRate'=>0, 'totPM'=>0, 'invRate'=>0, 'invPM'=>0);
+        }
+    foreach ($dataGrid->currData as $key => $line)
+        {
+        if($allCounter > 0) $valGrid .= ",\n";
+        $valGrid .= "r".$allCounter . ": {";
+        $allCounter++;
+        $keyFlag = false;
+        if (array_key_exists('keyArea', $line) && $currAct != $line['keyArea'])
+            {
+            $keyFlag = true;
+            $grid .= '<tr>' . "\n";
+            $gridTot .= '<tr>' . "\n";
+            $dataRows .= ",";
+            $labelRows .= strval($rowCounter++) . ",";
+            $currAct = $line['keyArea'];
+            if (!$line['IsMainContr'])
+                {
+                $currClass = 'areaBannerNoCC';
+                $totClass = 'gridTotals gridTotNoCC';    
+                }
+            elseif ($line['Vendor'] > 0)
+                {
+                $currClass = 'areaBannerVendor';
+                $totClass = 'gridTotals';    
+                }
+            elseif ($line['NotInvoiced'] > 0)
+                {
+                $currClass = 'areaBannerNotInv';
+                $totClass = 'gridTotals';    
+                }
+            else
+                {
+                $currClass = 'areaBannerNormal';
+                $totClass = 'gridTotals';    
+                }
+                
+            $gridTot .= "<td class='" . $currClass . "'>&nbsp;</td>\n" .
+                    "<td class='" . $currClass . " gridHidden'>&nbsp;</td>\n" .
+                    "<td class='" . $currClass . " gridHidden'>&nbsp;</td>\n" .
+                    "<td class='" . $currClass . " gridHidden'>&nbsp;</td>\n" .
+                    "</tr>\n";
+            $grid .= '<td colspan="';
+            $grid .= $numLabelCols;
+            $grid .= '" onClick="callOut(' . "'fase', '" . $line['keyArea'] . "'" .
+                    ');" class="sticky-cell ' . $currClass . '">' . $line['AreaShort'];
+            if ($line['NotInvoiced'] > 0)
+                {
+                $grid .=  ' (Not Invoiced)';
+                }
+            $grid .=  '</td>' . "\n";
+//            for($emptyCell = 0; $emptyCell < ($lastVisibleCol + 4); $emptyCell++)
+//            for($emptyCell = 0; $emptyCell < ($lastVisibleCol+4); $emptyCell++)
+            for($emptyCell = 0; $emptyCell < ($numMonths+2); $emptyCell++)
+                {
+                $grid .= '<td class="' . $currClass . 
+                        getYearLimit($emptyCell, $months) .
+                         '">&nbsp;</td>' . "\n";
+                if($emptyCell > 0) $valGrid .= ",\n";
+                $valGrid .= "c".$emptyCell.': {rate: 0, pm:0, gg: 0, nr: 0, inv:false, contr:false}';
+                }
+            $grid .= '</tr>' . "\n";
+            }
+//        if ((array_key_exists('idProgStep', $line) && ($line['idProgStep'] != $currStep)))
+//            {
+//            
+//            }
+        if ((array_key_exists('keyRichiesta', $line) && ($line['keyRichiesta'] != '')) || 
+                (array_key_exists('idProgStep', $line) && ($line['idProgStep'] != '')))
+            {
+            if($keyFlag)
+                {
+                if($colCount > 0)
+                    {
+                    $valGrid .= ",\n tot: {".
+                            "totcontrgg:0, totcontrate:0, totcontrpm:0, ".
+                            "totgg:0, totrate:0, totpm:0, inv:false, contr:false} },\n";
+                    }
+                else    
+                    {
+                    $valGrid .= ",\n},\n";
+                    }
+                $valGrid .= "r".$allCounter . ": {";
+                $allCounter++;
+                }
+            $rowCounter++;
+            $dataRows .= $line['keyRichiesta'] . ',';
+            $gridTot .= '<tr>' . "\n";
+            $grid .= '<tr>' . "\n" .
+                    '<td class="sticky-cell gridActiveTitles" onClick="callOut(' . "'att', '" . $line['idProgStep'] . "'" .
+                    ');">' . $line['Step'] . '</td>' . "\n" .
+                    '<td class="sticky-cell gridActiveTitles" onClick="callOut(' . "'qual', '" . $line['keyRichiesta'] .
+                    "', '" . $line['idProgStep'] . "');\">" . $line['Qualifica'] . '</td>' . "\n" .
+                    '<td class="sticky-cell gridActiveTitles" onClick="callOut(' . "'pers', '" . $line['idJob'] .
+                    "', '" . $line['keyRichiesta'] . "'" .
+                    ');">' . $line['Supervisor'] . '</td>' . "\n" .
+                    '<td class="sticky-cell gridTitles">';
+
+            $countPrev = 0;
+            foreach ($line['ListFornPers'] as $currFornPers => $value)
+                {
+                if($countPrev == 0)
+                    {
+                    $grid .= '<span class="gridPrevForn">' . $currFornPers . '</span>';
+                    }
+                else
+                    {                    
+                    $grid .= ', ' . $currFornPers;                    
+                    }
+                $countPrev++;    
+                }
+
+            $grid .= '</td>'."\n".'<td class="sticky-cell gridTitles lastGridTitle">' .
+                    $line['Sigla'] . '</td>' . "\n";
+            $colCount = 0;
+            $horizTot = array('GG'=>0, 'Rate'=>0, 'PM'=>0, 
+                'contrGG'=>0, 'contrRate'=>0, 'contrPM'=>0);
+            foreach ($line['Data'] as $mKey=>$value)
+                {
+                $titles = array();
+                $classes = array();
+                $currValue = '';
+                if($colCount > 0) 
+                    {
+                    $valGrid .= ",\n";
+                    }
+                $valGrid .= "c".$colCount.
+                    ': {rate: ' . $value['RateGG'] . 
+                    ', pm: ' . $value['RatePM'] . 
+                    ', gg: ' . intval($value['GiorniTarget']) . 
+                    ', nr: ' . $value['GiorniNotInv'] . 
+                    ', note: "' . str_replace(array("\n", "\r", "\""), 
+                        array(" ", " ", "'"), $value['NoteGG']) . '"';
+                if ($line['NotInvoiced'] == 0)
+                    {
+                    $currLineInv = ', inv:false';
+                    $valGrid .= ',inv:false';
+                    }
+                else
+                    {                    
+                    $currLineInv = ', inv:true';
+                    $valGrid .= ',inv:true';
+                    }    
+                if ($line['IsMainContr'])
+                    {
+                    $currLineContr = ', contr:true';
+                    $valGrid .= ',contr:true}';
+                    }
+                else
+                    {                    
+                    $currLineContr = ', contr:false';
+                    $valGrid .= ',contr:false}';
+                    }    
+
+                $classes[] = getYearLimit($colCount, $months);
+
+                if ($value['GiorniEffAltriProg'] > 0)
+                    {
+                    $titles[] = $line['Supervisor'].' Other Commitments: '.
+                            $value['GiorniTotAltriProg']."<br>".
+                            $value['GiorniTargetListAltriProg'];
+                    $classes[] = 'gridOtherCommitments';
+                    }
+                else if ($value['GiorniTargetAltriProg'] > 0)
+                    {
+                    $titles[] = $line['Supervisor'].' Other Commitments: '.
+                            $value['GiorniTotAltriProg']."<br>".
+                            $value['GiorniTargetListAltriProg'];
+                    $classes[] = 'gridOtherCommitments';
+                    }
+                    
+                if($colCount < $refColumn)
+                    {
+                    $classModifyer = 'Dis';
+                    //$currValue = 'X';
+                    }
+                else    
+                    {
+                    $classModifyer = '';
+                    $currValue = $value['GiorniTarget'];
+                    $targetValue = $value['GiorniTarget'];
+                    }
+                    
+                if ($value['GiorniEff'] > 0)
+                    {
+                    if ($value['NoteGG'] != '')
+                        {
+                        $classes[] = 'gridNoteLocked';
+                        $titles[] = $value['NoteGG'];
+                        }
+                    $classes[] = 'gridLocked'.$classModifyer;
+                    if($value['HasDetail'])
+                        {
+                        $classes[] = 'gridDetail';
+                        }
+                    $currValue = $value['GiorniEff'];
+                    $numValue = ($currValue+0);
+                    if ($line['NotInvoiced'] == 0 && $line['IsMainContr'])
+                        {
+                        $horizTot['contrGG'] += $numValue;
+                        }
+                    $horizTot['contrRate'] += $numValue*$value['RateGG'];
+                    $horizTot['contrPM'] += $numValue*$value['RatePM'];
+                    $numValue += ($value['GiorniNotInv']+0);
+                    $horizTot['GG'] += $numValue;
+                    $horizTot['Rate'] += $numValue*$value['RateGG'];
+                    $horizTot['PM'] += $numValue*$value['RatePM'];
+
+                    if ($line['IsMainContr'])
+                        {
+                        $TotArray[$mKey]['totGG'] += $numValue;    
+                        $TotArray[$mKey]['totRate'] += $numValue*$value['RateGG'];    
+                        $TotArray[$mKey]['totPM'] += $numValue*$value['RatePM'];    
+                        if ($line['NotInvoiced'] == 0)
+                            {
+                            $TotArray[$mKey]['invGG'] += ($value['GiorniEff'] + 0);
+                            $TotArray[$mKey]['invRate'] += $numValue*$value['RateGG'];    
+                            $TotArray[$mKey]['invPM'] += $numValue*$value['RatePM'];    
+                            }
+                        }
+                    }
+                else if ($value['GiorniTarget'] > 0 && $colCount >= $refColumn)
+                    {
+                    if ($value['NoteGG'] != '')
+                        {
+                        $classes[] = 'gridNote';
+                        $titles[] = $value['NoteGG'];
+                        }
+                    $classes[] = 'gridEvid'.$classModifyer;
+                    if($value['HasDetail'])
+                        {
+                        $classes[] = 'gridDetail';
+                        }
+                    $currValue = $value['GiorniTarget'];
+                    $numValue = ($currValue+0);
+                    if ($line['NotInvoiced'] == 0 && $line['IsMainContr'])
+                        {
+                        $horizTot['contrGG'] += $numValue;
+                        }
+                    $horizTot['contrRate'] += $numValue*$value['RateGG'];
+                    $horizTot['contrPM'] += $numValue*$value['RatePM'];
+                    $numValue += ($value['GiorniNotInv']+0);
+                    $horizTot['GG'] += $numValue;
+                    $horizTot['Rate'] += $numValue*$value['RateGG'];
+                    $horizTot['PM'] += $numValue*$value['RatePM'];
+
+                    if ($line['IsMainContr'])
+                        {
+                        $TotArray[$mKey]['totGG'] += $numValue;    
+                        $TotArray[$mKey]['totRate'] += $numValue*$value['RateGG'];    
+                        $TotArray[$mKey]['totPM'] += $numValue*$value['RatePM'];    
+                        if ($line['NotInvoiced'] == 0)
+                            {
+                            $TotArray[$mKey]['invGG'] += $numValue;    
+                            $TotArray[$mKey]['invRate'] += $numValue*$value['RateGG'];    
+                            $TotArray[$mKey]['invPM'] += $numValue*$value['RatePM'];    
+                            }
+                        }
+                    }
+                else if ($value['GiorniTarget'] > 0 && $colCount < $refColumn)
+                    {
+                    $classes[] = 'gridEvid'.$classModifyer;
+                    $classes[] = 'gridNote';
+                    $currValue = 'X';
+                    }
+                else if ($value['GiorniNotInv'] > 0)
+                    {
+                    if($value['StatusDetail'] == 'A')
+                        {
+                        $classes[] = 'gridLocked'.$classModifyer;                        
+                        }
+                    else
+                        {
+                        $classes[] = 'gridEvid'.$classModifyer;
+                        }                        
+                    $classes[] = 'gridDetail';
+                    $TotArray[$mKey]['totGG'] += $value['GiorniNotInv'];    
+                    $currValue = 'D';
+                    $numValue = ($value['GiorniNotInv']+0);
+                    $horizTot['GG'] += $numValue;
+                    $horizTot['Rate'] += $numValue*$value['RateGG'];
+                    $horizTot['PM'] += $numValue*$value['RatePM'];
+                    }
+                else if ($value['GiorniNotInv'] == 0 && $value['HasDetail'])
+                    {
+                    if($value['StatusDetail'] == 'A')
+                        {
+                        $classes[] = 'gridLocked'.$classModifyer;                        
+                        }
+                    else
+                        {
+                        $classes[] = 'gridEvid'.$classModifyer;
+                        }                        
+                    $classes[] = 'gridDetail';
+                    $currValue = 'D';
+                    }
+                else if (!$line['keyRichiesta'])
+                    {
+                    $classes[] = 'gridForbidden';
+                    }
+                else if($value['NoteGG'] != '' && $value['GiorniNotInv'] > 0)
+                    {
+                    $currValue = 'D';
+                    $classes[] = 'gridNote';
+                    if($value['StatusDetail'] == 'A')
+                        {
+                        $classes[] = 'gridLocked'.$classModifyer;                        
+                        }
+                    else
+                        {
+                        $classes[] = 'gridEvid'.$classModifyer;
+                        }                        
+                    $classes[] = 'gridDetail';
+                    $titles[] = $value['NoteGG'];
+                    $numValue = ($value['GiorniNotInv']+0);
+                    $horizTot['GG'] += $numValue;
+                    $horizTot['Rate'] += $numValue*$value['RateGG'];
+                    $horizTot['PM'] += $numValue*$value['RatePM'];
+                    }
+                else if($value['NoteGG'] != '')
+                    {
+                    $currValue = 'N';
+                    $classes[] = 'gridNote';
+                    $classes[] = 'gridZero'.$classModifyer;
+                    $titles[] = $value['NoteGG'];
+                    }
+                else
+                    {
+                    $currValue =  $currValue == 'X' ? 'X' : $value['GiorniTarget'];
+                    $classes[] = 'gridZero'.$classModifyer;
+                    }
+                    
+                    
+                $grid .= '<td';
+                if(count($titles)>0)
+                    {
+                    $grid .= ' title="'.implode('<br>', $titles).'"';
+                    }
+                if(count($classes)>0)
+                    {
+                    $grid .= ' class="'.implode(' ', $classes).'"';
+                    }
+                $grid .= '>'.$currValue. '</td>'."\n";
+                  
+                    
+                $colCount++;    
+                }
+            $grid .= '<td class="'.$totClass.'">' . $horizTot['contrGG'] . "</td>\n" .
+                    '<td class="'.$totClass.'">' . $horizTot['GG'] . "</td>\n" .
+                    '<td class="'.$totClass.', gridHidden">' . myFormat($horizTot['Rate']) . '</td>' . "\n" .
+                    '<td class="'.$totClass.', gridHidden">' . myFormat($horizTot['PM']) . '</td>' . "\n" .
+                    '<td class="'.$totClass.', gridHidden">' . myFormat($horizTot['PM'] +$horizTot['Rate']) . '</td>' . "\n";
+            $gridTot .= '<td class="'.$totClass.'">' . $horizTot['contrGG'] . '</td>' . "\n" .
+                    '<td class="'.$totClass.'">' . $horizTot['GG'] . '</td>' . "\n" .
+                    '<td class="'.$totClass.', gridHidden">' . myFormat($horizTot['Rate']) . '</td>' . "\n" .
+                    '<td class="'.$totClass.', gridHidden">' . myFormat($horizTot['PM']) . '</td>' . "\n" .
+                    '<td class="'.$totClass.', gridHidden">' . myFormat($horizTot['PM'] + $horizTot['Rate']) . '</td>' . "\n";
+            $grid .= '</tr>' . "\n";
+            $gridTot .= '</tr>' . "\n";
+            }
+        else
+            {
+            $colCount = 0;
+            $horizTot = array('GG'=>0, 'Rate'=>0, 'PM'=>0, 
+                'contrGG'=>0, 'contrRate'=>0, 'contrPM'=>0);           
+            }
+//        $valGrid .= "}\n"; 
+        if($colCount > 0)
+            {
+            $valGrid .= ",\n tot: {".
+            "totcontrgg:".$horizTot['contrGG'].
+            ", totcontrate:".$horizTot['contrRate'].
+            ", totcontrpm:".$horizTot['contrPM'].
+            ", totgg:".$horizTot['GG'].
+            ", totrate:".$horizTot['Rate'].
+            ", totpm:".$horizTot['PM'].
+            $currLineInv.
+            $currLineContr.
+            "} }\n";
+            }
+        else
+            {
+            $valGrid .= "\n}\n";
+            }
+        }
+    $valGrid .= "};\n"; 
+    $grid .= "</tbody>\n<tfoot>\n";
+    $gridTot .= "</tbody>\n<tfoot>\n";
+
+// Contract totals
+    if (array_key_exists('totInvTarget', $dataGrid->totData))
+        {
+        $rowCounter++;
+        $grid .= '<tr id="totInvGrid">' . "\n";
+        $gridTot .= '<tr id="totTotInvGrid">' . "\n";
+        $line = $dataGrid->totData['totInvTarget'];
+        $labelRows .= strval($rowCounter) . ",";
+        $grid .= '<td class="gridColTotals sticky-cell" colspan="' . $numLabelCols . '">' .
+                $line['Qualifica'] . '</td>' . "\n";
+        $totInvGen = array('GG'=>0,'Rate'=>0,'PM'=>0);
+        $i = 0;
+        foreach ($months as $currMonth)
+            {
+            $totInvGen['GG']+=$TotArray[$currMonth]['invGG'];
+            $totInvGen['Rate']+=$TotArray[$currMonth]['invRate'];
+            $totInvGen['PM']+=$TotArray[$currMonth]['invPM'];
+            $grid .= '<td class="gridColTotals'.
+                    getYearLimit($i++, $months).'">';
+            $grid .= $TotArray[$currMonth]['invGG'] . '</td>' . "\n";
+            }
+        $grid .= "<td id='totGG1' class='gridColTotals'>"  . $totInvGen['GG'] . "</td>\n" .
+                "<td class='gridColTotals'>&nbsp;</td>\n" .
+                "<td class='gridColTotals gridHidden'>" . myFormat($totInvGen['Rate']) . "</td>\n" .
+                "<td class='gridColTotals gridHidden'>" . myFormat($totInvGen['PM']) . "</td>\n" .
+                "<td class='gridColTotals gridHidden'>" . myFormat($totInvGen['Rate'] + $totInvGen['PM']) . "</td>\n" .
+                "</tr>\n";  //"<td class='gridColTotals'>" . $totInvGen['GG'] . "</td>\n" 
+        $gridTot .= "<td class='gridColTotals'>" . "</td>\n" .
+                "<td class='gridColTotals'>&nbsp;</td>\n" .
+                "<td class='gridColTotals gridHidden'>" . myFormat($totInvGen['Rate']) . "</td>\n" .
+                "<td class='gridColTotals gridHidden'>" . myFormat($totInvGen['PM']) . "</td>\n" .
+                "<td class='gridColTotals gridHidden'>" . myFormat($totInvGen['Rate'] + $totInvGen['PM']) . "</td>\n" .
+                "</tr>\n";
+        }
+    if (array_key_exists('progressivoInvTarget', $dataGrid->totData))
+        {
+        $rowCounter++;
+        $grid .= '<tr id="progInvGrid">' . "\n";
+        $gridTot .= '<tr id="progInvTotGrid">' . "\n";
+        $line = $dataGrid->totData['progressivoInvTarget'];
+        $labelRows .= strval($rowCounter) . ",";
+        $grid .= '<td class="sticky-cell gridColProgressive" colspan="' . $numLabelCols . '">' .
+                $line['Qualifica'] . '</td>' . "\n";
+        $currProg = 0;
+        $i = 0;
+        foreach ($months as $currMonth)
+            {
+            $currProg += $TotArray[$currMonth]['invGG'];
+            $grid .= '<td class="gridColProgressive'.
+                    getYearLimit($i++, $months).'">';
+            $grid .= $currProg . '</td>' . "\n";
+            }
+        $delta = (($dataGrid->projData['contractMD']+0)-($totInvGen['GG']+0)); 
+        $deltaStr='<div id="deltaContract1">'.$delta.' &Delta;</div>';
+        if($delta < 0)
+            {
+            $grid .= '<td class="deltaNegative">' . $deltaStr;
+            $gridTot .= '<td class="gridColTotProgressive, deltaNegative">' . $deltaStr;
+            }
+        else
+            {
+            $grid .= '<td class="deltaPositive">' . $deltaStr;
+            $gridTot .= '<td class="gridColTotProgressive, deltaPositive">' . $deltaStr;
+            }
+//        $grid .= "</td>\n<td>&nbsp;</td>\n<td>&nbsp;</td>\n<td>&nbsp;</td>\n</tr>\n";
+        $grid .= "</td>\n<td class='gridColProgressive'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "</tr>\n";
+        $gridTot .= "</td>\n<td class='gridColProgressive'>&nbsp;</td>\n" .
+                "<td class='gridColTotProgressive gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridColTotProgressive gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridColTotProgressive gridHidden'>&nbsp;</td>\n" .
+                "</tr>\n";
+        }
+// Totali
+    if (array_key_exists('totTarget', $dataGrid->totData))
+        {
+        $rowCounter++;
+        $grid .= '<tr id="totGrid">' . "\n";
+        $gridTot .= '<tr id="totTotGrid">' . "\n";
+        $line = $dataGrid->totData['totTarget'];
+        $labelRows .= strval($rowCounter) . ",";
+        $grid .= '<td class="sticky-cell gridColTotals2" colspan="' . $numLabelCols . '">' .
+                $line['Qualifica'] . '</td>' . "\n";
+        $totGen = array('GG'=>0,'Rate'=>0,'PM'=>0);
+        $i = 0;
+        foreach ($months as $currMonth)
+            {
+            $totGen['GG']+=$TotArray[$currMonth]['totGG'];
+            $totGen['Rate']+=$TotArray[$currMonth]['totRate'];
+            $totGen['PM']+=$TotArray[$currMonth]['totPM'];
+            $grid .= '<td class="gridColTotals2'.
+                    getYearLimit($i++, $months).'">';
+            $grid .= $TotArray[$currMonth]['totGG'] . '</td>' . "\n";
+            }
+        $grid .= "<td class='gridColTotals2'>&nbsp;</td>".
+                "<td id='totGG2' class='gridColTotals2'>" . $totGen['GG'] . "</td>\n" .
+                "<td class='gridColTotals2 gridHidden'>" . myFormat($totGen['Rate']) . "</td>\n" .
+                "<td class='gridColTotals2 gridHidden'>" . myFormat($totGen['PM']) . "</td>\n" .
+                "<td class='gridColTotals2 gridHidden'>" . myFormat($totGen['Rate'] + $totGen['PM']) . "</td>\n" .
+                "</tr>\n";
+        $gridTot .= "<td class='gridColTotals2'>&nbsp;</td>".
+                "<td class='gridColTotals2'>" . $totGen['GG'] . "</td>\n" .
+                "<td class='gridColTotals2 gridHidden'>" . myFormat($totGen['Rate']) . "</td>\n" .
+                "<td class='gridColTotals2 gridHidden'>" . myFormat($totGen['PM']) . "</td>\n" .
+                "<td class='gridColTotals2 gridHidden'>" . myFormat($totGen['Rate'] + $totGen['PM']) . "</td>\n" .
+                "</tr>\n";
+        }
+    if (array_key_exists('progressivoTarget', $dataGrid->totData))
+        {
+        $rowCounter++;
+        $grid .= '<tr id="progGrid">' . "\n";
+        $gridTot .= '<tr id="progTotGrid">' . "\n";
+        $line = $dataGrid->totData['progressivoTarget'];
+        $labelRows .= strval($rowCounter) . ",";
+        $grid .= '<td class="sticky-cell gridColProgressive2" colspan="' . $numLabelCols . '">' .
+                $line['Qualifica'] . '</td>' . "\n";
+        $currProg = 0;
+        $i = 0;
+        foreach ($months as $currMonth)
+            {
+            $currProg += $TotArray[$currMonth]['totGG'];
+            $grid .= '<td class="gridColProgressive2'.
+                    getYearLimit($i++, $months).'">';
+            $grid .= $currProg . '</td>' . "\n";
+            }
+//        $grid .= "<td>&nbsp;</td>\n<td>&nbsp;</td>\n<td>&nbsp;</td>\n<td>&nbsp;</td>\n</tr>\n";
+        $delta = (($dataGrid->projData['contractMD']+0)-($totGen['GG']+0)); 
+        $deltaStr='<div id="deltaContract2">'.$delta.' &Delta;</div>';
+        if($delta < 0)
+            {
+            $grid .= '<td class="gridColProgressive2">&nbsp;</td><td class="deltaNegative">' . $deltaStr;
+            $gridTot .= '<td class="gridColProgressive2">&nbsp;</td><td class="gridColTotProgressive, deltaNegative">' . $deltaStr;
+            }
+        else
+            {
+            $grid .= '<td>&nbsp;</td><td class="deltaPositive">' . $deltaStr;
+            $gridTot .= '<td>&nbsp;</td><td class="gridColTotProgressive, deltaPositive">' . $deltaStr;
+            }
+        $grid .= "</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "</tr>\n";
+        $gridTot .= "</td>\n" .
+                "<td class='gridColTotProgressive2 gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridColTotProgressive2 gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridColTotProgressive2 gridHidden'>&nbsp;</td>\n" .
+                "</tr>\n";
+        }
+    $grid .= "</tfoot>\n</table>\n";
+    $gridTot .= "</tfoot>\n</table>\n";
+
+    $labelRows = 'var labelRows = [' . substr($labelRows, 0, -1) . "];\n";
+    $dataRows = substr($dataRows, 0, -1);
+    $labelRows .= 'var dataRows = [' . $dataRows . "];\n" .
+            "$('#datakeys').val('" . $dataRows . "');\n";
+    "var numLabelCols=" . $numLabelCols . ";\n" .
+            "var lastVisibleCol=" . $lastVisibleCol . ";\n" .
+            "var currStartVisCol=0;\n";
+
+    $gridEV = '';
+    $alignEvFunct = "function alignEvents()\n{\n" .
+            'var visDouble = $("#singleTitle").hasClass("hiddenTitle");' . "\n" .
+            'var visTitle = visDouble ? "dt-" : "";' . "\n" .
+            'var visOffset = visDouble ? 0 : 0;' . "\n";
+    $alignEvLabelsFunct = "function alignEventLabels()\n{\n" .
+            'var visDouble = $("#singleTitle").hasClass("hiddenTitle");' . "\n" .
+            'var visTitle = visDouble ? "dt-" : "";' . "\n" .
+            'var visOffset = visDouble ? 0 : 0;' . "\n";    
+    $lastOffset = null;
+    $lastLow = true;
+    foreach ($dataGrid->eventData as $key => $line)
+        {
+        $currOffset = strtotime($line['Data']);
+        if(is_null($lastOffset))
+            {
+            $lastLow = true;
+            $alignEvLabelsFunct .= "$('#label-ev-" . $line['evGGYY'] . '-' .$line['idEvento'] .
+                "').removeClass('events-label-2div').addClass('events-label-div');\n";
+            }
+        else
+            {
+            if(($currOffset-$lastOffset) > (2*30*60*60*24))
+                {
+                $lastLow = true;
+                }
+            else
+                {
+                $lastLow = !$lastLow;
+                }
+            if($lastLow)
+                {
+                $alignEvLabelsFunct .= "$('#label-ev-" . $line['evGGYY'] . '-' .$line['idEvento'] .
+                    "').removeClass('events-label-2div').addClass('events-label-div');\n";
+                }
+            else
+                {
+                $alignEvLabelsFunct .= "$('#label-ev-" . $line['evGGYY'] . '-' .$line['idEvento'] .
+                    "').removeClass('events-label-div').addClass('events-label-2div');\n";            
+                }
+            }
+        $gridEV .= '<div id="ev-' . $line['evGGYY'] . '-' .$line['idEvento'] .
+                "\" class=\"eventLine\">\n&nbsp;\n</div>\n";
+        $alignEvFunct .= "$('#ev-" . $line['evGGYY'] .'-' .$line['idEvento'] .
+                "').css({left: $('#'+visTitle+'" . $line['evGGYY'] .
+                "').offset().left+visOffset});\n";
+        $alignEvLabelsFunct .= "$('#label-ev-" . $line['evGGYY'] . '-' .$line['idEvento'] .
+            "').css({left: $('#'+visTitle+'" . $line['evGGYY'] .
+            "').offset().left+visOffset});\n";
+        $lastOffset = $currOffset; 
+        }
+
+    if($currRefYear > 0 && $currRefMonth > 0)
+        {
+        $gridEV .= '<div id="ev-reference"' .
+                " class=\"referenceLine\">\n&nbsp;\n</div>\n";
+        $alignEvFunct .= "$('#ev-reference').css({left: $('#'+visTitle+'" . 
+                $currRefMonth.'-'.$currRefYear .
+                "').offset().left+visOffset});\n";
+        $alignEvLabelsFunct .= "$('#label-ev-" . $currRefMonth.'-'.$currRefYear .
+                "').css({left: $('#'+visTitle+'" . $currRefMonth.'-'.$currRefYear .
+                "').offset().left+visOffset});\n";
+        }
+        
+    $alignEvFunct .= "}\n";
+    $alignEvLabelsFunct .= "}\n";
+
+    return array('labelsVar' => $labelRows . $valGrid,
+        'alignFunct' => $alignEvFunct . $alignEvLabelsFunct,
+        'mainGrid' => $grid,
+        'totGrid' => $gridTot,
+        'evGrid' => $gridEV);
+    }
+
+function getYearLimit($numMonth, $months)
+    {
+    if($numMonth < count($months)  && substr($months[$numMonth],0,2) == '12')
+        {
+        return " gridYearLimit";
+        }
+    else    
+        {
+        return "";
+        }
+//    
+    }
+        
+function myFormat($inValue)
+    {
+    if($inValue == round($inValue))
+        {
+        return(number_format($inValue, 0, ',', '.'));
+        }
+    else
+        {
+        return(number_format($inValue, 2, ',', '.'));            
+        }    
+    }

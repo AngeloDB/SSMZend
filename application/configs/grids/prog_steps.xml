@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <prog_steps>
+        <title>Attività</title>
+        <addlink>/prog-steps/new</addlink>
+        <addtitle>Nuova attività</addtitle>
+        <parameters>
+            <currIdProgetto>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </currIdProgetto>
+            <currFase>
+                <from>defaultnamespace</from>
+            </currFase>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <prog_steps>prog_steps</prog_steps>
+                </aliasname>
+                <fields>
+                    <idProgStep>idProgStep</idProgStep>
+                    <idProgetto>idProgetto</idProgetto>
+                    <Ordine>Ordine</Ordine>
+                    <Step>Step</Step>
+                    <Inizio>Inizio</Inizio>
+                    <Fine>Fine</Fine>
+                </fields>
+            </from>
+            <join id='aree'>
+                <cond>aree.idArea = prog_steps.idArea</cond>
+                <aliasname>
+                    <aree>aree</aree>
+                </aliasname>
+                <fields>
+                    <Area>AreaShort</Area>
+                </fields>
+            </join>
+            <join id='richieste'>
+                <type>left</type>
+                <cond>richieste.idProgStep = prog_steps.idProgStep</cond>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <RicPres>COUNT(richieste.idRichiesta)</RicPres>
+                    <!--<idRichiesta>idRichiesta</idRichiesta>-->
+<!--                    <delIco> (CASE WHEN MIN(richieste.idRichiesta) IS NOT NULL AND SMPres IS NOT NULL AND GGEff IS NOT NULL THEN 'del-dis' ELSE 'fechar' END) </delIco>
+                    <delLink> (CASE WHEN MIN(richieste.idRichiesta) IS NOT NULL AND SMPres IS NOT NULL AND GGEff IS NOT NULL THEN '#' ELSE CONCAT('/prog-steps/delete/id/', prog_steps.idProgStep) END) </delLink>
+                    <delAlert> (CASE WHEN MIN(richieste.idRichiesta) IS NOT NULL AND SMPres IS NOT NULL AND GGEff IS NOT NULL THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) </delAlert>-->
+                    <delIco> 
+                        (CASE WHEN COUNT(richieste.idRichiesta) IS NOT NULL AND 
+                                    ( COUNT(spesemese.idSpeseMese) > 0 OR 
+                                    SUM(giorni_lav.GiorniEff) IS NOT NULL ) 
+                              THEN 'del-dis' 
+                              ELSE 'fechar' 
+                        END) 
+                    </delIco>
+                    <delLink> 
+                        (CASE WHEN COUNT(richieste.idRichiesta) IS NOT NULL AND 
+                                    ( COUNT(spesemese.idSpeseMese) > 0 OR 
+                                    SUM(giorni_lav.GiorniEff) IS NOT NULL ) 
+                            THEN '#' 
+                            ELSE CONCAT('/prog-steps/delete/id/', prog_steps.idProgStep) 
+                        END) 
+                    </delLink>
+                    <delAlert> 
+                        (CASE WHEN COUNT(richieste.idRichiesta) IS NOT NULL AND 
+                                    ( COUNT(spesemese.idSpeseMese) > 0 OR 
+                                    SUM(giorni_lav.GiorniEff) IS NOT NULL ) 
+                            THEN 'alert(''Can`t delete''); return false;' 
+                            ELSE 'return(confirm(''Confirm delete?''));' 
+                        END) 
+                    </delAlert>
+                </fields>
+            </join>
+            <join id='giorni_lav'>
+                <type>left</type>
+                <cond>giorni_lav.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <giorni_lav>giorni_lav</giorni_lav>
+                </aliasname>
+                <fields>
+                    <GGEff>SUM(GiorniEff)</GGEff>
+                </fields>
+            </join>
+            <join id='spesemese'>
+                <type>left</type>
+                <cond>spesemese.idProgetto = prog_steps.idProgetto AND
+                spesemese.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <spesemese>spesemese</spesemese>
+                </aliasname>
+                <fields>
+                    <SMPres>COUNT(idSpeseMese)</SMPres>
+                </fields>
+            </join>
+            <join></join>
+            <group>
+                prog_steps.idProgStep
+            </group>            
+            <where>
+                <from>
+                    prog_steps.idProgetto = "{{currIdProgetto}}" AND 
+                        prog_steps.idArea = 
+                            CASE WHEN '{{currFase}}' = '' THEN 
+                             prog_steps.idArea ELSE '{{currFase}}' END 
+                </from>
+            </where>
+            <order>prog_steps.Ordine</order>
+
+        </select>
+        <updatecolumns>
+            <idProgetto>
+                <hidden>1</hidden>
+            </idProgetto>
+            <idProgStep>
+                <hidden>1</hidden>
+            </idProgStep>
+            <RicPres>
+                <hidden>1</hidden>
+            </RicPres>
+            <SMPres>
+                <hidden>1</hidden>
+            </SMPres>
+            <GGEff>
+                <hidden>1</hidden>
+            </GGEff>
+            <idSpeseMese>
+                <hidden>1</hidden>
+            </idSpeseMese>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Area>
+                <title>Fase</title>
+                <position>1</position>
+            </Area>
+            <Ordine>
+                <title>Ordine</title>
+                <position>2</position>
+                <class>width_80</class>
+            </Ordine>
+            <Step>
+                <title>Attività</title>
+                <position>3</position>
+            </Step>
+            <Inizio>
+                <title>Inizio</title>
+                <position>4</position>
+                <!--<class>colonnadata</class>-->
+<!--                <class>width_75</class>
+                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Inizio>
+            <Fine>
+                <title>Fine</title>
+                <position>5</position>
+                <!--<class>colonnadata</class>-->
+<!--                <class>width_75</class>
+                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Fine>
+        </updatecolumns>
+        <updateCallbacks>
+            <Inizio>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Inizio}}</params>
+            </Inizio>
+            <Fine>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Fine}}</params>
+            </Fine>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /prog-steps/edit/id/{{idProgStep}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <Richieste>
+                <position>left</position>
+                <title>Qualifiche</title>
+                <decorator>
+                    /richieste/list/id/{{idProgStep}}#/images/bkg-loginico.png#Qualifiche
+                </decorator>
+            </Richieste>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+        <!--                    <linkheight>
+                                    28
+                            </linkheight>-->
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                            <!--/prog-steps/delete/id/{{idProgStep}}#/images/del-dis.png#Delete-->
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </prog_steps>
+</grids>

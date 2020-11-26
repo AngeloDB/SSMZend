@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <select_graph>
+        <title>Totals Graph</title>
+        <edittitle>Totals Graph</edittitle>
+        <newtitle>New Total Graph</newtitle>
+        <maintable>dual</maintable>
+        <currkey>id</currkey>
+        <currsql>SELECT " " FROM dual WHERE </currsql>
+        <javascript>
+                
+$(document).ready(function() 
+  {
+    $.localise("ui.multiselect", 
+                {language: "en", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+//    $('#idMultiCamp option').prop('selected', true);
+    $("#idMultiJobs").multiselect({
+//        multiple: true,
+//        header: '(info: Select all required jobs).',
+        noneSelectedText: 'Jobs (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No job.',
+        selectedText: '# jobs have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+//        header: '(info: Select all required qualifications).',
+        noneSelectedText: 'Qualifications (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No qualification.',
+        selectedText: '# Qualifications have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+    $("#idMultiMode").multiselect({
+        multiple: true,
+//        header: '(info: Select search mode(s)).',
+        noneSelectedText: 'Searc modes (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No search mode.',
+        selectedText: '# Search modes have been selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 900
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+
+  
+  });  
+
+        </javascript>
+        <form>
+            <name>seltotals</name>
+            <elements>
+                <id>
+                    <type>hidden</type>
+                </id>
+                <Progressive>
+                    <type>checkbox</type>
+                    <label>Progressive</label>
+                </Progressive>
+                <idMultiJobs>
+                    <type>multiselect</type>
+                    <label>Jobs</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+                    </selsql>
+                    <aiuto>Select all required jobs &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</aiuto>
+                </idMultiJobs>                               
+<!--                <idMultiQual>
+                    <type>multiselect</type>
+                    <label>Qualifications</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                        SELECT idQualifica AS KeyId, Descrizione AS Value 
+                        FROM qualifiche 
+                        ORDER BY Descrizione
+                    </selsql>
+                    <aiuto>Select all required qualifications</aiuto>                
+                </idMultiQual>                               
+                <idMultiSearch>
+                    <type>multiselect</type>
+                    <notempty>true</notempty>
+                    <label>Search Mode</label>-->
+<!--                    <values>
+                        <value id="MCpw" elem="Contract Paul Wurth"></value>
+                        <value id="MCvend" elem="Contract Vendor"></value>
+                        <value id="MCnotAss" elem="Contract Not Assigned"></value>
+                        <value id="MCcons" elem="Contract Consultants"></value>
+                        <value id="pwoe" elem="Paul Wurth Other Entities"></value>
+                        <value id="vend" elem="Other Vendor"></value>
+                        <value id="pwPartner" elem="Paul Wurth Partner"></value>
+                    </values>-->
+<!--                    <selsql>
+                        SELECT            "MCpw"      AS KeyId, "Contract Paul Wurth"       AS Value 
+                        UNION ALL (SELECT "MCvend"    AS KeyId, "Contract Vendor"           AS Value)
+                        UNION ALL (SELECT "MCnotAss"  AS KeyId, "Contract Not Assigned"     AS Value)
+                        UNION ALL (SELECT "MCcons"    AS KeyId, "Contract Consultants"      AS Value)
+                        UNION ALL (SELECT "pwoe"      AS KeyId, "Paul Wurth Other Entities" AS Value)
+                        UNION ALL (SELECT "vend"      AS KeyId, "Other Vendor"              AS Value)
+                        UNION ALL (SELECT "pwPartner" AS KeyId, "Paul Wurth Partner"        AS Value)
+                        UNION ALL (SELECT idContratto AS KeyId, CONCAT(Sigla, " ", Contratto) AS Value 
+                            FROM contratti
+                            ORDER BY Sigla, Contratto)
+                    </selsql>
+                    <aiuto>Select all required search modes</aiuto>                
+                </idMultiSearch>-->
+                <startDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Start</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </startDate>                               
+                <endDate>
+                    <type>date</type>
+                    <parameters>
+                        <Label>End</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </endDate>                               
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </select_graph>
+</edits>

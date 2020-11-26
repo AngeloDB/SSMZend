@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <richieste>
+        <title>Qualifiche richieste</title>
+        <addlink>/richieste/new</addlink>
+        <addtitle>Nuova qualifica richiesta</addtitle>
+        <parameters>
+            <currIdProgetto>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </currIdProgetto>
+            <currIdProgStep>
+                <from>arrdefaultnamespace</from>
+                <array>currStep</array>
+                <offset>idProgStep</offset>
+            </currIdProgStep>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <idRichiesta>idRichiesta</idRichiesta>
+                    <idQualifica>idQualifica</idQualifica>
+                    <idProgStep>idProgStep</idProgStep>
+                    <idPersonale>idPersonale</idPersonale>
+                    <Ordine>Ordine</Ordine>
+                    <delIco> (CASE WHEN 
+                                SUM(giorni_lav.GiorniEff) > 0 OR
+                                SUM(spesemese.Importo - spesemese.Storno) > 0                         
+                        THEN 'del-dis' ELSE 'fechar' END) 
+                    </delIco>
+                                <!--SUM(giorni_lav.GiorniTarget) > 0 OR-->
+                    <delLink> (CASE WHEN 
+                                SUM(giorni_lav.GiorniEff) > 0 OR
+                                SUM(spesemese.Importo - spesemese.Storno) > 0                         
+                        THEN '#' ELSE CONCAT('/richieste/delete/id/', richieste.idRichiesta) END) 
+                    </delLink>
+                                <!--SUM(giorni_lav.GiorniTarget) > 0 OR-->
+                    <delAlert> (CASE WHEN
+                                SUM(giorni_lav.GiorniEff) > 0 OR
+                                SUM(spesemese.Importo - spesemese.Storno) > 0                         
+                        THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) 
+                    </delAlert>                    
+                                <!--SUM(giorni_lav.GiorniTarget) > 0 OR-->
+<!--                    <delAlert> (CASE WHEN
+                                SUM(giorni_lav.GiorniTarget) = 0 AND
+                                SUM(giorni_lav.GiorniEff) = 0 AND
+                                SUM(spesemese.Importo - spesemese.Storno) = 0                         
+                        THEN ' ' ELSE 'alert(''Can`t delete''); return false;' END) 
+                    </delAlert>                    -->
+                </fields>
+            </from>
+            <join id='qualifiche'>
+                <cond>qualifiche.idQualifica = richieste.idQualifica</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <Qualifica>Descrizione</Qualifica>
+                </fields>
+            </join>
+            <join id='tab_schemi_lav'>
+                <type>left</type>
+                <cond>tab_schemi_lav.idTabSchemiLav = richieste.idTabSchemiLav</cond>
+                <aliasname>
+                    <tab_schemi_lav>tab_schemi_lav</tab_schemi_lav>
+                </aliasname>
+                <fields>
+                    <descSchemaLav>descSchemaLav</descSchemaLav>
+                </fields>
+            </join>
+            <join id='jobs'>
+                <type>left</type>
+                <cond>jobs.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <jobs>jobs</jobs>
+                </aliasname>
+            </join>
+            <join id='personale'>
+                <type>left</type>
+                <cond>personale.idPersonale = jobs.idPersonale</cond>
+                <aliasname>
+                    <personale>personale</personale>
+                </aliasname>
+                <fields>
+                    <Pers>GROUP_CONCAT(DISTINCT CONCAT(Nome, " ", Cognome))</Pers>
+                </fields>
+            </join>
+            <join id='giorni_lav'>
+                <type>left</type>
+                <cond>giorni_lav.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <giorni_lav>giorni_lav</giorni_lav>
+                </aliasname>
+                <fields>
+                    <GG_plan>SUM(giorni_lav.GiorniTarget)</GG_plan>
+                    <GG_eff>SUM(giorni_lav.GiorniEff)</GG_eff>
+                </fields>
+            </join>
+            <join id='spesemese'>
+                <type>left</type>
+                <cond>spesemese.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <spesemese>spesemese</spesemese>
+                </aliasname>
+                <fields>
+                    <Spese>SUM(spesemese.Importo - spesemese.Storno)</Spese>
+                </fields>
+            </join>
+<!--            <join id='forn_pers'>
+                <type>left</type>
+                <cond>forn_pers.idFornPers = personale.idFornPers</cond>
+                <aliasname>
+                    <forn_pers>forn_pers</forn_pers>
+                </aliasname>
+                <fields>
+                    <RagSoc>RagSoc</RagSoc>
+                </fields>
+            </join>-->
+            <join></join>
+            <group>
+                richieste.idRichiesta
+            </group>            
+            <where>
+                <from>
+                    richieste.idProgStep = "{{currIdProgStep}}"
+                </from>
+            </where>
+        </select>
+        <updatecolumns>
+            <idRichiesta>
+                <hidden>1</hidden>
+            </idRichiesta>
+            <idQualifica>
+                <hidden>1</hidden>
+            </idQualifica>
+            <idProgStep>
+                <hidden>1</hidden>
+            </idProgStep>
+            <idPersonale>
+                <hidden>1</hidden>
+            </idPersonale>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Ordine>
+                <title>Ordine</title>
+                <position>1</position>
+                <class>width_75</class>
+            </Ordine>
+            <Qualifica>
+                <title>Qualifica</title>
+                <position>2</position>
+            </Qualifica>
+            <Pers>
+                <title>Supervisor</title>
+                <position>3</position>
+            </Pers>
+            <GG_plan>
+                <title>Days plan.</title>
+                <position>4</position>
+                <class>width_90</class>
+            </GG_plan>
+            <GG_eff>
+                <title>Days act.</title>
+                <position>5</position>
+                <class>width_80</class>
+            </GG_eff>
+            <Spese>
+                <title>Cash</title>
+                <position>6</position>
+                <format>currency</format>
+                <format>
+                    <locale>it-IT</locale>
+                </format>
+            </Spese>
+            <descSchemaLav>
+                <title>Orario</title>
+                <position>7</position>                
+            </descSchemaLav>
+<!--            <Nome>
+                <title>Nome</title>
+                <position>3</position>
+            </Nome>
+            <Cognome>
+                <title>Cognome</title>
+                <position>4</position>
+            </Cognome>
+            <RagSoc>
+                <title>Fornitore</title>
+                <position>5</position>
+            </RagSoc>-->
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /richieste/edit/id/{{idRichiesta}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <Jobs>
+                <position>left</position>
+                <title>Jobs</title>
+                <decorator>
+                    /jobs/list/id/{{idRichiesta}}#/images/b-ico-lav-autorizzazioni-1.png#Edit
+                </decorator>
+            </Jobs>
+<!--            <Del>
+                <position>left</position>
+                <title>Delete</title>
+                <decorator>
+                    /richieste/delete/id/{{idRichiesta}}#/images/fechar.png#Edit
+                </decorator>
+            </Del>-->
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+        <!--                    <linkheight>
+                                    28
+                            </linkheight>-->
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                            <!--/richieste/delete/id/{{idRichiesta}}#/images/del-dis.png#Delete-->
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </richieste>
+</grids>

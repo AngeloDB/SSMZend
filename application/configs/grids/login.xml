@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <login>
+        <title>Login</title>
+        <addlink>/utenti/new</addlink>
+        <addtitle>Nuovo login</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <utenti>utenti</utenti>
+                </aliasname>
+                <fields>
+                    <Utente>CONCAT(utenti.nome, " ", utenti.cognome)</Utente>
+                    <idUtente>id_utente</idUtente>
+                </fields>
+            </from>
+            <join id='login'>
+                <type>left</type>
+                <cond>login.id_utente = utenti.id_utente</cond>
+                <aliasname>
+                    <login>login</login>
+                </aliasname>
+                <fields>
+                    <idLogin>id</idLogin>
+                    <username>username</username>
+                </fields>
+            </join>
+            <join id='tab_userlevel'>
+                <cond>tab_userlevel.id_userlevel = utenti.id_userlevel</cond>
+                <aliasname>
+                    <tab_userlevel>tab_userlevel</tab_userlevel>
+                </aliasname>
+                <fields>
+                    <Userlevel>Titolo</Userlevel>
+                </fields>
+            </join>
+            <where>
+                <from>
+                    true
+                </from>
+            </where>
+            <order>Utente</order>
+        </select>
+        <updatecolumns>
+            <idLogin>
+                <hidden>1</hidden>
+            </idLogin>
+            <idUtente>
+                <hidden>1</hidden>
+            </idUtente>
+            <Utente>
+                <position>1</position>
+                <title>Utente</title>
+            </Utente>
+            <Userlevel>
+                <position>2</position>
+                <title>Userlevel</title>
+            </Userlevel>
+            <Username>
+                <position>3</position>
+                <title>Username</title>
+            </Username>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /utenti/edit/idutente/{{idUtente}}/idlogin/{{idLogin}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+        </extracolumns>
+    </login>
+</grids>

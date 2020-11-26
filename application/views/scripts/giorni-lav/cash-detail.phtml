@@ -1,0 +1,1020 @@
+<!--Cash Detail-->
+
+<script>
+    
+    
+class CashDett {
+    constructor() {
+        this.currPosition = {id: 0,
+                idProgetto: 0,
+                Anno: '', 
+                Mese: '',
+                idRichiesta: 0,
+                changed: false};
+                    
+        this.currPo = {id: 0,
+                from: '',
+                to: '',
+                changed: false};
+
+        this.titlesResponse = '';
+        this.ratesResponse = [];
+        this.poResponse = [];
+        }
+    
+    showDialog(outForm) {
+        this.outForm = outForm;
+        var myThis = this;
+        
+        Promise.all([
+            myThis.getRates(),
+            myThis.getPo()]).then(function(){
+                $("#dettRate").dialog("open");
+                $("#dettRate").dialog("moveToTop");
+                $("#dettRate").dialog({
+                    classes: {
+                            "ui-front": "primoPiano",
+                            "ui-dialog": "ppPiano"
+                            }
+                        });
+                if(myThis.outForm.ric == "xx") {
+                    $(".cashRightDetail").hide();
+                    };        
+                });
+        }
+
+    getRates() {
+        var myThis = this;
+        var mmaa = this.outForm.ym.split('-');         
+        this.currPosition.idProgetto = this.outForm.id;
+        this.currPosition.Anno = mmaa[1];
+        this.currPosition.Mese = mmaa[0];
+        this.currPosition.idRichiesta = this.outForm.ric;
+        var callRate = baseUrl+'/cash-rate-detail/list-rates';
+
+        return $.ajax({
+            url: callRate,
+            type: "post",
+            data: this.outForm,
+            dataType:"json",
+            success: function(result){
+                myThis.titlesResponse = result['Date']+result['Title'];
+                myThis.ratesResponse = result['Detail'];
+                },  
+            error: function(request, status, err) 
+                {
+                alert(err+' '+request.responseText);
+                }                
+            });
+        }
+        
+    getPo() {
+        var myThis = this;
+        var callPo = baseUrl+'/cash-po-detail/list-po';
+
+        return  $.ajax({
+            url: callPo,
+            type: "post",
+            data: this.outForm,
+            dataType:"json",
+            success: function(result){
+                myThis.poResponse = result['poTable'];
+                },  
+            error: function(request, status, err) 
+                {
+                alert(err+' '+request.responseText);
+                }                
+            });                
+        }    
+    
+    openDetailDialog() {
+        var myThis = this;
+        $(".ui-dialog-titlebar-close").show();
+        $("#titlesDettRate").html(this.titlesResponse);
+        $("#listDettRate").html(this.ratesResponse);
+        $("#listDettPo").html(this.poResponse);
+        $('#cashDetTable tr').click(function(){
+            cashDett.selRate(this); });
+        $('#cashPoTable tr').click(function(){
+            cashDett.selPo(this); });                  
+        $('#cashdett').trigger('reset');
+        $('#cashdett :input').change(function(){
+            myThis.currPosition.changed = true;
+            });                    
+        $('#cashdett #idProgetto').val(this.currPosition.idProgetto);
+        $('#idSpeseMese').val('');
+        $('#Anno').val(this.currPosition.Anno);
+        $('#Mese').val(this.currPosition.Mese);
+        $('#idRichiesta').val(this.currPosition.idRichiesta);
+        $('#formPersFornPers').trigger('reset');
+        $('#formPersFornPers :input').change(function(){
+            myThis.currPo.changed = true;
+            });                    
+        $('#formPersFornPers #idProgetto').val(this.currPosition.idProgetto);
+        }
+    
+    selRate(currRow, newRow=false) {
+        var myThis = this;
+        $(currRow).siblings().removeClass('gridEvid');
+        $(currRow).addClass('gridEvid');
+        var currId=$(currRow).attr('id').substring(('cdRow-').length);
+//                    currPosition.idSpeseMese = currId;
+        var newPoRow = $('#cashPoTable tr:contains("New")');            
+        if(currId == '0') {
+            $('#cashdett').trigger('reset');
+            $('#cashdett #idProgetto').val(this.currPosition.idProgetto);
+            $('#idSpeseMese').val('');
+            $('#Anno').val(this.currPosition.Anno);
+            $('#Mese').val(this.currPosition.Mese);
+            $('#idRichiesta').val(this.currPosition.idRichiesta);
+            myThis.selPo(newPoRow);            
+            }
+        else {
+            var callRow = baseUrl+'/cash-rate-detail/get-cash-row';
+            $.ajax({
+                url: callRow,
+                type: "post",
+                data: {id: currId},
+                success: function(result){
+                    var currRow = JSON.parse(result);
+                    for (let [key, value] of Object.entries(currRow)) {
+                        if ($('#'+key).length) {
+                            $('#'+key).val(value);
+                            }
+                        }
+                    if(newRow) {
+                        $('#Importo').val('');
+                        $('#Storno').val('');
+                        }
+                    var currPo = $('#Ordine').val();
+                    if(currPo !== '') {
+                        var rowPo = $('#cashPoTable tr:contains("'+currPo+'")');    
+                        myThis.selPo(rowPo);
+                        }
+                    else {    
+                        myThis.selPo(newPoRow);
+                        }
+                    },  
+                error: function(request, status, err) 
+                    {
+                    alert(err+' '+request.responseText);
+                    }                
+                });
+            }    
+        $('#cashdett :input').off('change');
+        myThis.currPosition.id = currId;
+        myThis.currPosition.changed = false;
+        $('#cashdett :input').change(function(){
+            myThis.currPosition.changed = true;
+            });                    
+        }
+
+    selPo(currRow) {
+        var myThis = this;
+        $(currRow).siblings().removeClass('gridEvid');
+        $(currRow).addClass('gridEvid');
+        var currId=$(currRow).attr('id').substring(('poRow-').length);
+//                    currPosition.idSpeseMese = currId;
+        if(currId == '0') {
+            $('#formPersFornPers').trigger('reset');
+            $('#formPersFornPers #idPersFornPers').val('');
+            $('#formPersFornPers #idPersonale').val(this.outForm.idPers);
+            $('#formPersFornPers #idProgetto').val(this.currPosition.idProgetto);
+            }
+        else {
+            var callRow = baseUrl+'/cash-po-detail/get-cash-po-row';
+            $.ajax({
+                url: callRow,
+                type: "post",
+                data: {id: currId},
+                success: function(result){
+                    var currRow = JSON.parse(result);
+                    for (let [key, value] of Object.entries(currRow)) {
+                        $('#'+key).val(value);
+                        }
+                    myThis.currPosition.changed = true;    
+                    $('#formPersFornPers .hasDatepicker').each(
+                            function(index,item){
+                               var currAltId = item.id.split('alternate');
+                            //   $('#'+item.id).val($('#'+currAltId[0]).val());
+                               $('#'+item.id).datepicker("setDate", 
+                                 new Date($('#'+currAltId[0]).val()));
+                           //    $("#datepicker").datepicker("setDate", date);
+                            });                            
+                    },  
+                error: function(request, status, err) 
+                    {
+                    alert(err+' '+request.responseText);
+                    }                
+                });
+            }
+        $('#formPersFornPers :input').off('change');
+        this.currPo.id=currId;
+        this.currPo.from = $('#Dalalternate').val();
+        this.currPo.to = $('#Alalternate').val();
+        this.currPo.changed = false;
+        $('#formPersFornPers :input').change(function(){
+            myThis.currPo.changed = true;
+            });                    
+        }
+    
+    delRate() {
+        var myThis = this;
+        var delRow = baseUrl+'/cash-rate-detail/del-cash-row';
+        if(parseInt(this.currPosition.id) > 0) {
+            $.ajax({
+                type: 'post',
+                url: delRow,
+                data: {toDel: myThis.currPosition.id}, 
+                success: function(response) {
+                    Promise.all([myThis.getRates()]).then(function(){
+                        $("#listDettRate").html(myThis.ratesResponse);
+                        $('#cashDetTable tr').click(function(){
+                            cashDett.selRate(this); });
+                        });
+                    },
+                error: function() {
+                    alert("There was an error submitting comment");
+                    }
+                });
+//            $("#dettRate").dialog('close');
+            }
+        
+        }
+    
+    delPo() {
+        var myThis = this;
+        var delRow = baseUrl+'/cash-po-detail/del-cash-po-row';
+        if(parseInt(this.currPo.id) > 0) {
+            $.ajax({
+                type: 'post',
+                url: delRow,
+                data: {toDel: myThis.currPo.id}, 
+                success: function(response) {
+                    Promise.all([myThis.getPo()]).then(function(){
+                            $("#listDettPo").html(myThis.poResponse);
+                            $('#cashPoTable tr').click(function(){
+                                cashDett.selPo(this); });                  
+                        });
+                    },
+                error: function() {
+                    alert("There was an error submitting comment");
+                    }
+                });
+//            $("#dettRate").dialog('close');
+            }
+        
+        }
+        
+    saveRate() {
+        var saveRow = baseUrl+'/cash-rate-detail/save-cash-row';
+        var myThis = this;
+        $('#Ordine').val($('#PurchaseOrder').val());    
+        if(!this.checkRate())
+            {
+//            alert("Can't save:  Check Rate Fields");
+            return;
+            }
+        else
+            {
+            if(this.currPosition.changed)
+                {
+                $.ajax({
+                    type: 'post',
+                    url: saveRow,
+                    data: $('#cashdett').serialize(), 
+                    success: function(response) {
+                        Promise.all([myThis.getRates()]).then(function(){
+                            $("#listDettRate").html(myThis.ratesResponse);
+                            $('#cashDetTable tr').click(function(){
+                                cashDett.selRate(this); });
+                            myThis.selRate($('#cdRow-'+myThis.currPosition.id));
+                            });
+                        },
+function(xhr, status, error) {
+  alert(xhr.responseText);
+}
+//                    error: function() {
+//                        alert("There was an error saving rate");
+//                        }
+                    });
+                }
+            }        
+        }
+        
+    savePlusRate() {
+        var saveRow = baseUrl+'/cash-rate-detail/save-cash-row';
+        var myThis = this;
+        $('#Ordine').val($('#PurchaseOrder').val());    
+        if(!this.checkRate())
+            {
+//            alert("Can't save:  Check Rate Fields");
+            return;
+            }
+        else
+            {
+            if(this.currPosition.changed)
+                {
+                $('#idSpeseMese').val('');
+                $.ajax({
+                    type: 'post',
+                    url: saveRow,
+                    data: $('#cashdett').serialize(), 
+                    success: function(response) {
+                        Promise.all([myThis.getRates()]).then(function(){
+                            $("#listDettRate").html(myThis.ratesResponse);
+                            $('#cashDetTable tr').click(function(){
+                                cashDett.selRate(this); });
+                            myThis.selRate($('#cdRow-'+myThis.currPosition.id), true);
+                            });
+                        },
+error: function(xhr, status, error) {
+  alert(xhr.responseText);
+}
+//                    error: function() {
+//                        alert("There was an error saving rate");
+//                        }
+                    });
+                }
+            }        
+        }
+        
+    savePo() {
+        var savePo = baseUrl+'/cash-po-detail/save-cash-po-row';
+        var myThis = this;
+        if(!this.checkPo())
+            {
+            alert("Can't save:  Check Purchase Order");
+            return;
+            }
+        else
+            {
+            if(this.currPo.changed)
+                {
+                $.ajax({
+                    type: 'post',
+                    url: savePo,
+                    data: $('#formPersFornPers').serialize(), 
+                    success: function(response) {
+                        Promise.all([myThis.getPo()]).then(function(){
+                            $("#listDettPo").html(myThis.poResponse);
+                            $('#cashPoTable tr').click(function(){
+                                cashDett.selPo(this); });                  
+                            myThis.selPo($('#poRow-'+myThis.currPo.id));
+                            });
+                        },
+                    error: function() {
+                        alert("There was an error saving purchase order");
+                        }
+                    });
+                }
+            }        
+        }
+        
+    close() {
+        $("#dettRate").dialog('close');
+        saveAll();
+        $('#outMode').attr('value', 'cash');
+        $('#orderBy').attr('value', this.value);
+        $("#exitForm").submit();
+        }
+
+    checkPo()
+        {
+        if(!this.currPo.changed)
+            {
+            return true;    
+            }
+        else
+            {
+            this.currPo.from = $('#Dal').val();
+            this.currPo.to = $('#Al').val();       
+            var dateFrom = new Date(this.currPo.from);
+            var dateTo = new Date(this.currPo.to);
+            var currDate = new Date(this.currPosition.Anno+'-'+this.currPosition.Mese+'-01');
+//            var currDate = Date.parse(this.currPosition.Anno+'-'+this.currPosition.Mese+'-01');
+            if(dateFrom !== NaN && dateFrom !== 0 && 
+                    dateTo !== NaN && dateTo !== 0 && 
+                    dateFrom <= currDate && dateTo >= currDate )
+                {
+                return true;
+                }
+            else
+                {
+                return false;            
+                }
+            }
+        return this.currPo.changed;
+        }
+
+    checkRate()
+        {
+        var msg = 'Ok';    
+        if(!this.currPosition.changed) 
+            {
+            msg = 'Nothing to save!';    
+            }
+        else if($('#idTipoSpesa').val() === '') {
+            msg = 'Choose a cost type';
+            }
+        else if(parseInt($('#Importo').val()) === 0 && parseInt($('#Storno').val()) === 0) {
+            msg = 'Specify an amount or a balance value';
+            }
+        else if($('#Ordine').val() === ''){
+            if(this.outForm.ric === "xx"){
+                $('#Ordine').val('0');
+                $('#idRichiesta').val('0');
+                }
+            else{    
+                msg = 'Choose a valid purchase order';
+                }
+            }
+        if(msg != 'Ok') {            
+            alert(msg);
+            return false;
+            }
+        else {
+            return true;
+            }
+//        return this.currPosition.changed;
+        }
+    }
+
+</script>
+
+
+<!--
+<script>
+//  IE 11
+
+"use strict";
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var CashDett = /*#__PURE__*/function () {
+  function CashDett() {
+    _classCallCheck(this, CashDett);
+
+    this.currPosition = {
+      id: 0,
+      idProgetto: 0,
+      Anno: '',
+      Mese: '',
+      idRichiesta: 0,
+      changed: false
+    };
+    this.currPo = {
+      id: 0,
+      from: '',
+      to: '',
+      changed: false
+    };
+    this.titlesResponse = '';
+    this.ratesResponse = [];
+    this.poResponse = [];
+  }
+
+  _createClass(CashDett, [{
+    key: "showDialog",
+    value: function showDialog(outForm) {
+      this.outForm = outForm;
+      var myThis = this;
+      Promise.all([myThis.getRates(), myThis.getPo()]).then(function () {
+        $("#dettRate").dialog("open");
+        $("#dettRate").dialog("moveToTop");
+        $("#dettRate").dialog({
+          classes: {
+            "ui-front": "primoPiano",
+            "ui-dialog": "ppPiano"
+          }
+        });
+      });
+    }
+  }, {
+    key: "getRates",
+    value: function getRates() {
+      var myThis = this;
+      var mmaa = this.outForm.ym.split('-');
+      this.currPosition.idProgetto = this.outForm.id;
+      this.currPosition.Anno = mmaa[1];
+      this.currPosition.Mese = mmaa[0];
+      this.currPosition.idRichiesta = this.outForm.ric;
+      var callRate = baseUrl + '/cash-rate-detail/list-rates';
+      return $.ajax({
+        url: callRate,
+        type: "post",
+        data: this.outForm,
+        dataType: "json",
+        success: function success(result) {
+          myThis.titlesResponse = result['Date'] + result['Title'];
+          myThis.ratesResponse = result['Detail'];
+        },
+        error: function error(request, status, err) {
+          alert(err + ' ' + request.responseText);
+        }
+      });
+    }
+  }, {
+    key: "getPo",
+    value: function getPo() {
+      var myThis = this;
+      var callPo = baseUrl + '/cash-po-detail/list-po';
+      return $.ajax({
+        url: callPo,
+        type: "post",
+        data: this.outForm,
+        dataType: "json",
+        success: function success(result) {
+          myThis.poResponse = result['poTable'];
+        },
+        error: function error(request, status, err) {
+          alert(err + ' ' + request.responseText);
+        }
+      });
+    }
+  }, {
+    key: "openDetailDialog",
+    value: function openDetailDialog() {
+      var myThis = this;
+      $(".ui-dialog-titlebar-close").show();
+      $("#titlesDettRate").html(this.titlesResponse);
+      $("#listDettRate").html(this.ratesResponse);
+      $("#listDettPo").html(this.poResponse);
+      $('#cashDetTable tr').click(function () {
+        cashDett.selRate(this);
+      });
+      $('#cashPoTable tr').click(function () {
+        cashDett.selPo(this);
+      });
+      $('#cashdett').trigger('reset');
+      $('#cashdett :input').change(function () {
+        myThis.currPosition.changed = true;
+      });
+      $('#cashdett #idProgetto').val(this.currPosition.idProgetto);
+      $('#idSpeseMese').val('');
+      $('#Anno').val(this.currPosition.Anno);
+      $('#Mese').val(this.currPosition.Mese);
+      $('#idRichiesta').val(this.currPosition.idRichiesta);
+      $('#formPersFornPers').trigger('reset');
+      $('#formPersFornPers :input').change(function () {
+        myThis.currPo.changed = true;
+      });
+      $('#formPersFornPers #idProgetto').val(this.currPosition.idProgetto);
+    }
+  }, {
+    key: "selRate",
+    value: function selRate(currRow) {
+      var newRow = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var myThis = this;
+      $(currRow).siblings().removeClass('gridEvid');
+      $(currRow).addClass('gridEvid');
+      var currId = $(currRow).attr('id').substring('cdRow-'.length); //                    currPosition.idSpeseMese = currId;
+
+      var newPoRow = $('#cashPoTable tr:contains("New")');
+
+      if (currId == '0') {
+        $('#cashdett').trigger('reset');
+        $('#cashdett #idProgetto').val(this.currPosition.idProgetto);
+        $('#idSpeseMese').val('');
+        $('#Anno').val(this.currPosition.Anno);
+        $('#Mese').val(this.currPosition.Mese);
+        $('#idRichiesta').val(this.currPosition.idRichiesta);
+        myThis.selPo(newPoRow);
+      } else {
+        var callRow = baseUrl + '/cash-rate-detail/get-cash-row';
+        $.ajax({
+          url: callRow,
+          type: "post",
+          data: {
+            id: currId
+          },
+          success: function success(result) {
+            var currRow = JSON.parse(result);
+
+            for (var _i = 0, _Object$entries = Object.entries(currRow); _i < _Object$entries.length; _i++) {
+              var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+                  key = _Object$entries$_i[0],
+                  value = _Object$entries$_i[1];
+
+              if ($('#' + key).length) {
+                $('#' + key).val(value);
+              }
+            }
+
+            if (newRow) {
+              $('#Importo').val('');
+              $('#Storno').val('');
+            }
+
+            var currPo = $('#Ordine').val();
+
+            if (currPo !== '') {
+              var rowPo = $('#cashPoTable tr:contains("' + currPo + '")');
+              myThis.selPo(rowPo);
+            } else {
+              myThis.selPo(newPoRow);
+            }
+          },
+          error: function error(request, status, err) {
+            alert(err + ' ' + request.responseText);
+          }
+        });
+      }
+
+      $('#cashdett :input').off('change');
+      myThis.currPosition.id = currId;
+      myThis.currPosition.changed = false;
+      $('#cashdett :input').change(function () {
+        myThis.currPosition.changed = true;
+      });
+    }
+  }, {
+    key: "selPo",
+    value: function selPo(currRow) {
+      var myThis = this;
+      $(currRow).siblings().removeClass('gridEvid');
+      $(currRow).addClass('gridEvid');
+      var currId = $(currRow).attr('id').substring('poRow-'.length); //                    currPosition.idSpeseMese = currId;
+
+      if (currId == '0') {
+        $('#formPersFornPers').trigger('reset');
+        $('#formPersFornPers #idPersFornPers').val('');
+        $('#formPersFornPers #idPersonale').val(this.outForm.idPers);
+        $('#formPersFornPers #idProgetto').val(this.currPosition.idProgetto);
+      } else {
+        var callRow = baseUrl + '/cash-po-detail/get-cash-po-row';
+        $.ajax({
+          url: callRow,
+          type: "post",
+          data: {
+            id: currId
+          },
+          success: function success(result) {
+            var currRow = JSON.parse(result);
+
+            for (var _i2 = 0, _Object$entries2 = Object.entries(currRow); _i2 < _Object$entries2.length; _i2++) {
+              var _Object$entries2$_i = _slicedToArray(_Object$entries2[_i2], 2),
+                  key = _Object$entries2$_i[0],
+                  value = _Object$entries2$_i[1];
+
+              $('#' + key).val(value);
+            }
+
+            myThis.currPosition.changed = true;
+            $('#formPersFornPers .hasDatepicker').each(function (index, item) {
+              var currAltId = item.id.split('alternate'); //   $('#'+item.id).val($('#'+currAltId[0]).val());
+
+              $('#' + item.id).datepicker("setDate", new Date($('#' + currAltId[0]).val())); //    $("#datepicker").datepicker("setDate", date);
+            });
+          },
+          error: function error(request, status, err) {
+            alert(err + ' ' + request.responseText);
+          }
+        });
+      }
+
+      $('#formPersFornPers :input').off('change');
+      this.currPo.id = currId;
+      this.currPo.from = $('#Dalalternate').val();
+      this.currPo.to = $('#Alalternate').val();
+      this.currPo.changed = false;
+      $('#formPersFornPers :input').change(function () {
+        myThis.currPo.changed = true;
+      });
+    }
+  }, {
+    key: "delRate",
+    value: function delRate() {
+      var myThis = this;
+      var delRow = baseUrl + '/cash-rate-detail/del-cash-row';
+
+      if (parseInt(this.currPosition.id) > 0) {
+        $.ajax({
+          type: 'post',
+          url: delRow,
+          data: {
+            toDel: myThis.currPosition.id
+          },
+          success: function success(response) {
+            Promise.all([myThis.getRates()]).then(function () {
+              $("#listDettRate").html(myThis.ratesResponse);
+              $('#cashDetTable tr').click(function () {
+                cashDett.selRate(this);
+              });
+            });
+          },
+          error: function error() {
+            alert("There was an error submitting comment");
+          }
+        }); //            $("#dettRate").dialog('close');
+      }
+    }
+  }, {
+    key: "delPo",
+    value: function delPo() {
+      var myThis = this;
+      var delRow = baseUrl + '/cash-po-detail/del-cash-po-row';
+
+      if (parseInt(this.currPo.id) > 0) {
+        $.ajax({
+          type: 'post',
+          url: delRow,
+          data: {
+            toDel: myThis.currPo.id
+          },
+          success: function success(response) {
+            Promise.all([myThis.getPo()]).then(function () {
+              $("#listDettPo").html(myThis.poResponse);
+              $('#cashPoTable tr').click(function () {
+                cashDett.selPo(this);
+              });
+            });
+          },
+          error: function error() {
+            alert("There was an error submitting comment");
+          }
+        }); //            $("#dettRate").dialog('close');
+      }
+    }
+  }, {
+    key: "saveRate",
+    value: function saveRate() {
+      var saveRow = baseUrl + '/cash-rate-detail/save-cash-row';
+      var myThis = this;
+      $('#Ordine').val($('#PurchaseOrder').val());
+
+      if (!this.checkRate()) {
+        //            alert("Can't save:  Check Rate Fields");
+        return;
+      } else {
+        if (this.currPosition.changed) {
+          $.ajax({
+            type: 'post',
+            url: saveRow,
+            data: $('#cashdett').serialize(),
+            success: function success(response) {
+              Promise.all([myThis.getRates()]).then(function () {
+                $("#listDettRate").html(myThis.ratesResponse);
+                $('#cashDetTable tr').click(function () {
+                  cashDett.selRate(this);
+                });
+                myThis.selRate($('#cdRow-' + myThis.currPosition.id));
+              });
+            },
+            error: function error() {
+              alert("There was an error saving rate");
+            }
+          });
+        }
+      }
+    }
+  }, {
+    key: "savePlusRate",
+    value: function savePlusRate() {
+      var saveRow = baseUrl + '/cash-rate-detail/save-cash-row';
+      var myThis = this;
+      $('#Ordine').val($('#PurchaseOrder').val());
+
+      if (!this.checkRate()) {
+        //            alert("Can't save:  Check Rate Fields");
+        return;
+      } else {
+        if (this.currPosition.changed) {
+          $('#idSpeseMese').val('');
+          $.ajax({
+            type: 'post',
+            url: saveRow,
+            data: $('#cashdett').serialize(),
+            success: function success(response) {
+              Promise.all([myThis.getRates()]).then(function () {
+                $("#listDettRate").html(myThis.ratesResponse);
+                $('#cashDetTable tr').click(function () {
+                  cashDett.selRate(this);
+                });
+                myThis.selRate($('#cdRow-' + myThis.currPosition.id), true);
+              });
+            },
+            error: function error() {
+              alert("There was an error saving rate");
+            }
+          });
+        }
+      }
+    }
+  }, {
+    key: "savePo",
+    value: function savePo() {
+      var savePo = baseUrl + '/cash-po-detail/save-cash-po-row';
+      var myThis = this;
+
+      if (!this.checkPo()) {
+        alert("Can't save:  Check Purchase Order");
+        return;
+      } else {
+        if (this.currPo.changed) {
+          $.ajax({
+            type: 'post',
+            url: savePo,
+            data: $('#formPersFornPers').serialize(),
+            success: function success(response) {
+              Promise.all([myThis.getPo()]).then(function () {
+                $("#listDettPo").html(myThis.poResponse);
+                $('#cashPoTable tr').click(function () {
+                  cashDett.selPo(this);
+                });
+                myThis.selPo($('#poRow-' + myThis.currPo.id));
+              });
+            },
+            error: function error() {
+              alert("There was an error saving purchase order");
+            }
+          });
+        }
+      }
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      $("#dettRate").dialog('close');
+      saveAll();
+      $('#outMode').attr('value', 'cash');
+      $('#orderBy').attr('value', this.value);
+      $("#exitForm").submit();
+    }
+  }, {
+    key: "checkPo",
+    value: function checkPo() {
+      if (!this.currPo.changed) {
+        return true;
+      } else {
+        this.currPo.from = $('#Dal').val();
+        this.currPo.to = $('#Al').val();
+        var dateFrom = new Date(this.currPo.from);
+        var dateTo = new Date(this.currPo.to);
+        var currDate = new Date(this.currPosition.Anno + '-' + this.currPosition.Mese + '-01'); //            var currDate = Date.parse(this.currPosition.Anno+'-'+this.currPosition.Mese+'-01');
+
+        if (dateFrom !== NaN && dateFrom !== 0 && dateTo !== NaN && dateTo !== 0 && dateFrom <= currDate && dateTo >= currDate) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      return this.currPo.changed;
+    }
+  }, {
+    key: "checkRate",
+    value: function checkRate() {
+      var msg = 'Ok';
+
+      if (!this.currPosition.changed) {
+        msg = 'Nothing to save!';
+      } else if ($('#idTipoSpesa').val() === '') {
+        msg = 'Choose a cost type';
+      } else if (parseInt($('#Importo').val()) === 0 && parseInt($('#Storno').val()) === 0) {
+        msg = 'Specify an amount or a balance value';
+      } else if ($('#Ordine').val() === '') {
+        msg = 'Choose a valid purchase order';
+      }
+
+      if (msg != 'Ok') {
+        alert(msg);
+        return false;
+      } else {
+        return true;
+      } //        return this.currPosition.changed;
+
+    }
+  }]);
+
+  return CashDett;
+}();
+
+
+//  END IE 11 
+
+</script>
+-->
+
+<script>
+const cashDett = new CashDett();
+    
+    $(document).ready(function () {            
+        $("#dettRate").dialog({
+            autoOpen: false,
+            closeOnEscape: false,
+            width: "1600 px",
+            title: "Cash detail",
+            open: function(event, ui) {
+                $(this).parent().promise().done(function () {
+                    cashDett.openDetailDialog(); 
+                    $('#cashDetTable tr').click(function(){
+                        cashDett.selRate(this); });
+                    $('#cashPoTable tr').click(function(){
+                        cashDett.selPo(this); });                  
+                    });
+                },
+            close: function(event, ui) {cashDett.close(); },    
+            show: {
+                effect: "blind",
+                duration: 100
+                },
+            hide: {
+                effect: "blind",
+                duration: 100
+                }
+            });
+
+        $('#discDettRate').click(function(){cashDett.close(); });
+        $('#discDettPo').click(function(){cashDett.close(); });
+        $('#delDettRate').click(function(){cashDett.delRate(); });        
+        $('#delDettPo').click(function(){cashDett.delPo(); });        
+        $('#confDettRate').click(function(){cashDett.saveRate(); });
+        $('#confNewRate').click(function(){cashDett.savePlusRate(); });
+        $('#confDettPo').click(function(){cashDett.savePo(); });
+    });
+
+
+
+
+        
+//    saveRate() {
+//        var saveRow = baseUrl+'/cash-rate-detail/save-cash-row';
+//        var savePo = baseUrl+'/cash-po-detail/save-cash-po-row';
+//        if(!checkPo())
+//            {
+//            alert("Can't save:  Check Purchase Order");
+//            return;
+//            }
+//        else
+//            {
+//            saveAll();
+//            $('#idProgetto').val(this.currPosition.idProgetto);
+//            $('#Anno').val(this.currPosition.Anno);
+//            $('#Mese').val(this.currPosition.Mese);
+//            $('#idRichiesta').val(this.currPosition.idRichiesta);
+//            if(this.currPo.changed)
+//                {
+//                $.ajax({
+//                    type: 'post',
+//                    url: savePo,
+//                    data: $('#formPersFornPers').serialize(), 
+//                    success: function(response) {
+//                        $.ajax({
+//                            type: 'post',
+//                            url: saveRow,
+//                            data: $('#cashdett').serialize(), 
+//                            success: function(response) {
+//                                saveAll();
+//                                $('#outMode').attr('value', 'cash');
+//                                $('#orderBy').attr('value', this.value);
+//                                $("#exitForm").submit();
+//                                },
+//                            error: function() {
+//                                alert("There was an error submitting comment");
+//                                }
+//                            });
+//                        },
+//                    error: function() {
+//                        alert("There was an error submitting comment");
+//                        }
+//                    });
+//                }
+//            else
+//                {
+//                $.ajax({
+//                    type: 'post',
+//                    url: saveRow,
+//                    data: $('#cashdett').serialize(), 
+//                    success: function(response) {
+//                        saveAll();
+//                        $('#outMode').attr('value', 'cash');
+//                        $('#orderBy').attr('value', this.value);
+//                        $("#exitForm").submit();
+//                        },
+//                    error: function() {
+//                        alert("There was an error submitting comment");
+//                        }
+//                    });
+//                $("#dettRate").dialog('close');
+//                }
+//            }        
+//        }
+        
+</script>    

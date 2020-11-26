@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <group_qual>
+        <title>Grupppo qualifiche</title>
+        <edittitle>Modifica gruppo qualifiche</edittitle>
+        <newtitle>Nuovo gruppo qualifiche</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>raggruppamenti</maintable>
+        <currkey>idRagg</currkey>
+        <currsql>SELECT * FROM raggruppamenti WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formgroupqual</name>
+            <elements>
+                <idRagg>
+                    <type>hidden</type>
+                </idRagg>
+                <NumRagg>
+                    <type>text</type>
+                    <label>Numero ragg.</label>
+                    <parameters>
+                        <size>4</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </NumRagg>
+                <Raggruppamento>
+                    <type>text</type>
+                    <label>Raggruppamento</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Raggruppamento>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </group_qual>
+</edits>

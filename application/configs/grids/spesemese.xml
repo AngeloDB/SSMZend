@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <spesemese>
+        <title>Spese Mensili</title>
+        <addlink>/spese-mese/new</addlink>
+        <addtitle>Nuova Spesa mensile</addtitle>
+        <parameters>
+            <currIdProject>
+                <from>arrdefaultnamespace</from>
+                <array>currSpesaPar</array>
+                <offset>idProgetto</offset>
+            </currIdProject>
+            <currAnno>
+                <from>arrdefaultnamespace</from>
+                <array>currSpesaPar</array>
+                <offset>Anno</offset>
+            </currAnno>
+            <currMese>
+                <from>arrdefaultnamespace</from>
+                <array>currSpesaPar</array>
+                <offset>Mese</offset>
+            </currMese>
+            <currRic>
+                <from>arrdefaultnamespace</from>
+                <array>currSpesaPar</array>
+                <offset>idRichiesta</offset>
+            </currRic>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <spesemese>spesemese</spesemese>
+                </aliasname>
+                <fields>
+                    <idSpeseMese>idSpeseMese</idSpeseMese>
+                    <Periodo>
+                        CONCAT(LPAD(spesemese.Mese, 2, '0'), "/", LPAD(spesemese.Anno, 2, '0'))
+                    </Periodo>
+                    <YM>
+                        CONCAT(LPAD(spesemese.Mese, 2, '0'), "/", LPAD(spesemese.Anno, 2, '0'))
+                    </YM>
+<!--                    <Periodo>
+                        CONCAT(RIGHT(CONCAT("00", CAST(spesemese.Mese AS (CHAR(2)))), 2), "/", spesemese.Anno)
+                    </Periodo>
+                    <YM>
+                        CONCAT(RIGHT(CONCAT("00", CAST(spesemese.Mese AS (CHAR(2)))), 2), "-", spesemese.Anno)
+                    </YM>-->
+                    <Importo>Importo</Importo>
+                    <Storno>Storno</Storno>
+                    <!--<Riferimento>Riferimento</Riferimento>-->
+                    <Fattura>Fattura</Fattura>                    
+                    <Ordine>Ordine</Ordine>                    
+                </fields>
+            </from>
+            <join id='tab_tipospesa'>
+                <type>left</type>
+                <cond>tab_tipospesa.idTabTipoSpesa = spesemese.idTipoSpesa</cond>
+                <aliasname>
+                    <tab_tipospesa>tab_tipospesa</tab_tipospesa>
+                </aliasname>
+                <fields>
+                    <Tipo>
+                        CONCAT(tab_tipospesa.Descrizione, 
+                            IF(tab_tipospesa.Descrizione = "Others", 
+                                CONCAT(" (", spesemese.DescTipoSpesa, ")"), ""))
+                    </Tipo>
+                </fields>
+            </join>
+            <join id='progetti'>
+                <cond>progetti.idProgetto=spesemese.idProgetto</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <Commessa>Nome</Commessa>
+                </fields>
+            </join>
+            <join id='richieste'>
+                <type>left</type>
+                <cond>richieste.idRichiesta = spesemese.idRichiesta</cond>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <idRichiesta>idRichiesta</idRichiesta>
+                </fields>
+            </join>
+            <join id='qualifiche'>
+                <type>left</type>
+                <cond>qualifiche.idQualifica = richieste.idQualifica</cond>
+                <aliasname>
+                    <qualifiche>qualifiche</qualifiche>
+                </aliasname>
+                <fields>
+                    <Qualifica>Descrizione</Qualifica>
+                </fields>
+            </join>
+            <join id='jobs'>
+                <type>left</type>
+                <cond>jobs.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <jobs>jobs</jobs>
+                </aliasname>
+                <fields>
+                    <idJob>idJob</idJob>
+                </fields>
+            </join>
+            <join id='personale'>
+                <type>left</type>
+                <cond>personale.idPersonale = jobs.idPersonale</cond>
+                <aliasname>
+                    <personale>personale</personale>
+                </aliasname>
+                <fields>
+                    <Pers>CONCAT(personale.Nome, " ", Cognome)</Pers>
+                </fields>
+            </join>
+            <join id='forn_pers'>
+                <type>left</type>
+                <cond>forn_pers.idFornPers = personale.idFornPers</cond>
+                <aliasname>
+                    <forn_pers>forn_pers</forn_pers>
+                </aliasname>
+                <fields>
+                    <RagSoc>RagSoc</RagSoc>
+                </fields>
+            </join>
+            <join>
+            </join>
+            <where>
+                <from>
+                spesemese.idProgetto = "{{currIdProject}}" AND                    
+                spesemese.Anno = (CASE WHEN "{{currAnno}}" = "" THEN spesemese.Anno ELSE "{{currAnno}}" END) AND                    
+                spesemese.Mese = (CASE WHEN "{{currMese}}" = "" THEN spesemese.Mese ELSE "{{currMese}}" END) AND                    
+                spesemese.idRichiesta = (CASE WHEN "{{currRic}}" = "" THEN spesemese.idRichiesta ELSE "{{currRic}}" END)                    
+                </from>
+            </where>
+        </select>
+        <updatecolumns>
+            <idSpeseMese>
+                <hidden>1</hidden>
+            </idSpeseMese>
+            <YM>
+                <hidden>1</hidden>
+            </YM>
+            <Commessa>
+                <title>Commessa</title>
+                <position>1</position>
+            </Commessa>
+            <Periodo>
+                <title>Periodo</title>
+                <position>2</position>
+            </Periodo>
+            <idJob>
+                <hidden>1</hidden>
+            </idJob>
+            <idRichiesta>
+                <hidden>1</hidden>
+            </idRichiesta>
+            <Tipo>
+                <title>Tipo spesa</title>
+                <position>3</position>
+            </Tipo>
+            <Fattura>
+                <title>Fattura</title>
+                <position>4</position>
+            </Fattura>
+            <Ordine>
+                <title>Ordine di acquisto</title>
+                <position>5</position>
+            </Ordine>
+<!--            <Riferimento>
+                <title>Riferimento spesa</title>
+                <position>4</position>
+                <class>colonnadata</class>
+                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>
+            </Riferimento>-->
+            <Qualifica>
+                <title>Qualifica</title>
+                <position>6</position>
+            </Qualifica>
+            <Pers>
+                <title>Supervisor</title>
+                <parameters>
+                    <search>false</search>
+                </parameters>
+                <position>7</position>
+            </Pers>
+            <RagSoc>
+                <title>Fornitore</title>
+                <position>8</position>
+            </RagSoc>
+            <Importo>
+                <title>Importo</title>
+                <position>9</position>
+                <Currency>
+                    <format>it-IT</format>
+                </Currency>
+            </Importo>
+            <Storno>
+                <title>Storno</title>
+                <position>10</position>
+                <Currency>
+                    <format>it-IT</format>
+                </Currency>
+            </Storno>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /spese-mese/edit/id/{{idSpeseMese}}/ym/{{YM}}/ric/{{idRichiesta}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                /spese-mese/delete/id/{{idSpeseMese}}/ym/{{YM}}/ric/{{idRichiesta}}
+                            </link>
+                            <linkstyle>
+                                cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/fechar.png
+                            </linkimg>
+                            <onclick>return(confirm('Confirm delete?'))</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </spesemese>
+</grids>

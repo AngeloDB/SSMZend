@@ -1,0 +1,120 @@
+.menusemplice {
+				margin-left: 80px;
+				font-size: 12px;
+				color: #7f8385;
+				font-weight: bold;
+				display: block;
+				float: left;
+				padding: 0 ;
+				height: 20px
+			}
+			.menusemplice li {
+				line-height: 1.25em;
+				list-style: none; margin-left: 5px;
+			}
+			.menusemplice a {
+				text-decoration: none;
+				
+			}
+			.menusemplice a:hover, .menusemplice a:focus {
+				color: #000;
+				text-decoration: underline
+			}
+			d
+			.menusemplice ul{
+				list-style: none;
+				margin-left: 0
+			}
+			.menusemplice ul li a{
+				width:110px;
+				padding: 2px 0 0 10px;
+			}
+			.menusemplice ul li a{
+				color:#fff;
+				
+				/*background-color: #6b7074;*/
+				height: 24px;
+				display: block
+			}
+			.menusemplice ul li {
+				z-index: 10000 !important;
+				position: relative;
+				float: left;
+				padding: 0;
+/*				margin-left: 20px*/
+				padding:0px;
+				margin: 0px
+			}
+
+			.menusemplice li ul {
+				font-size: 13px;
+				display: none;
+				position: absolute;
+				top: 20px;
+				left: 0px;
+				color: #fff;
+				background-color: #888;
+				padding: 16px 8px 24px 20px;
+				height: 152px;
+				border-left:1px solid #fff;
+				border-bottom:2px solid #444;
+				border-right:2px solid #444;
+			}
+			html > body .menusemplice li ul {
+				height: auto;
+				min-height: 64px;
+				max-height: 256px
+			}
+			html > body .menusemplice li ul ul {
+				min-height: inherit
+			}
+
+			.menusemplice li.first ul {
+				/*padding: 17px 0 23px;*/
+			}
+			.menusemplice li li {
+				position: static;
+				float: none
+			}
+			.menusemplice ul li ul li a {
+				width: 200px;
+				padding-right: 20px
+			}
+			
+
+			.menusemplice li li ul {
+				display: block;
+				position: static;
+				top: auto;
+				height: auto
+			}
+
+			.menusemplice ul.block li.last, .menusemplice ul.block li li {
+				border-right: 0
+			}
+			.menusemplice ul.block li li {
+				padding: 0
+			}
+			
+			.menusemplice li:hover ul, .menusemplice li.open ul {
+				display: block
+			}
+
+
+		/*, .menusemplice ul li.open , .menusemplice li ul  a:hover, .menusemplice li ul a:focus*/
+			.menusemplice ul li:hover, .menusemplice ul li:focus {
+				
+				text-decoration: none;
+				color: #ff0;
+				background-color: #888;
+			}
+
+			.menusemplice li ul a, .menusemplice li ul b {
+				display: block;
+				
+				padding: 0 0 0.2em 10px;
+				color: #fff;
+				font-size: 1.1em;
+				font-weight: normal;
+				background: #888 url("/public/images/icons.png") no-repeat 0 -494px
+			}

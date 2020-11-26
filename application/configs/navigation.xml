@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configdata>
+    <base>
+        <index>
+            <label></label>
+            <uri>#</uri>
+        </index>
+    </base>
+    <SuperIT>
+        <home>
+            <!--<label>Home</label>-->
+            <label>
+                #LT#img src="/public/images/home2.png" 
+                    style="padding_top: 1px; 
+                    max-width: 100%;
+                    height: auto;"
+                #GT#
+            </label>
+            <controller>index</controller>
+            <!--<action>list</action>  style="padding_top: 1px;" -->            
+        </home>
+        <utenti>
+            <label>Utenti</label>
+            <resource>login</resource>
+            <uri>#</uri>
+            <pages>
+                <dipendenti>
+                    <label>Utenti</label>
+                    <controller>new-users</controller>
+                    <action>list</action>
+                </dipendenti>
+                <autorizz>
+                    <label>Autorizzazioni</label>
+                    <controller>autorizz</controller>
+                    <action>list</action>
+                </autorizz>
+            </pages>
+        </utenti>        
+        <tabelle>
+            <label>Tabelle</label>
+            <resource>tabelle</resource>
+            <uri>#</uri>
+            <pages>
+                <contratti>
+                    <label>Contractors</label>
+                    <controller>contratti</controller>
+                    <action>list</action>
+                </contratti>
+                <businessunits>
+                    <label>Business Units</label>
+                    <controller>business-units</controller>
+                    <action>list</action>
+                </businessunits>
+                <perssub>
+                    <label>Personale sito</label>
+                    <resource>tabelle</resource>
+                    <uri>#</uri>
+                    <pages>
+                        <persnew>
+                            <label>Personale nuovo</label>
+                            <controller>new-pers</controller>
+                            <action>index</action>
+                            <params>
+                                <mode>new</mode>
+                            </params>                    
+                        </persnew>
+                        <persint>
+                            <label>Personale interno</label>
+                            <controller>personale</controller>
+                            <action>list</action>
+                            <params>
+                                <mode>int</mode>
+                            </params>                    
+                        </persint>
+                        <persext>
+                            <label>Personale esterno</label>
+                            <controller>personale</controller>
+                            <action>list</action>
+                            <params>
+                                <mode>ext</mode>
+                            </params>                    
+                        </persext>
+                        <persall>
+                            <label>Personale tutto</label>
+                            <controller>personale</controller>
+                            <action>list</action>
+                            <params>
+                                <mode></mode>
+                            </params>                    
+                        </persall>
+                    </pages>
+                </perssub>
+                <fornpers>
+                    <label>Fornitori personale</label>
+                    <controller>forn-pers</controller>
+                    <action>list</action>
+                </fornpers>
+<!--                <importcv>
+                    <label>import CV</label>
+                    <controller>import-cv</controller>
+                    <action>list</action>
+                </importcv>-->
+                <qualsub>
+                    <label>Qualifiche</label>
+                    <resource>tabelle</resource>
+                    <uri>#</uri>
+                    <pages>
+                        <group_qual>
+                            <label>Gruppi qualifiche</label>
+                            <controller>group-qual</controller>
+                            <action>list</action>
+                        </group_qual>
+                        <qualifiche>
+                            <label>Qualifiche</label>
+                            <controller>qualifiche</controller>
+                            <action>list</action>
+                        </qualifiche>
+                    </pages>
+                </qualsub>
+                <clienti>
+                    <label>Clienti</label>
+                    <controller>clienti</controller>
+                    <action>list</action>
+                </clienti>
+            </pages>
+        </tabelle> 
+        <progetti>
+            <label>Commesse</label>
+            <resource>progetti</resource>
+            <uri>#</uri>
+            <pages>
+                <progetti>
+                    <label>Commesse aperte</label>
+                    <controller>progetti</controller>
+                    <params>
+                        <mode>open</mode>
+                    </params>                    
+                    <action>list</action>
+                </progetti>
+                <tuttiprogetti>
+                    <label>Commesse (tutte)</label>
+                    <controller>progetti</controller>
+                    <action>list</action>
+                    <params>
+                        <mode>all</mode>
+                    </params>                    
+                </tuttiprogetti>
+                <joboptsub>
+                    <label>Opzioni commesse</label>
+                    <resource>progetti</resource>
+                    <uri>#</uri>
+                    <pages>
+                        <invservices>
+                            <label>Services to be invoiced</label>
+                            <controller>inv-services</controller>
+                            <action>list</action>
+                        </invservices>
+                        <tipivisto>
+                            <label>Visa Types</label>
+                            <controller>visa-type</controller>
+                            <action>list</action>
+                        </tipivisto>
+                        <valute>
+                            <label>Valute</label>
+                            <controller>valute</controller>
+                            <action>list</action>
+                        </valute>
+                        <calendars>
+                            <label>Calendars</label>
+                            <controller>calendars</controller>
+                            <action>list</action>
+                        </calendars>
+                    </pages>
+                </joboptsub>
+            </pages>
+        </progetti> 
+        <report>
+            <label>Reports</label>
+            <resource>reports</resource>
+            <uri>#</uri>
+            <pages>
+                <totals>
+                    <label>Totals Graph</label>
+                    <controller>reports</controller>
+                    <action>tot-graph</action>
+                </totals>
+                <totreports>
+                    <label>Job Workload</label>
+                    <controller>reports</controller>
+                    <action>jobs-plan</action>
+                    <params>
+                        <mode>jobs</mode>
+                    </params>                    
+                </totreports>
+                <jobs-plan>
+                    <label>Personnel Workload</label>Job
+                    <controller>reports</controller>
+                    <action>jobs-plan</action>
+                    <params>
+                        <mode>pers</mode>
+                    </params>                    
+                </jobs-plan>
+                <qualplan>
+                    <label>Qualification Planning</label>
+                    <controller>reports</controller>
+                    <action>tot-report</action>
+                </qualplan>
+                <dettreports>
+                    <label>Man/Day Details</label>
+                    <controller>reports</controller>
+                    <action>dett-report</action>
+                </dettreports>
+            </pages>
+        </report>        
+    </SuperIT>
+    <SuperLU>
+        <home>
+            <!--<label>Home</label>-->
+            <label>
+                #LT#img src="/public/images/home2.png" 
+                    style="padding_top: 1px; 
+                    max-width: 100%;
+                    height: auto;"
+                #GT#
+            </label>
+            <controller>index</controller>
+        </home>
+        <tabelle>
+            <label>Tabelle</label>
+            <resource>tabelle</resource>
+            <uri>#</uri>
+            <pages>
+                <clienti>
+                    <label>Clienti</label>
+                    <controller>clienti</controller>
+                    <action>list</action>
+                </clienti>
+                <fornpers>
+                    <label>Fornitori</label>
+                    <controller>forn-pers</controller>
+                    <action>list</action>
+                </fornpers>
+                <personale>
+                    <label>PersonaleMnu</label>
+                    <controller>personale</controller>
+                    <action>list</action>
+                </personale>
+                <importcv>
+                    <label>import CV</label>
+                    <controller>import-cv</controller>
+                    <action>list</action>
+                </importcv>
+                <group_qual>
+                    <label>Gruppi qualifiche</label>
+                    <controller>group-qual</controller>
+                    <action>list</action>
+                </group_qual>
+                <qualifiche>
+                    <label>Qualifiche</label>
+                    <controller>qualifiche</controller>
+                    <action>list</action>
+                </qualifiche>
+                <contratti>
+                    <label>Contractors</label>
+                    <controller>contratti</controller>
+                    <action>list</action>
+                </contratti>
+                <businessunits>
+                    <label>Business Units</label>
+                    <controller>business-units</controller>
+                    <action>list</action>
+                </businessunits>
+                <invservices>
+                    <label>Services to be invoiced</label>
+                    <controller>inv-services</controller>
+                    <action>list</action>
+                </invservices>
+                <tipivisto>
+                    <label>Visa Types</label>
+                    <controller>visa-type</controller>
+                    <action>list</action>
+                </tipivisto>
+                <valute>
+                    <label>Valute</label>
+                    <controller>valute</controller>
+                    <action>list</action>
+                </valute>
+                <calendars>
+                    <label>Calendars</label>
+                    <controller>calendars</controller>
+                    <action>list</action>
+                </calendars>
+            </pages>
+        </tabelle> 
+        <progetti>
+            <label>Commesse</label>
+            <resource>progetti</resource>
+            <uri>#</uri>
+            <pages>
+                <progetti>
+                    <label>Commesse</label>
+                    <controller>progetti</controller>
+                    <action>list</action>
+                </progetti>
+            </pages>
+        </progetti> 
+        <report>
+            <label>Reports</label>
+            <resource>reports</resource>
+            <uri>#</uri>
+            <pages>
+                <totals>
+                    <label>Totals Graph</label>
+                    <controller>reports</controller>
+                    <action>tot-graph</action>
+                </totals>
+                <totreports>
+                    <label>Job Workload</label>
+                    <controller>reports</controller>
+                    <action>jobs-plan</action>
+                    <params>
+                        <mode>jobs</mode>
+                    </params>                    
+                </totreports>
+                <jobs-plan>
+                    <label>Personnel Workload</label>Job
+                    <controller>reports</controller>
+                    <action>jobs-plan</action>
+                    <params>
+                        <mode>pers</mode>
+                    </params>                    
+                </jobs-plan>
+                <qualplan>
+                    <label>Qualification Planning</label>
+                    <controller>reports</controller>
+                    <action>tot-report</action>
+                </qualplan>
+                <dettreports>
+                    <label>Man/Day Details</label>
+                    <controller>reports</controller>
+                    <action>dett-report</action>
+                </dettreports>
+            </pages>
+        </report>        
+    </SuperLU>
+    
+    <Project extends="SuperLU">
+    </Project>
+    
+    <PM-CM extends="SuperLU">
+    </PM-CM>
+    
+    <Admin extends="SuperLU">
+    </Admin>
+
+    <Secretary extends="SuperLU">
+    </Secretary>
+
+    <Info extends="SuperLU">
+    </Info>
+        
+    <User extends="SuperLU">
+    </User>
+        
+    <Guest extends="SuperLU">
+    </Guest>
+        
+</configdata>

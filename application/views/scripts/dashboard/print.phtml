@@ -1,0 +1,103 @@
+<!-- #Sezione main1 -->
+<!--<div class="logoheader"><img style="width:200mm" border="0" src="images/paulwurth-logo.jpg"></div>-->
+<!--<div class="logoheader"><img style="width:200mm" border="0" src="images/cattelan-borsa-Fotogramma_258.jpg"></div>-->
+<!--<div class="logoheader"><img style="width:200mm" border="0" src="
+<?php echo $this->Intestazione;?>"></div>-->
+<table width="100%" cols="10" CELLSPACING="0" BORDER="0">
+	<tr>
+		 <td colspan="11"  class="titoli3"><b>Progetto {{NomeProgetto}}</b></td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<tr>
+		 <td colspan="3" class="titoli">Indirizzo</td>
+		 <td colspan="8" class="bordi">{{IndirizzoProgetto}}</td>
+	</tr>
+	<tr>
+		 <td colspan="3" class="titoli">Inizio</td>
+		 <td colspan="3" class="bordi">{{DataInizio, italdate}}</td>
+		 <td colspan="2" class="titoli">Fine</td>
+		 <td colspan="3" class="bordi">{{DataFine, italdate}}</td>
+	</tr>
+	<tr>
+		 <td colspan="3" class="titoli">Giorni totali</td>
+		 <td colspan="3" class="bordi">{{ggProg}}</td>
+		 <td colspan="2" class="titoli">Budget</td>
+		 <td colspan="3" class="bordi">{{Budget}}</td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="bordi">{{NoteProgetto}}</td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<!-- #Sezione step_title -->
+	<tr>
+		 <td colspan="11"  class="titoli3"><b>Step di progetto</b></td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<!-- #Sezione step_line -->
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="titoli3">Step {{Step}}</td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<tr>
+		 <td colspan="3" class="titoli">Inizio</td>
+		 <td colspan="3" class="bordi">{{InizioStep, italdate}}</td>
+		 <td colspan="2" class="titoli">Fine</td>
+		 <td colspan="3" class="bordi">{{FineStep, italdate}}</td>
+	</tr>
+	<tr>
+		 <td colspan="3" class="titoli">Giorni totali</td>
+		 <td colspan="3" class="bordi">{{ggStep}}</td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="bordi">{{NoteStep}}</td>
+	</tr>
+	<tr>
+		 <td colspan="11"  class="spazioverticale"></td>
+	</tr>
+	<!-- #Sezione richieste -->
+	<tr>
+		 <td colspan="3" class="titoli">Qualifica</td>
+		 <td colspan="3" class="bordi">{{Qualifica}}</td>
+		 <td colspan="2" class="titoli">Lavoratore</td>
+		 <td colspan="3" class="bordi">{{Lavoratore}}</td>
+	</tr>
+	<!-- #Sezione endtable -->        
+</table>
+<!-- #Sezione firstfooter -->
+<div class="intestazionefooter">
+	<div width="100%">
+		<div style="float:left; width:48%; text-align:left">
+			Verbale di riunione n°{{Protocollo}}
+		</div>
+		<div style="float:right; width:48%; text-align:right">
+			{PAGENO}
+		</div>
+	</div>
+</div>
+<!-- #Sezione secondfooter -->
+<div class="intestazionefooter">
+	<img SRC=<?php echo '"'.$this->Foother.'"';?> style="width:200mm" border="0">
+	<br>
+	<div width="100%">
+		<div style="float:left; width:48%; text-align:left">
+			Verbale di riunione n°{{Protocollo}}
+		</div>
+		<div style="float:right; width:48%; text-align:right">
+			{PAGENO}
+		</div>
+	</div>
+</div>    

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <job>
+        <title>Passaporto</title>
+        <edittitle>Modifica job</edittitle>
+        <newtitle>Nuovo job</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>jobs</maintable>
+        <currkey>idJob</currkey>
+        <currsql>SELECT * FROM jobs WHERE </currsql>
+        <parameters>
+            <req_id>
+                <from>arrdefaultnamespace</from>
+                <array>currReq</array>
+                <offset>idRichiesta</offset>
+            </req_id>
+            <qual_id>
+                <from>arrdefaultnamespace</from>
+                <array>currReq</array>
+                <offset>idQualifica</offset>
+            </qual_id>
+<!--            <nullpar>
+                <const>1</const>
+            </nullpar>-->
+        </parameters>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formJob</name>
+            <elements>
+                <idJob>
+                    <type>hidden</type>
+                </idJob>
+                <idRichiesta>
+                    <type>hidden</type>
+                    <value>req_id</value>
+                </idRichiesta>
+<!--                <Delete>
+                    <type>button</type>
+                    <label>Delete</label>
+                    <javascript>                        
+                        <onclick>return(confirm('Confirm delete?'));</onclick>
+                    </javascript>
+                </Delete>-->
+                <Inizio>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Inizio</Label>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Inizio>
+                <Fine>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Fine</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Fine>
+                <idPersonale>
+                    <type>select</type>
+                    <!--<notempty>true</notempty>-->
+                    <label>Personale</label>
+                    <selsql>
+                        SELECT personale.idPersonale AS KeyId, CONCAT(personale.Nome, " ", personale.Cognome) AS Value
+                        FROM personale
+                        WHERE personale.idPersonale IN 
+                        (SELECT guesthost.idGuest 
+                            FROM guesthost 
+                            JOIN tab_guests ON tab_guests.idTab_guest=guesthost.idTab_guest 
+                            JOIN tab_hosts ON tab_hosts.idTab_host=guesthost.idTab_host 
+                            WHERE guesthost.idHost="{{qual_id}}" 
+                                AND tab_guests.TableName="personale" 
+                                AND tab_hosts.TableName="qualifiche")
+                        OR personale.idQualifica="{{qual_id}}"
+                        ORDER BY personale.Cognome, personale.Nome 
+                    </selsql>
+                </idPersonale>
+                <SalGG>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Tariffa giornaliera</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </SalGG>
+                <SalOrario>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Tariffa oraria</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </SalOrario>
+                <PocketMoney>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Pocket Money</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </PocketMoney>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </job>
+</edits>

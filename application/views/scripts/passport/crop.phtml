@@ -1,0 +1,118 @@
+<?php
+$this->headLink()->appendStylesheet($this->baseUrl() . '/styles/styles.css');
+$this->headLink()->appendStylesheet($this->baseUrl() . '/jcrop/css/jquery.Jcrop.css');
+//echo $this->baseUrl() . '/jcrop/css/jquery.Jcrop.css';
+?>
+<script type="text/javascript">
+    $(function() {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci",
+                "<?php
+if (array_key_exists('ggEsci-1_list', $_SESSION))
+    echo $_SESSION['ggEsci-1_list'];
+?>", "r");
+    });
+
+    $(document).ready(function()
+    {
+        $('#cropbox').Jcrop(
+                {
+                    onChange: showCoords,
+                    onSelect: showCoords,
+                    aspectRatio: 0.7734375
+                }, function() {
+            jcrop_api = this;
+            bounds = jcrop_api.getBounds();
+            boundx = bounds[0];
+            boundy = bounds[1];
+
+        });
+    });
+    //	function showPreview(coords)
+    //	{
+    //		
+    //	};
+    // Simple event handler, called from onChange and onSelect
+    // event handlers, as per the Jcrop invocation above
+    function showCoords(c)
+    {
+        $('#x1').val(c.x);
+        $('#y1').val(c.y);
+        $('#x2').val(c.x2);
+        $('#y2').val(c.y2);
+        $('#w').val(c.w);
+        $('#h').val(c.h);
+/*
+        if (parseInt(c.w) > 0)
+        {
+            var rx = 99 / c.w;
+            var ry = 128 / c.h;
+
+            $('#preview').css({
+                width: Math.round(rx * boundx) + 'px',
+                height: Math.round(ry * boundy) + 'px',
+                marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                marginTop: '-' + Math.round(ry * c.y) + 'px'
+            });
+        }
+*/
+    }
+    ;
+
+</script>
+
+<?php
+echo $this->javascript;
+?>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li><a href="#GGtabs-1"><?php //echo $this->title;    ?>Ritaglia fototessera</a></li>
+    </ul>
+    <div id="GGtabs-1">
+        <table id="mox">
+            <tr>
+                <td>
+                    <div id="img">
+                        <img src="<?php
+                        echo("/public/uploads/" .
+                        $this->result['Allegato']);
+                        ?>" id = "cropbox">
+                    </div>
+                </td>
+                <td>
+<!--                    <div style="width:99px;height:128px;overflow:hidden;border: 1px solid #000;">
+                        <img src="<?php
+                        echo("/public/uploads/" .
+                        $this->result['Allegato']);
+                        ?>"  id="preview" />
+                    </div> -->
+                </td>
+                <td style="vertical-align: bottom">
+                    <div id="form">
+                        <?php echo $this->form; ?>
+                    </div>                    
+                </td>
+            </tr>
+        </table>
+
+        <!--$this->baseUrl() .  onsubmit="return false;" "/uploads/"--> 
+    </div>
+    <?php //var_dump($this->result);   ?>
+</div>
+
+
+
+
+<!--			<form class="coords" action=
+<?php
+echo('"' . $this->baseUrl() .
+ '/passport/crop/id/' . $this->currId . '"');
+?> method="POST">
+                                <input type="hidden" size="4" id="x1" name="x1" /></label>
+                                <input type="hidden" size="4" id="y1" name="y1" /></label>
+                                <input type="hidden" size="4" id="x2" name="x2" /></label>
+                                <input type="hidden" size="4" id="y2" name="y2" /></label>
+                                <input type="hidden" size="4" id="w" name="w" /></label>
+                                <input type="hidden" size="4" id="h" name="h" /></label>
+                                <input type="submit" value="Ok">
+                        </form>-->

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <calendar>
+        <title>Calendario</title>
+        <edittitle>Modifica Calendario</edittitle>
+        <newtitle>Nuova Calendario</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>calendars</maintable>
+        <currkey>idCalendar</currkey>
+        <currsql>SELECT * FROM calendars WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formcalendar</name>
+            <elements>
+                <idCalendar>
+                    <type>hidden</type>
+                </idCalendar>
+                <Nome>
+                    <type>text</type>
+                    <label>Calendario</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>128</maxlen>
+                    </parameters>
+                </Nome>
+                <Descrizione>
+                    <type>text</type>
+                    <label>Descrizione</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Descrizione>
+                <Lun>
+                    <type>checkbox</type>
+                    <label>Lunedì</label>
+                </Lun>
+                <Mar>
+                    <type>checkbox</type>
+                    <label>Martedì</label>
+                </Mar>
+                <Mer>
+                    <type>checkbox</type>
+                    <label>Mercoledì</label>
+                </Mer>
+                <Gio>
+                    <type>checkbox</type>
+                    <label>Giovedì</label>
+                </Gio>
+                <Ven>
+                    <type>checkbox</type>
+                    <label>Venerdì</label>
+                </Ven>
+                <Sab>
+                    <type>checkbox</type>
+                    <label>Sabato</label>
+                </Sab>
+                <Dom>
+                    <type>checkbox</type>
+                    <label>Domenica</label>
+                </Dom>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </calendar>
+</edits>

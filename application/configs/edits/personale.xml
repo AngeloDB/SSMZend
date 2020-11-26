@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <personale>
+        <title>Personale</title>
+        <edittitle>Modifica personale</edittitle>
+        <newtitle>Nuovo personale</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>personale</maintable>
+        <currkey>idPersonale</currkey>
+        <currsql>SELECT * FROM personale WHERE </currsql>
+        <parameters>
+            <mode>
+                <from>pararr</from>
+            </mode>
+<!--            <modeExt>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>ext</op2>
+            </modeExt>-->
+            <modeInt>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>int</op2>
+            </modeInt>
+<!--            <modeAll>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>all</op2>
+            </modeAll>-->
+        </parameters>
+        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "en", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: Multiselect).',
+        noneSelectedText: 'Allowed qualifications (checkbox select)',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No selected qualification.',
+        selectedText: '# qualification(s) selected',
+        selectedList: 200,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "Search:"
+    });
+            
+    $("#idQualifica").multiselect({
+        multiple: false,
+        noneSelectedText: 'No selected job(s).',
+        selectedText: '# Job(s) Selected',
+        selectedList: 200,
+        height: 175,
+        minWidth: 600
+<!--        position: {
+        my: 'left bottom',
+        at: 'left top'
+    }-->
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+            
+    $("#idFornPers").multiselect({
+        multiple: false,
+        noneSelectedText: 'No selected company.',
+        selectedText: '# Job(s) Selected',
+        selectedList: 200,
+        height: 175,
+        minWidth: 500
+<!--        position: {
+        my: 'left bottom',
+        at: 'left top'
+    }-->
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+            
+  
+});  
+
+        </javascript>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formPersonale</name>
+            <elements>
+                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>
+                <Nome>
+                    <type>text</type>
+                    <label>anagNome</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Nome>
+                <Cognome>
+                    <type>text</type>
+                    <label>Cognome</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Cognome>
+                <CodFisc>
+                    <type>text</type>
+                    <label>Codice Fiscale</label>
+                    <!--<checkcodfisc>true</checkcodfisc>-->
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>25</maxlen>
+                    </parameters>
+                </CodFisc>
+                <DataNascita>
+                    <type>date</type>
+                    <!--<notempty>true</notempty>-->
+                    <parameters>
+                        <Label>Nascita</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </DataNascita>
+                <LuogoNascita>
+                    <type>text</type>
+                    <label>Luogo di nascita</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </LuogoNascita>
+                <IndResidenza>
+                    <type>text</type>
+                    <label>Residenza</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </IndResidenza>
+                <Email>
+                    <type>text</type>
+                    <label>Email</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Email>
+                <Telefono>
+                    <type>text</type>
+                    <label>Telefono</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Telefono>
+                <TelMobile>
+                    <type>text</type>
+                    <label>Cellulare</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </TelMobile>
+                <TelMobileLocal>
+                    <type>text</type>
+                    <label>Cellulare locale</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </TelMobileLocal>
+                <idQualifica>
+                    <type>select</type>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, qualifiche.Descrizione AS Value
+                        FROM qualifiche
+                    </selsql>
+                </idQualifica>
+                <idMultiQual>
+                    <type>multiselect</type>
+                    <label>Mans. possibili</label>
+                    <selsql>
+                        SELECT idQualifica AS KeyId, 
+                            CONCAT(qualifiche.NumRagg, ' - ',
+                            raggruppamenti.Raggruppamento, ' ', 
+                            SiglaDesc, ' - ', Descrizione) AS Value
+                        FROM qualifiche
+                        JOIN raggruppamenti ON raggruppamenti.idRagg = qualifiche.idRagg
+                    </selsql>
+                    <!--<aiuto>standard</aiuto>-->                
+                </idMultiQual>                               
+                <idFornPers>
+                    <type>select</type>
+                    <label>Fornitore</label>
+                        <selsql>
+                            SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                            FROM forn_pers
+                            ORDER BY forn_pers.RagSoc
+                        </selsql>
+                     
+<!--                    <if>
+                        <cond>{{modeExt}}</cond>
+                        <iftrue>
+                            <selsql>
+                                SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                                FROM forn_pers
+                                WHERE forn_pers.Tipo IN("C","V")
+                                ORDER BY forn_pers.RagSoc
+                            </selsql>
+                        </iftrue>
+                    </if>                                                -->
+                    
+<!--                    <if>
+                        <cond>{{modeInt}}</cond>
+                        <iftrue>
+                            <selsql>
+                                SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                                FROM forn_pers
+                                WHERE forn_pers.Tipo NOT IN("C","V")
+                                ORDER BY forn_pers.RagSoc
+                            </selsql>
+                        </iftrue>
+                        <iffalse>
+                            <selsql>
+                                SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                                FROM forn_pers
+                                ORDER BY forn_pers.RagSoc
+                            </selsql>
+                        </iffalse>
+                    </if>-->
+<!--                    <if>
+                        <cond>{{modeAll}}</cond>
+                        <iftrue>
+                            <selsql>
+                                SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                                FROM forn_pers
+                                ORDER BY forn_pers.RagSoc
+                            </selsql>
+                        </iftrue>
+                    </if>-->
+                </idFornPers>
+                <Resident>
+                    <label>Permanent/Temporary</label>
+                    <type>checkbox</type>
+                </Resident>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </personale>
+</edits>

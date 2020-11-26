@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <progetto>
+        <title>Progetto</title>
+        <edittitle>Modifica commessa</edittitle>
+        <newtitle>Nuova commessa</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>progetti</maintable>
+        <currkey>idProgetto</currkey>
+        <currsql>SELECT * FROM progetti WHERE </currsql>
+<!--        <parameters>
+            <mode>
+                <from>parameter</from>
+            </mode>
+            <isNew>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{mode}}</op1>
+                <op2>new</op2>
+            </isNew>
+        </parameters>-->
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formProgetto</name>
+            <elements>
+                <idProgetto>
+                    <type>hidden</type>
+                </idProgetto>
+                <PWMainContractor>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>PW Main Contr.</label>
+                    <selsql>
+                        SELECT idContratto AS KeyId, CONCAT(Sigla, " - ",Contratto)  AS Value
+                        FROM contratti
+                    </selsql>
+                </PWMainContractor>
+                <Nome>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Commessa</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Nome>
+                <JobNumber>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>JobNumber</label>
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>50</maxlen>
+                    </parameters>
+                </JobNumber>
+                <JobNumber2>
+                    <type>text</type>
+                    <label>Secondary JobNumber</label>
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>50</maxlen>
+                    </parameters>
+                </JobNumber2>
+                <idCliente>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Cliente</label>
+                    <selsql>
+                        SELECT idCliente+1000 AS KeyId, Nome AS Value
+                        FROM clienti
+                        UNION
+                        SELECT idContratto AS KeyId, Contratto AS Value
+                        FROM contratti
+                    </selsql>
+                </idCliente>
+                <idClienteFin>
+                    <type>select</type>
+                    <label>Cliente Finale</label>
+                    <selsql>
+                        SELECT idCliente AS KeyId, Nome AS Value
+                        FROM clienti
+                    </selsql>
+                </idClienteFin>
+                <idBusinessUnit>
+                    <type>select</type>
+                    <label>Business Unit</label>
+                    <selsql>
+                        SELECT idBusinessUnit AS KeyId, Descrizione AS Value
+                        FROM business_units
+                    </selsql>
+                </idBusinessUnit>
+                <Inizio>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Inizio</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Inizio>
+                <Fine>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Fine</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Fine>
+                <OnHold>
+                    <label>On Hold</label>
+                    <type>checkbox</type>
+                </OnHold>                
+                <Impianto>
+                    <type>text</type>
+                    <label>Impianto</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Impianto>
+                <Paese>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Paese</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Paese>
+                <Indirizzo>
+                    <type>text</type>
+                    <label>Indirizzo sito</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Indirizzo>
+                <Longitudine>
+                    <type>text</type>
+                    <float>4</float>
+                    <label>Longitudine</label>
+                    <parameters>
+                        <size>10.7</size>
+                        <maxlen>12</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Longitudine>
+                <Latitudine>
+                    <type>text</type>
+                    <float>4</float>
+                    <label>Latitudine</label>
+                    <parameters>
+                        <size>10,7</size>
+                        <maxlen>12</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Latitudine>
+                <idVisaType>
+                    <type>select</type>
+                    <label>VISA type</label>
+                    <selsql>
+                        SELECT idVisaType AS KeyId, VisaType AS Value
+                        FROM tab_visa_types
+                    </selsql>
+                </idVisaType>
+                <idCalendar>
+                    <type>select</type>
+                    <label>Giorno libero</label>
+                    <selsql>
+                        SELECT idCalendar AS KeyId, Nome AS Value
+                        FROM calendars
+                    </selsql>
+                </idCalendar>
+                <Rotation>
+                    <type>text</type>
+                    <label>Rotation</label>
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>50</maxlen>
+                    </parameters>
+                </Rotation>
+                <idTabOreGG>
+                    <type>select</type>
+                    <label>Ore lavorative</label>
+                    <selsql>
+                        SELECT idTabOreGG AS KeyId, Ore AS Value
+                        FROM tab_ore_gg
+                    </selsql>
+                </idTabOreGG>
+                <idTabContrMd>
+                    <type>select</type>
+                    <label>Services to be invoiced</label>
+                    <selsql>
+                        SELECT IdTabContrMd AS KeyId, Opzione AS Value
+                        FROM tab_contr_md
+                    </selsql>
+                </idTabContrMd>
+                <PocketMoney>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Pocket Money</label>
+                    <parameters>
+                        <size>10,2</size>
+                        <maxlen>12</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </PocketMoney>
+                <ODFcosts>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>O.D.F. Costs</label>
+                    <parameters>
+                        <size>10,2</size>
+                        <maxlen>12</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </ODFcosts>
+                <MSCBudget>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Montly Site Cash</label>
+                    <parameters>
+                        <size>10,2</size>
+                        <maxlen>12</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </MSCBudget>
+                <HQ_Coordinator>
+                    <type>select</type>
+                    <label>HQ Coordinator</label>
+                    <selsql>
+                        SELECT utenti.id_utente AS KeyId, CONCAT(utenti.nome, " ", utenti.cognome, " (", tab_userlevel.Titolo, ")") AS Value
+                        FROM utenti
+                        JOIN tab_userlevel ON tab_userlevel.id_userlevel = utenti.id_userlevel
+                        ORDER BY utenti.cognome, utenti.nome
+                    </selsql>
+                </HQ_Coordinator>
+                <ProjectManager>
+                    <type>select</type>
+                    <label>Project Manager</label>
+                    <selsql>
+                        SELECT utenti.id_utente AS KeyId, CONCAT(utenti.nome, " ", utenti.cognome) AS Value
+                        FROM utenti
+                        JOIN tab_userlevel ON tab_userlevel.id_userlevel = utenti.id_userlevel
+                        WHERE tab_userlevel.desc_userlevel LIKE "PM%"
+                        ORDER BY utenti.cognome, utenti.nome
+                    </selsql>
+                </ProjectManager>
+<!--                <Reference>
+                    <type>date</type>
+                    <parameters>
+                        <Label>Reference</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Reference>-->
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+                <spazioverticale2>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale2>
+            </elements>
+        </form>
+    </progetto>
+</edits>

@@ -1,0 +1,883 @@
+<script>
+    $(function () {
+    $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . 
+            $this->addLabel . '", "' . $this->addLink . '", "l");';
+    }
+echo 'macroAddTabsBtn(".ui-tabs-nav", "esci", "Close", "1", "r");';
+echo "\n});\n";
+echo "var currStatus = ".json_encode($this->currStatus).";\n"; 
+echo $this->jsData;
+?>
+    var spreadTable, max;
+    var titlesResponse, ratesResponse, poResponse;
+
+    $(document).ready(function () {
+        $("#Referencealternate").datepicker({
+            "dateFormat":"dd\/mm\/yy",
+            "altField":"#Reference",
+            "regional":"it",
+            "altFormat":"yy-mm-dd",
+            "navigationAsDateFormat":true});
+
+        spreadTable = $('#spreadSheet').find('table');
+        max = {
+            y: spreadTable.find('tr').length,
+                    x: spreadTable.parent().find('th').length
+            };
+
+        $('#planGrid .gridEvid,.gridZero').click(function(){
+            var col = $(this).parent().children().index($(this));
+            var row = $(this).parent().parent().children().index($(this).parent());
+            var idRow, idPers, idFornPers, idCurrFornPers;
+            if(row == 0)
+                {
+                idPers = 0;    
+                idFornPers = 0;    
+                idCurrFornPers = 0;    
+                col += 4;
+                if($(this).hasClass('cellCashFlow'))
+                    {
+                    idRow = 'xx';
+                    }
+                else
+                    {
+                    idRow = '';
+                    }
+                }
+            else
+                {
+                idPers = persRows[row-1];    
+                idFornPers = fornPersRows[row-1];    
+                idCurrFornPers = currFornPersRows[row-1];    
+                var idRow = dataRows[($(this).closest("tr").index())-1];                
+                }
+            var idCol = $('#planGrid tr:first th:eq('+col+')')[0].id;
+            var currId = <?php echo '"'.$this->currId.'"; ';?>    
+            var outForm={id: currId,
+                         ym: idCol,
+                         ric: idRow,
+                         edit: $(this).hasClass('gridEvid'),
+                         idfornpers: idFornPers,
+                         idPers: idPers,
+                         idcurrfornpers: idCurrFornPers};
+            cashDett.showDialog(outForm);         
+            return;
+        });
+            
+        $('#planGrid .gridTitles').click(function(){
+            var row = $(this).parent().parent().children().index($(this).parent());
+            var idRow;
+            if(row == 0)
+                {
+                idRow = 'xx';
+                }
+            else
+                {
+                var idRow = dataRows[($(this).closest("tr").index())-1];                
+                }
+            window.location=<?php echo '"'.$this->baseUrl().
+                    '/spese-mese/list/id/'.$this->currId.'"';?> + 
+                                "/ym/-/ric/" + idRow;
+        });
+            
+        $('#planGrid th').click(function(){
+            if(this.id != '')
+                {
+                window.location=<?php echo '"'.$this->baseUrl().
+                    '/spese-mese/list/id/'.$this->currId.'"';?> + 
+                                "/ym/" +this.id + "/ric/";
+                }
+            else    
+                {
+                window.location=<?php echo '"'.$this->baseUrl().
+                    '/spese-mese/list/id/'.$this->currId.'"';?> + 
+                                "/ym/-/ric/xx";
+                }                
+        });
+
+        $('#CashGrid').click(function(){
+            window.location=<?php echo '"'.$this->baseUrl().
+                    '/spese-mese/list/id/'.$this->currId.'"';?> + 
+                                "/ym/-/ric/";
+        });
+            
+        $("#esci").click(function () {
+                saveAll();
+                return (document.activeElement.getAttribute('id') == "esci");
+            });
+
+
+        $('input[type=radio][name=groupDisp]').change(function() {
+                if (this.value == 'Target') {
+                    $('#spreadSheet').find('table').dispTarget();
+                    }
+                else if (this.value == 'Effettivo') {
+                    $('#spreadSheet').find('table').dispEff();
+                    }
+            });
+
+        setViewMode(currStatus);
+
+        $('#dispQualification').click(function(){toggleColumn(1, this);});
+        $('#dispSupervisor').click(function(){toggleColumn(2, this);});
+        $('#dispPersonnel_Company').click(function(){toggleColumn(3, this);});
+        $('#dispContract_Company').click(function(){toggleColumn(4, this);});
+        $('#dispZoom').click(function(){toggleZoom(this);});
+
+        $('#orderGrid').change(function(){
+            saveAll();
+            $('#outMode').attr('value', 'cash');
+            $('#orderBy').attr('value', this.value);
+            $("#exitForm").submit();
+            });
+        $('#outExcel').click(function(){callExcel('cash')});
+        $('#expJSON').click(function(){fnExport('json', 'false'); });
+        $('#expXML').click(function(){fnExport('xml', 'false'); });
+        $('#expPNG').click(function(){fnExport('png', 'false'); });
+        $('#expCSV').click(function(){fnExport('csv', 'false'); });
+        $('#expTXT').click(function(){fnExport('txt', 'false'); });
+        $('#expSQL').click(function(){fnExport('sql', 'false'); });
+        $('#expMS-Word').click(function(){fnExport('doc', 'false'); });
+        $('#expMs-Excel').click(function(){callExcel('cash')});
+        $('#expMs-Excel2').click(function(){callExcel('cash')});
+        $('#expMs-Powerpoint').click(function(){fnExport('powerpoint', 'false'); });
+        $('#expPDF').click(function(){callPdf('cash'); });
+//        $('#expPDF').click(function(){fnExport('pdf', 'true'); });
+        $('#Reference').datepicker({"dateFormat" : "dd/mm/yy"}) ;
+        $('#Planning').click(function(){callOut("plan", "", "")});
+        $('#riassGrid').click(function(){callOut("riass", "", "")});
+        $('#Actual').click(function(){callOut("eff", "", "")});
+ 
+    });
+    
+    function callOut(outMode, outId, outId2)
+        {
+        if (outMode == "pers" && !(outId2 > 0))
+            {
+        <?php
+            $translate = Zend_Registry::get('translate');
+            echo 'alert("'.$translate->_('Non si può inserire un supervisor senza qualifica').'");';
+        ?>
+            return false;
+            }
+        $('#outMode').attr('value', outMode);
+        $('#outPar').attr('value', outId);
+        $('#outPar2').attr('value', outId2);
+        saveAll();
+        $("#exitForm").submit();
+        }
+
+    function saveGrid()
+        {
+        var data = Array();
+        data[0] = Array();
+        $('#singleTitle').children('th').each(function(i)
+            {
+            data[0][i] = $(this).text();
+            });
+        $('#planGrid').find('tbody tr').each(function (i, v) 
+            {
+            if ($(this).children('td:first').text() === "Totale")
+                {
+                return false;
+                }
+            data[i + 1] = Array();
+            $(this).children('td').each(function (ii, vv) 
+                {
+                if($(this).hasClass('gridEvid'))
+                    {
+                    data[i + 1][ii] = $(this).text();
+                    }
+                });
+            });
+        return JSON.stringify(data);
+        }
+                
+    function callExcel(mode)
+        {
+        saveAll();
+        $('#excelMode').attr('value', mode);
+        $('#outGGLavExcel').attr('value', saveGridExcel());            
+        $('#outEventiExcel').attr('value', '');            
+        $('#outStatusExcel').attr('value', saveStatus());            
+        $('#excelForm').attr('action', '/public/out-excel/out-sheet');
+        $('#excelForm').attr('target', '');
+        $("#excelForm").submit();
+        }
+
+    function callPdf(mode, tot)
+        {
+        saveAll();
+        $('#excelMode').attr('value', mode);
+        $('#outGGLavExcel').attr('value', saveGridExcel());            
+        $('#outEventiExcel').attr('value', '');            
+        $('#outStatusExcel').attr('value', saveStatus());            
+        $('#excelForm').attr('action', '/public/out-excel/print-sheet');
+        $('#excelForm').attr('target', '_blank');
+        $("#excelForm").submit();
+        }
+
+    function saveAll()
+        {
+        $('#outStatus').attr('value', saveStatus());            
+        }
+
+        
+    function toggleZero(currButton)
+        {
+        }
+
+    function toggleTotals()
+        {
+        }
+
+    function alignGrids()
+    {
+    }
+
+    function alignEvents()
+        {
+        }
+    
+    function alignEventLabels()
+        {
+        }
+
+    function isReadOnly()
+    {
+    <?php echo 'return '.($this->readonly=='1' ? 'true;' : 'false;');?>
+    }
+
+</script>
+<?php
+echo $this->jsGrid;
+?>
+<iframe id="txtArea1" style="display:none"></iframe>
+
+<div id="HeaderPlanning" class="headPlan">
+    <div id="HeaderPlanning-1">
+
+<!--<div id="GGtabs">
+    <div id="GGtabs-1">-->
+        <form id="exitForm" name="exitForm"
+        <?php
+        echo ' action="' . $this->baseUrl() .
+        '/giorni-lav/savegrid' . '" ';
+        ?>
+              method="POST" >
+        <!--title="Close" alt="Close">-->
+              
+        <div id="buttons_wrapper" style="width: 100%; overflow: auto; ">
+            <div id="buttons_content">
+                <div class="dropdown">
+                    <button type="button" id="outExcel" class="dropbtn">Export</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="expMs-Excel2">Ms-Excel</a>
+                        <a href="#" id="expPDF">PDF</a>                    
+                    </div>
+                </div>
+                <span style="margin-left: 55px; display: inline;">&nbsp;</span>
+                <div class="dropdown">
+                    <button type="button" id="visMode" class="dropbtn">Display</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="dispQualification" class="button_red">Qualification</a>
+                        <a href="#" id="dispSupervisor" class="button_red">Supervisor</a>    
+                        <a href="#" id="dispPersonnel_Company" class="button_red">Personnel Company</a>
+                        <a href="#" id="dispContract_Company" class="button_red">Contract Company</a>
+                        <a href="#" id="dispZoom" class="button_red">Month/Year</a>
+                    </div>
+                </div>
+                <span style="margin-left: 55px; display: inline-block;">&nbsp;</span>
+                <span style="margin-left: 15px; display: inline-block;">Order by:</span>
+                    <?php
+                    echo '<select name="orderGrid" id="orderGrid"  class="head_inline">'."\n";
+//                    echo '<select name="orderGrid" id="orderGrid" style="display: inline;">'."\n";
+                    echo checkOpt('', '', $this->currOrder);
+                    echo checkOpt('Qualification', '1', $this->currOrder);
+                    echo checkOpt('Supervisor', '2', $this->currOrder);
+                    echo checkOpt('Personnel Company', '3', $this->currOrder);
+                    echo checkOpt('Activity', '4', $this->currOrder);
+                    echo '</select>'."\n";
+
+                    echo '<span class="head_inline_5">Reference:</span>'."\n";
+//                    echo '<span style="margin-left: 5px; display: inline;">Reference:</span>'."\n";
+                    echo '<input name="reference-date" id="Reference" type="text" value = "'.
+                            $this->currCashReference.'">'."\n";
+                    echo '<span style="margin-left: 20px; display: inline;">&nbsp;</span>'."\n";
+                    echo '<button type="button" id="riassGrid">Contract</button>'."\n";
+                    echo '<span style="margin-left: 20px; display: inline;">&nbsp;</span>'."\n";
+                    echo '<button type="button" id="Planning">Planning</button>'."\n";
+                    echo '<button type="button" id="Actual">Actual</button>'."\n";
+                    echo '<button type="button" id="Cash" class="button_red">Cash</button>'."\n";
+                    echo '<button type="button" id="CashGrid">$</button>'."\n";
+
+                    echo '<div style="float: right">'."\n";
+              
+                    echo '<input type="hidden" name="outajax" id="outAjax" value=""/>';
+                    echo '<input type="hidden" name="gglav" id="outGGLav"/>';
+                    echo '<input type="hidden" name="gglavtot" id="outGGLavTot"/>';
+                    echo '<input type="hidden" name="status" id="outStatus"/>'."\n";
+                    echo '<input type="hidden" name="currid" id="currId" value="' . $this->currId . '"/>';
+                    echo '<input type="hidden" name="mode" id="currMode" value="cash"/>';
+                    echo '<input type="hidden" name="outmode" id="outMode" value=""/>';
+                    echo '<input type="hidden" name="outpar" id="outPar" value=""/>';
+                    echo '<input type="hidden" name="outpar2" id="outPar2" value=""/>';
+                    echo '<input type="hidden" name="orderby" id="orderBy" value=""/>';
+                    echo '<input type="hidden" name="datakeys" id="datakeys" value="' .
+                    $this->keys . '"/>';
+                    echo '<input type="hidden" name="keys" value="' . $this->keys . '"/>';
+                    echo '<input type="hidden" name="gridlen" value="' . $this->gridLen . '"/>';
+                    echo '<button type="submit" id="esci" name="esci" value="esci"><img src="' .
+                    $this->baseUrl() . '/images/ok.png' .
+                    '" title="Confirm" alt="Confirm">Close</button>';
+                    ?>
+                </div>
+            </div>
+            <div id="cleared"></div>
+        </form>
+        <?php
+        echo $this->render('giorni-lav/excelform.phtml');
+        ?>                
+    </div>
+<!--    <div id="GGtabs-2" style="width: 100%">
+    </div>-->
+</div>    
+</div>    
+<div id="parentSheet" class="parentGrid">        
+    <div id="spreadSheet" class="sticky-table sticky-ltr-cells sticky-headers mainGridPos">        
+        <?php
+        $calcGrids = makeGrid($this->dataGrid, $this->currStatus, $this->title);
+        echo $calcGrids['mainGrid'] . $calcGrids['evGrid'];
+        ?>
+    </div>
+    <div id="totSheet" class="sticky-table sticky-ltr-cells sticky-headers totGridPos">
+    </div>
+    <!--<span class="clear"></span>-->
+    <script type="text/javascript">
+<?php
+echo $calcGrids['labelsVar'] . $calcGrids['alignFunct'];
+?>
+    </script>        
+</div>
+<?php
+echo $this->render('giorni-lav/cash-detail-form.phtml');
+echo $this->render('giorni-lav/cash-detail.phtml');
+
+function checkOpt($label, $currVal, $currOrder)
+    {
+    if ($currVal == $currOrder)
+        {
+        return('<option value="' . $currVal . '" label="' . $label . 
+                '" selected="selected">' . $label . '</option>' . "\n");
+        }
+    else
+        {
+        return('<option value="' . $currVal . '" label="' . $label . 
+                '">' . $label . '</option>' . "\n");
+        }
+    }
+
+function makeGrid($dataGrid, $currStatus, $title)
+    {
+    reset($dataGrid->currData);
+    $firstData = current($dataGrid->currData);
+    reset($firstData['Data']);
+    $firstMonthYear = current(array_keys($firstData['Data']));
+    $monthYear = explode('/', $firstMonthYear);
+    $yearCount = 0;
+    $currYear = $monthYear[1];
+    $rowYear = '<th colspan="';
+    $rowMonth = '';
+    $rowMonthYear = '';
+    foreach ($firstData['Data'] as $key => $value)
+        {
+        $monthYear = explode('/', $key);
+        if ($currYear != $monthYear[1])
+            {
+            $rowYear .= $yearCount . '" id="-' . $currYear . '">' . $currYear . "</th>\n<th colspan=\"";
+            $currYear = $monthYear[1];
+            $yearCount = 0;
+            }
+        $yearCount++;
+        $rowMonth .= '<th id="dt-' . $monthYear[0] . '-' . $monthYear[1] . '">' .
+                $monthYear[0] . "</th>\n";
+        $rowMonthYear .= '<th id="' . $monthYear[0] . '-' . $monthYear[1] . '">' .
+                $key . "</th>\n";
+        }
+    $rowYear .= $yearCount .  '" id="-' . $currYear . '">' . $currYear . "</th>\n";
+    if($currStatus->my)
+        {
+        $singleMod = "hiddenTitle";
+        $double1Mod = "";
+        $double2Mod = "";
+        }
+    else
+        {
+        $singleMod = "";
+        $double1Mod = "hiddenTitle";
+        $double2Mod = "hiddenTitle";
+        }
+
+//  Single title    
+    $grid = '<table id="planGrid" align="top" cellspacing="0" cellpadding="0">
+<thead>
+<tr id="singleTitle" class="sticky-row '.$singleMod.'">
+<th class="sticky-cell">Phase/Activity</th>
+<th class="sticky-cell">Qualification</th>
+<th class="sticky-cell">Supervisor</th>
+<th class="sticky-cell">Personnel Company</th>
+<th class="sticky-cell lastGridTitle">Contract Company</th>
+' . $rowMonthYear . '<th>Tot.€</th>
+<th class="gridHidden">Tot.Rate</th>
+<th class="gridHidden">Tot.PM</th>
+<th class="gridHidden">Totale</th>
+</tr>
+';
+    $gridTot = '<table id="planTotGrid" class="totGridTable" align="center" cellspacing="0" cellpadding="0">
+<thead>
+<tr id="singleTotTitle" class="sticky-row '.$singleMod.'">
+<th>Tot.€</th>
+<th>Tot.Rate</th>
+<th>Tot.PM</th>
+<th>Totale</th>
+</tr>
+';
+
+// Dual title
+// First row
+
+    $grid .= '
+<tr id="dualTitle1" class="sticky-row visibleTitle'.$double1Mod.'">
+<th class="sticky-cell" rowspan="2">Phase/Activity</th>
+<th class="sticky-cell" rowspan="2">Qualification</th>
+<th class="sticky-cell" rowspan="2">Supervisor</th>
+<th class="sticky-cell" rowspan="2">Personnel Company</th>
+<th class="sticky-cell lastGridTitle" rowspan="2">Contract Company</th>' . "\n" .
+            $rowYear . 
+'<th rowspan="2">Tot.€</th>
+<th class="gridHidden"  rowspan="2">Tot.Rate</th>
+<th class="gridHidden"  rowspan="2">Tot.PM</th>
+<th class="gridHidden"  rowspan="2">Totale</th>
+</tr>' . "\n";
+    $gridTot .= '<tr id="dualTotTitle1" class="sticky-row visibleTitle '.$double1Mod.'">
+<th rowspan="2">Tot.€</th>
+<th rowspan="2">Tot.Rate</th>
+<th rowspan="2">Tot.PM</th>
+<th rowspan="2">Totale</th>
+</tr>' . "\n";
+
+// Second row
+    $grid .= "<tr id=\"dualTitle2\" class=\"sticky-row visibleTitle2 ".$double2Mod."\">\n" . $rowMonth . "</thead>\n<tbody>\n";
+    $gridTot .= "<tr id=\"dualTotTitle2\" class=\"sticky-row visibleTitle2 ".$double2Mod."\">\n</thead>\n<tbody>\n";
+
+// Body
+    $numLabelCols = 5;
+    $months = array_keys($firstData['Data']);
+    $numMonths = count($months);
+    $lastVisibleCol = $numMonths > 12 ? $numMonths : 12;
+    $currAct = '';
+    $rowCounter = 0;
+    $TotGenGG = 0;
+    $TotGenRate = 0;
+    $TotGenPM = 0;
+    $TotGenSpese = 0;
+    $dataRows = '';
+    $labelRows = '';
+    $fornPersRows = '';
+    $currFornPersRows = '';
+    $persRows = '';
+    // Cash flow
+    $grid .= '<tr>' . "\n";
+    $gridTot .= '<tr>' . "\n";
+    $grid .= '<td colspan="';
+    $grid .= $numLabelCols;
+    $grid .= '" class="sticky-cell gridTitles gridCashFlow">Site Cash expenses</td>' . "\n";
+    $currSpese = 0;
+    $currSpeseTot = 0;
+    $currMonth = 0;
+    foreach ($firstData['Data'] as $key => $value)
+        {
+//        $moYe = explode('/', $key);
+//        $currMonth = $moYe[0]+0;
+        if(array_key_exists('id--0-', $dataGrid->speseData) &&
+            array_key_exists('detail', $dataGrid->speseData['id--0-']) &&
+            array_key_exists($key, $dataGrid->speseData['id--0-']['detail']))
+            {
+            $currSpese = $dataGrid->speseData['id--0-']['detail'][$key];
+            $currSpeseTot += $currSpese;
+            $grid .= '<td class="gridEvid cellCashFlow' . 
+                      getYearLimit($currMonth, $months) . 
+                      '">'.myFormat($currSpese).'</td>' . "\n";       
+            $dataGrid->totData['totSpese'][$key]+=$currSpese;
+            }
+        else
+            {
+            $grid .= '<td class="gridZero cellCashFlow .' . 
+                      getYearLimit($currMonth, $months) . '"></td>' . "\n";        
+            }    
+        $currMonth++;
+        }
+    $TotGenSpese += $currSpeseTot;
+    $grid .= '<td class="gridTotals">'.myFormat($currSpeseTot).'</td>' . "\n" .
+        '<td class="gridHidden">' . "0" . '</td>' . "\n" .
+        '<td class="gridHidden">' . "0" . '</td>' . "\n" .
+        '<td class="gridHidden">' . "0" . '</td>' .
+        "\n</tr>\n";
+    
+    foreach ($dataGrid->currData as $key => $line)
+        {
+//        $rowCounter++;
+        if (array_key_exists('keyArea', $line) && $currAct != $line['keyArea'])
+            {
+            $grid .= '<tr>' . "\n";
+            $gridTot .= '<tr>' . "\n";
+            $dataRows .= ",";
+            $persRows .= ',';
+            $fornPersRows .= ',';
+            $currFornPersRows .= ',';
+            $labelRows .= strval($rowCounter++) . ",";
+            $currAct = $line['keyArea'];
+
+            if (!$line['IsMainContr'])
+                {
+                $currClass = 'areaBannerNoCC';
+                $totClass = 'gridTotals gridTotNoCC';    
+                }
+            elseif ($line['Vendor'] > 0)
+                {
+                $currClass = 'areaBannerVendor';
+                $totClass = 'gridTotals';    
+                }
+            elseif ($line['NotInvoiced'] > 0)
+                {
+                $currClass = 'areaBannerNotInv';
+                $totClass = 'gridTotals';    
+                }
+            else
+                {
+                $currClass = 'areaBannerNormal';
+                $totClass = 'gridTotals';    
+                }
+
+
+//            if ($line['Vendor'] > 0)
+//                {
+//                $currClass = 'areaBannerVendor';
+//                }
+//            elseif ($line['NotInvoiced'] > 0)
+//                {
+//                $currClass = 'areaBannerNotInv';
+//                }
+//            elseif (!$line['IsMainContr'])
+//                {
+//                $currClass = 'areaBannerNoCC';
+//                }
+//            else
+//                {
+//                $currClass = 'areaBannerNormal';
+//                }
+            $gridTot .= "<td class='" . $currClass . "'>&nbsp;</td>\n" .
+                    "<td class='" . $currClass . "'>&nbsp;</td>\n" .
+                    "<td class='" . $currClass . "'>&nbsp;</td>\n" .
+                    "<td class='" . $currClass . "'>&nbsp;</td>\n" .
+                    "</tr>\n";
+            $grid .= '<td colspan="';
+            $grid .= $numLabelCols;
+            $grid .= '" class="sticky-cell ' . $currClass . '">' . $line['AreaShort'] .
+                    '</td>' . "\n";
+            for($emptyCell = 0; $emptyCell < ($numMonths+1); $emptyCell++)
+                {
+                $grid .= '<td class="' . $currClass .
+                        getYearLimit($emptyCell, $months) . '">&nbsp;</td>' . "\n";
+                }
+            $grid .= '</tr>' . "\n";
+            }
+        if (array_key_exists('keyRichiesta', $line) && ($line['keyRichiesta'] != '' || $line['idProgStep'] != ''))
+            {
+            $rowCounter++;
+            $dataRows .= $line['keyRichiesta'] . ',';
+            $persRows .= $line['idPers'] . ',';
+            $fornPersRows .= $line['idFp1'] . ',';
+            $currFornPersRows .= $line['idFp2'] . ',';
+            $gridTot .= '<tr>' . "\n";
+            $grid .= '<tr>' . "\n" .
+                    '<td class="sticky-cell gridTitles">' . $line['Step'] . '</td>' . "\n" .
+                    '<td class="sticky-cell gridTitles">' . $line['Qualifica'] . '</td>' . "\n" .
+                    '<td class="sticky-cell gridTitles">' . $line['Supervisor'] . '</td>' . "\n" .
+                    '<td class="sticky-cell gridTitles">';
+    //        '<td class="sticky-cell gridTitles">' . $line['FornPers'] . '</td>' . "\n" .
+    
+            $countPrev = 0;
+            foreach ($line['ListFornPers'] as $currFornPers => $value)
+                {
+                if($countPrev == 0)
+                    {
+                    $grid .= '<span class="gridPrevForn">' . $currFornPers . '</span>';
+                    }
+                else
+                    {                    
+                    $grid .= ', ' . $currFornPers;                    
+                    }
+                $countPrev++;    
+                }
+                
+            $grid .= '<td class="sticky-cell gridTitles lastGridTitle">' . $line['Sigla'] . '</td>' . "\n";
+            $colCount = 0;
+            $planCashValue = 0;
+            if(!array_key_exists($key, $dataGrid->speseData))
+                {
+                $dataGrid->speseData[$key]=array('spesamese' => 0);
+                foreach ($line['Data'] as $keyGGYY=>$value)
+                    {
+                    $grid .= '<td';
+                    if (!$line['keyRichiesta'])
+                        {
+                        $grid .= ' class="gridForbidden' . 
+                                getYearLimit($colCount, $months) . 
+                                '">&nbsp;</td>' . "\n";
+                        }
+                    else
+                        {                        
+                        $planCashValue = getCashValue($line['IsMainContr'], 
+                                $dataGrid->projData['ODFcosts'], $value);
+                        $grid .= ' class="gridZero' . 
+                                getYearLimit($colCount, $months);
+                        if(array_key_exists('HasRate', $value) && !$value['HasRate'])
+                            {
+                            $grid .= ' gridDetail';
+                            }
+                        $grid .= '">'.myFormatNoZero($planCashValue).
+                                '</td>' . "\n";
+                        $dataGrid->totData['totSpese'][$keyGGYY]+=$planCashValue;
+                        $dataGrid->speseData[$key]['spesamese']+=$planCashValue;
+//                        $grid .= ' class="gridZero' . 
+//                                getYearLimit($colCount, $months) . 
+//                                '">&nbsp;</td>' . "\n";
+                        }
+                    $colCount++;
+                    }
+                }
+            else
+                {
+                foreach ($line['Data'] as $keyGGYY=>$value)
+                    {
+                    $grid .= '<td';
+                    if(array_key_exists($keyGGYY, $dataGrid->speseData[$key]['detail']))
+                        {
+                        $grid .= ' class="gridEvid' . 
+                                getYearLimit($colCount, $months) . '">' .
+                                myFormat($dataGrid->speseData[$key]['detail'][$keyGGYY]) .
+                                '</td>' . "\n";
+                        $dataGrid->totData['totSpese'][$keyGGYY]+=$dataGrid->speseData[$key]['detail'][$keyGGYY];
+                        }
+                    else if (!$line['keyRichiesta'])
+                        {
+                        $grid .= ' class="gridForbidden' . 
+                                getYearLimit($colCount, $months) . 
+                                '">&nbsp;</td>' . "\n";
+                        }
+                    else
+                        {
+                        $planCashValue = getCashValue($line['IsMainContr'], 
+                                $dataGrid->projData['ODFcosts'], $value);
+                        $grid .= ' class="gridZero' . 
+                                getYearLimit($colCount, $months);
+                        if(array_key_exists('HasRate', $value) && !$value['HasRate'])
+                            {
+                            $grid .= ' gridDetail';
+                            }
+                        $grid .= '">'.myFormatNoZero($planCashValue).'</td>' . "\n";
+                        $dataGrid->totData['totSpese'][$keyGGYY]+=$planCashValue;
+                        $dataGrid->speseData[$key]['spesamese']+=$planCashValue;
+
+//                        $grid .= ' class="gridZero' . 
+//                                getYearLimit($colCount, $months) . 
+//                                '">&nbsp;</td>' . "\n";
+                        }
+                    $colCount++;
+                    }
+                }
+            if(array_key_exists($key, $dataGrid->speseData))
+                {
+                $currSpeseTot = $dataGrid->speseData[$key]['spesamese'];
+                }
+            else
+                {
+                $currSpeseTot = 0;
+                }    
+            $TotGenSpese += $currSpeseTot;
+            $TotGenGG += $line['TotGGEff'];
+            $TotGenRate += $line['TotRate'];
+            $TotGenPM += $line['TotPM'];
+            $grid .= '<td class="'.$totClass.'">' . myFormat($currSpeseTot) . '</td>' . "\n" .
+                    '<td class="gridHidden">' . $line['TotGGEff'] . '</td>' . "\n" .
+                    '<td class="gridHidden">' . $line['TotRate'] . '</td>' . "\n" .
+                    '<td class="gridHidden">' . $line['TotPM'] . '</td>' . "\n" .
+                    '<td class="gridHidden">' . ($line['TotPM'] + $line['TotRate']) . '</td>' . "\n";
+            $gridTot .= '<td class="'.$totClass.'">' . myFormat($currSpeseTot) . '</td>' . "\n" .
+                    '<td class="gridTotals">' . $line['TotGG'] . '</td>' . "\n" .
+                    '<td class="gridTotals">' . $line['TotRate'] . '</td>' . "\n" .
+                    '<td class="gridTotals">' . $line['TotPM'] . '</td>' . "\n" .
+                    '<td class="gridTotals">' . ($line['TotPM'] + $line['TotRate']) . '</td>' . "\n";
+            $grid .= '</tr>' . "\n";
+            $gridTot .= '</tr>' . "\n";
+            }
+//        else
+//            {
+//            
+//            }
+        }
+    $grid .= "</tbody>\n<tfoot>\n";
+    $gridTot .= "</tbody>\n<tfoot>\n";
+    if (array_key_exists('totSpese', $dataGrid->totData))
+        {
+        $rowCounter++;
+        $grid .= '<tr id="totGrid">' . "\n";
+        $gridTot .= '<tr id="totTotGrid">' . "\n";
+        $line = $dataGrid->totData['totSpese'];
+        $labelRows .= strval($rowCounter) . ",";
+        $grid .= '<td class="sticky-cell gridColTotals" colspan="' . $numLabelCols . '">' .
+                $line['Qualifica'] . '</td>' . "\n";
+        $colCount = 0;
+        foreach ($months as $currMonth)
+            {
+            $colCount++;
+            $grid .= '<td class="gridColTotals">';
+            $grid .= myFormat($line[$currMonth]) . '</td>' . "\n";
+            }
+        $grid .= "<td class='gridColTotals'>" . myFormat($TotGenSpese) . "</td>\n" .
+                "<td class='gridHidden'>" . $TotGenRate . "</td>\n" .
+                "<td class='gridHidden'>" . $TotGenPM . "</td>\n" .
+                "<td class='gridHidden'>" . myFormat($TotGenRate + $TotGenPM) . "</td>\n" .
+                "</tr>\n";
+        $gridTot .= "<td class='gridColTotals'>" . myFormat($TotGenSpese) . "</td>\n" .
+                "<td class='gridColTotals'>" . $TotGenRate . "</td>\n" .
+                "<td class='gridColTotals'>" . $TotGenPM . "</td>\n" .
+                "<td class='gridColTotals'>" . ($TotGenRate + $TotGenPM) . "</td>\n" .
+                "</tr>\n";
+        }
+    if (array_key_exists('progressivoSpese', $dataGrid->totData))
+        {
+        $rowCounter++;
+        $grid .= '<tr id="progGrid">' . "\n";
+        $gridTot .= '<tr id="progTotGrid">' . "\n";
+        $line = $dataGrid->totData['progressivoSpese'];
+        $totLine = $dataGrid->totData['totSpese'];
+        $labelRows .= strval($rowCounter) . ",";
+        $grid .= '<td class="sticky-cell gridColTotals" colspan="' . $numLabelCols . '">' .
+                $line['Qualifica'] . '</td>' . "\n";
+        $colCount = 0;
+        $prog = 0;
+        foreach ($months as $currMonth)
+            {
+            $prog += $totLine[$currMonth];
+            $line[$currMonth] = $prog;
+            $dataGrid->totData['progressivoSpese'][$currMonth] = $prog;
+            $colCount++;
+            $grid .= '<td class="gridColTotals">';
+            $grid .= myFormat($line[$currMonth]) . '</td>' . "\n";
+            }
+        $grid .= "<td></td>\n<td class='gridHidden'></td>\n<td class='gridHidden'></td>\n<td class='gridHidden'></td>\n</tr>\n";
+        $gridTot .= "<td class='gridColTotals'>&nbsp;</td>\n" .
+                "<td class='gridgridHidden'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "<td class='gridHidden'>&nbsp;</td>\n" .
+                "</tr>\n";
+        }
+    $grid .= "</tfoot>\n</table>\n";
+    $gridTot .= "</tfoot>\n</table>\n";
+
+    $labelRows = 'var labelRows = [' . substr($labelRows, 0, -1) . "];\n";
+    $dataRows = substr($dataRows, 0, -1);
+    $persRows = substr($persRows, 0, -1);
+    $fornPersRows = substr($fornPersRows, 0, -1);
+    $currFornPersRows = substr($currFornPersRows, 0, -1);
+    $labelRows .= 'var dataRows = [' . $dataRows . "];\n" .
+            'var persRows = [' . $persRows . "];\n" .
+            'var fornPersRows = [' . $fornPersRows . "];\n" .
+            'var currFornPersRows = [' . $currFornPersRows . "];\n" .
+            "$('#datakeys').val('" . $dataRows . "');\n";
+    "var numLabelCols=" . $numLabelCols . ";\n" .
+            "var lastVisibleCol=" . $lastVisibleCol . ";\n" .
+            "var currStartVisCol=0;\n";
+
+    $gridEV = '';
+    $alignEvFunct = "\n";
+    $alignEvLabelsFunct = "\n";
+
+    return array('labelsVar' => $labelRows,
+        'alignFunct' => $alignEvFunct . $alignEvLabelsFunct,
+        'mainGrid' => $grid,
+        'totGrid' => $gridTot,
+        'evGrid' => $gridEV);
+    }
+
+function getCashValue($isMainContr, $ODFcosts, $value)
+    {
+    $currValue = 0;                        
+    if (!$isMainContr)
+        {
+        return 0;
+        }
+    else if ($value['GiorniEff'] > 0)
+        {
+        $currValue = $value['GiorniEff'];
+        }
+    else if ($value['GiorniTarget'] > 0)
+        {
+        $currValue = $value['GiorniTarget'];
+        }
+    $numValue = ($currValue+0);
+    $numValue += ($value['GiorniNotInv']+0);
+    $cashValue = $numValue*$value['RateGG']+
+                 $numValue*$value['RatePM']+
+                 $numValue*$ODFcosts;
+    return $cashValue;    
+    }
+
+function myFormat($inValue)
+    {
+    if($inValue == round($inValue))
+        {
+        return(number_format($inValue, 0, ',', '.'));
+        }
+    else
+        {
+        return(number_format($inValue, 2, ',', '.'));            
+        }    
+    }
+
+function myFormatNoZero($inValue)
+    {
+    if($inValue == 0)
+        {
+        return '';
+        }
+    else if($inValue == round($inValue))
+        {
+        return(number_format($inValue, 0, ',', '.'));
+        }
+    else
+        {
+        return(number_format($inValue, 2, ',', '.'));            
+        }    
+    }
+    
+    
+function getYearLimit($numMonth, $months)
+    {
+    if($numMonth < count($months)  && substr($months[$numMonth],0,2) == '12')
+        {
+        return " gridYearLimit";
+        }
+    else    
+        {
+        return "";
+        }
+//    
+    }
+    

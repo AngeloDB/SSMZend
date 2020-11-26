@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <new_wp>
+        <title>Periodo lavorativo</title>
+        <edittitle>Modifica periodo lavorativo</edittitle>
+        <newtitle>Nuovo periodo lavorativo</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>pers_forn_pers</maintable>
+        <currkey>idPersFornPers</currkey>
+        <currsql>SELECT * FROM pers_forn_pers WHERE </currsql>
+        <parameters>
+            <currIdPers>
+                <from>arrdefaultnamespace</from>
+                <array>currPers</array>
+                <offset>idPersonale</offset>
+            </currIdPers>
+            <currNomePers>
+                <from>arrdefaultnamespace</from>
+                <array>currPers</array>
+                <offset>Nome</offset>
+            </currNomePers>
+            <currCognomePers>
+                <from>arrdefaultnamespace</from>
+                <array>currPers</array>
+                <offset>Cognome</offset>
+            </currCognomePers>
+        </parameters>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formPersFornPers</name>
+            <elements>
+                <idPersFornPers>
+                    <type>hidden</type>
+                </idPersFornPers>
+                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>
+                <DispPersona>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Personale</label>
+                    <description>{{currNomePers}} {{currCognomePers}}</description> 
+                    <!--<description> &lt;h4 class="aiutosuriga"&gt; Identificare il soggetto referente, se diverso dal referente d'impresa, per il DDS in oggetto &lt;/h4&gt;</description>--> 
+                </DispPersona> 
+                <idProgetto>
+                    <type>select</type>
+                    <!--<value>idProgetto</value>-->
+                    <label>Commessa</label>
+                    <selsql>
+                        <!--SELECT idProgetto AS KeyId, Nome AS Value FROM progetti-->
+                        SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+                    </selsql>
+                </idProgetto>
+<!--                <idPersonale>
+                    <type>select</type>
+                    <label>Personale</label>
+                    <selsql>
+                        SELECT personale.idPersonale AS KeyId, 
+                            CONCAT(personale.Nome, " ", personale.Cognome) AS Value
+                        FROM personale
+                    </selsql>
+                </idPersonale>-->
+                <Dal>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Inizio</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Dal>
+                <Al>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Fine</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Al>
+                <idQualifica>
+                    <type>select</type>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, 
+                            CONCAT(raggruppamenti.Raggruppamento, " - ", qualifiche.Descrizione) AS Value
+                        FROM qualifiche
+                        JOIN raggruppamenti ON raggruppamenti.idRagg = qualifiche.idRagg
+                        ORDER BY CONCAT(raggruppamenti.Raggruppamento, " - ", qualifiche.Descrizione)
+                    </selsql>
+                </idQualifica>
+                <idFornPers>
+                    <type>select</type>
+                    <label>Fornitore</label>
+                    <selsql>
+                        SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                        FROM forn_pers
+                        ORDER BY forn_pers.RagSoc
+                    </selsql>
+                </idFornPers>
+                <PurchaseOrder>
+                     <type>text</type>
+                     <label>Order</label>
+                     <parameters>
+                         <size>40</size>
+                         <maxlen>80</maxlen>
+                     </parameters>
+                </PurchaseOrder>
+                <RateGG>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Rate/Day</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </RateGG>
+                <RateHH>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Rate/Hour</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </RateHH>
+                <PocketMoney>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Pocket Money</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </PocketMoney>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </new_wp>
+</edits>

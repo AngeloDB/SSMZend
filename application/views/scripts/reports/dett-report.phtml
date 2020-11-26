@@ -1,0 +1,133 @@
+<!--<style>
+    table#totals td
+    {
+        border: visible;
+        border-color: #000;
+        border-bottom: 1px;
+        border-bottom-color: #000;
+        border-right: 1px;
+        border-right-color: #000;
+    }
+</style>-->
+<?php
+if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == "edit")
+    {
+    $ggStampa = '/public/' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName() . "/print/id/" . Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
+    }
+?>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+
+//        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Stampa", "<?php // echo $ggStampa; ?>", "l");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+        macroAddTabsBtn(".ui-tabs-nav", "titles", "Titles", "<?php // echo $ggStampa; ?>", "r");
+
+        $('a:contains("Titles")').css({'color': 'white', 
+            'padding-right': '10px'})
+            .click(function(){
+                $("#chartTitle").toggle();
+            });
+
+    });
+</script>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li>
+            <a href="#GGtabs-1">
+                <?php echo $this->formTitle; ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+        <div id="form">
+            <?php 
+    echo $this->form;
+    if($this->totali != '')
+        {
+            ?>    
+
+<div id="visualization" style="height: 96%;">
+    
+<div id="toPrint"> 
+    <h3>
+        <div id="chartTitle" class="chartTitleClass">
+<?php echo implode(' ',$this->titles); ?> 
+        </div>        
+    </h3>            
+</div>        
+<div id="parentSheet" class="parentGrid">
+    <div id="spreadSheet" class="mainGridPos">        
+    <table id="totals" border="1" style="background-color: #ffffff" cellspacing = "2" cellpadding = "2">
+        <thead>
+        <tr>
+            <th>Label</th>
+
+<?php 
+    $filledMonths = array_keys($this->allData);
+    foreach ($filledMonths as $currMonth)
+        {
+        echo ('<th>'.$currMonth.'</th>');
+        }
+
+    echo "<th>Total</th>\n".
+         "</tr>\n".
+         "</thead>\n".
+         "<tbody>\n";
+
+    foreach ($this->totali as $label => $rows)
+        {
+        $totBlock = '<tr><td class="td_tot2"><h3>'.$this->fatt[$label].'</h3></td>';
+        foreach ($filledMonths as $currMonth)
+            {
+            $totBlock .= '<td class="td_tot2"></td>';
+            }
+        $blockRows = '';
+        $totVal = 0;
+        $numRow = 0;
+        foreach ($rows as $labelRow => $row)
+            {
+            $numRow++;
+            if ($numRow % 2 == 0)
+                {
+                $oddClass = ' class="td_alt2"';
+                }
+            else
+                {
+                $oddClass = '';
+                }
+            $blockRows .= '<tr><td' . $oddClass . '>'.$this->tipi[$labelRow].'</td>';
+            foreach ($filledMonths as $currMonth)
+                {
+                $toPrint = $this->allData[$currMonth]->totali[$label][$labelRow];
+                $blockRows .= '<td' . $oddClass . '>' .
+                    ($toPrint > 0 ? $toPrint : '') . '</td>';
+                }                
+            $blockRows .= '<td' . $oddClass . '>' .$row.'</td></tr>';
+            $totVal += $row;
+            }
+        $totBlock .= '<td class="td_tot2"><h3>'.$totVal.'</h3></td></tr>';
+        echo $totBlock;
+        echo $blockRows;
+        }
+        
+    echo "</tbody>".
+         "</table>".
+         "</div>";
+
+//while($this->minYYMM < $this->maxYYMM)
+//    {
+//    echo $this->minYYMM->format('m-Y').' ';
+//    $this->minYYMM->modify('+1 month');
+//    }
+//
+//
+//    var_dump($this->minYYMM, $this->maxYYMM, $this->tipi, $this->fatt, $this->totali, $this->allData);
+    }
+?>
+        </div>
+    </div>
+</div>
+</div> 
+        

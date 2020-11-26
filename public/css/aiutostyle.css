@@ -1,0 +1,33 @@
+/* dialog: aiuto */
+	h1,h2,h3,h4,h5{margin: 0;padding: 0;}
+
+	p { text-align: justify}
+	.bloccotesto{font-size: 1.1em;}
+    .ui-tabs-vertical { width: 100%; font-size: 12px}
+    .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+    .ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+    .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
+    .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { color:#00F;font-weight: bold;padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
+    .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 80%;min-height: 360px;}
+	rif{font-weight: bolder;text-decoration: underline;color:#000;}/* riferimenti citazioni ecc*/
+	a.tooltip { /* Stile del testo del tooltip */
+		position: relative;
+		z-index: 24;
+		cursor: help;
+		text-decoration: underline;
+		font-weight: bolder;
+	}
+	a.tooltip:hover {z-index: 25; text-decoration: none;font-weight: bolder;}
+	a.tooltip span {display: none}
+	a.tooltip:hover span { /* Stile della descrizione */
+		display: block;
+		position: absolute;
+		top: 2em; left: 2em;
+		width: 10em;
+		padding: 2px;
+		border: 1px solid #000; /* Stile del bordo */
+		background: #444;
+		color: #FFF;
+		text-align: left;
+	}
+	

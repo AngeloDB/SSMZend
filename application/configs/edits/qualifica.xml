@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <qualifica>
+        <title>Qualifiche</title>
+        <edittitle>Modifica qualifica</edittitle>
+        <newtitle>Nuova qualifica</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>qualifiche</maintable>
+        <currkey>idQualifica</currkey>
+        <currsql>SELECT * FROM qualifiche WHERE </currsql>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formqualifiche</name>
+            <elements>
+                <idQualifica>
+                    <type>hidden</type>
+                </idQualifica>
+                <idRagg>
+                    <type>select</type>
+                    <notempty>true</notempty>
+                    <label>Gruppo</label>
+                    <selsql>
+                        SELECT raggruppamenti.idRagg AS KeyId, raggruppamenti.Raggruppamento AS Value
+                        FROM raggruppamenti
+                    </selsql>
+                </idRagg>
+<!--                <SiglaDesc>
+                    <type>text</type>
+                    <label>Sigla</label>
+                    <parameters>
+                        <size>2</size>
+                        <maxlen>8</maxlen>
+                    </parameters>
+                </SiglaDesc>-->
+                <Descrizione>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Qualifica</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Descrizione>
+                <tarGgBase>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Tariffa giornaliera di base</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </tarGgBase>
+                <tarOrariaBase>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Tariffa oraria di base</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </tarOrariaBase>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </qualifica>
+</edits>

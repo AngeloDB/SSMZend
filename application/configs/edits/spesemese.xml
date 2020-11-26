@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <spesemese>
+        <title></title>
+        <edittitle>Modifica spesa mese</edittitle>
+        <newtitle>Nuova spesa mese</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>spesemese</maintable>
+        <currkey>idSpeseMese</currkey>
+        <currsql>SELECT * FROM spesemese WHERE </currsql>
+        <parameters>
+            <idCommessa>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </idCommessa>
+<!--            <parFlagDup>
+                <from>const</from>
+                <value>false</value>
+            </parFlagDup>-->
+        </parameters>
+        <javascript>
+            
+$(document).ready(function () {
+    debugger;
+    if($('#Ordine').val() == 'None') {
+        openWP();
+        }
+    });
+
+$(function(){
+    $("#FlagDup").val('false');
+                    
+    $("#idTipoSpesa").change(function() {
+        if(this.options[this.options.selectedIndex].text == "Others")
+            {
+            $("#DescTipoSpesa").parent().parent().show();
+            }
+        else
+            {
+            $("#DescTipoSpesa").parent().parent().hide();
+            }  
+    });
+            
+    var startOpt = $("#idTipoSpesa")[0].options;        
+    if(startOpt[startOpt.selectedIndex].text == "Others")
+        {
+        $("#DescTipoSpesa").parent().parent().show();
+        }
+    else
+        {
+        $("#DescTipoSpesa").parent().parent().hide();
+        }
+    if($("#idSpeseMese").val() != "")
+        {
+        $("#Duplica").hide();
+        $("#Duplica").parent().parent().hide();
+        }
+        
+});
+        </javascript>
+        <form>
+            <name>formDettSM</name>
+            <elements>
+                <idSpeseMese>
+                    <type>hidden</type>
+                </idSpeseMese>
+                <FlagDup>
+                    <type>hidden</type>
+                    <!--<value>"0"</value>-->
+                </FlagDup>
+<!--                <Fake>
+                    <type>date</type>
+                    <notempty>true</notempty>
+                    <parameters>
+                        <Label>Fake</Label>
+                        <notempty>true</notempty>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </Fake>-->
+                <idProgetto>
+                    <type>select</type>
+                    <value>idCommessa</value>
+                    <label>Commessa</label>
+                    <selsql>
+                        <!--SELECT idProgetto AS KeyId, Nome AS Value FROM progetti-->
+                        SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+
+                    </selsql>
+                </idProgetto>
+                <Anno>
+                    <type>text</type>
+                    <label>Anno</label>
+                    <parameters>
+                        <size>4</size>
+                        <maxlen>4</maxlen>
+                    </parameters>
+                </Anno>
+                <Mese>
+                    <type>text</type>
+                    <label>Mese</label>
+                    <parameters>
+                        <size>2</size>
+                        <maxlen>2</maxlen>
+                    </parameters>
+                </Mese>
+                <idRichiesta>
+                    <type>select</type>
+                    <label>Richiesta</label>
+                    <selsql>
+                        SELECT richieste.idRichiesta AS KeyId, 
+                            CONCAT(prog_steps.Step, ' ', 
+                                   qualifiche.Descrizione, 
+                            CASE WHEN personale.idPersonale IS NULL 
+                            THEN ''
+                            ELSE CONCAT(' - ',
+                                   personale.Nome, ' ',
+                                   personale.Cognome, ' (',
+                                   forn_pers.RagSoc, ')')
+                            END ) AS Value 
+                        FROM richieste
+                        JOIN qualifiche ON qualifiche.idQualifica = richieste.idQualifica
+                        JOIN prog_steps ON prog_steps.idProgStep = richieste.idProgStep
+                        LEFT JOIN jobs ON jobs.idRichiesta = richieste.idRichiesta
+                        LEFT JOIN personale ON personale.idPersonale = jobs.idPersonale
+                        LEFT JOIN forn_pers ON forn_pers.idFornPers = personale.idFornPers
+                        WHERE prog_steps.idProgetto = '{{idCommessa}}'
+                    </selsql>
+                </idRichiesta>
+                <spacer1>
+                    <type>custom</type>
+                    <parameters>
+                        <type> </type>
+                    </parameters>
+                    <label> </label>
+                    <description> </description> 
+                </spacer1>
+                <idTipoSpesa>
+                    <type>select</type>
+                    <label>Tipo spesa</label>
+                    <selsql>
+                        SELECT idTabTipoSpesa AS KeyId, Descrizione AS Value FROM tab_tipospesa
+                    </selsql>
+                </idTipoSpesa>
+                <DescTipoSpesa>
+                    <type>text</type>
+                    <label>Altro tipo spesa</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+                </DescTipoSpesa>
+                <Importo>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Importo</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Importo>
+                <Duplica>
+                    <type>button</type>
+                    <label>Conferma+Add</label>
+                    <javascript>                        
+                        <onclick>$("#FlagDup").val(true);$("#Conferma").trigger("click");</onclick>
+                    </javascript>
+                </Duplica>
+                <spacer2>
+                    <type>custom</type>
+                    <parameters>
+                        <type> </type>
+                    </parameters>
+                    <label> </label>
+                    <description> </description> 
+                </spacer2>
+                <Storno>
+                    <type>text</type>
+                    <float>true</float>
+                    <label>Storno</label>
+                    <parameters>
+                        <size>8,2</size>
+                        <maxlen>10</maxlen>
+                        <Locale>it-IT</Locale>
+                    </parameters>
+                </Storno>
+                <Riferimento>
+                    <type>date</type>
+                    <!--<notempty>true</notempty>-->
+                    <parameters>
+                        <Label>Riferimento spesa</Label>
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+               </Riferimento>
+               <Fattura>
+                    <type>text</type>
+                    <label>Fattura</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+               </Fattura>
+               <Ordine>
+                    <type>text</type>
+                    <label>Order</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>80</maxlen>
+                    </parameters>
+               </Ordine>
+               <Wp>
+                    <type>button</type>
+                    <label>New/Edit Working Period</label>
+                    <javascript>                        
+                        <onclick>openWP();return(false);</onclick>
+                    </javascript>
+               </Wp>
+               <spacer3>
+                    <type>custom</type>
+                    <parameters>
+                        <type> </type>
+                    </parameters>
+                    <label> </label>
+                    <description> </description> 
+               </spacer3>
+               <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+<!--                        var goTo = $("#formDettSM").attr("action"); 
+                        window.location = goTo.replace(/new|edit/gi,"list"); -->
+                    <jsreset>
+                        var goTo = baseUrl+"/spese-mese/list/id/"+
+                            $("#idProgetto").val()+"/ym/"+
+                            $("#Mese").val()+"-"+
+                            $("#Anno").val()+"/ric/"+
+                            $("#idRichiesta").val(); 
+                        window.location = goTo; 
+                        return false;
+                    </jsreset>
+                </Conferma>
+            </elements>
+        </form>
+    </spesemese>
+</edits>

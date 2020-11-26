@@ -1,0 +1,41 @@
+<!-- #Sezione header1 -->
+<div id="contenitore" width="100%">
+       <div style="float:left; width:28%; text-align:left">
+            <img border="0" style="width:50mm; height: 15mm" src="images/logogruppo1.jpg" >
+       </div>
+       <div style="float:right; width:68%; text-align:left">
+            <?php
+            echo '<h2 class="TTitolo">' . $this->cantiere . '</h2>';
+            echo '<h3 class="STitolo">' . $this->cant2 . '</h3>';
+            ?>
+       </div>
+</div>
+
+<!-- #Sezione main1 -->
+<?php echo $this->grid; ?>
+
+<!-- #Sezione footer1 -->
+<div class="intestazionefooter">
+   <div width="100%">
+       <div style="float:left; width:48%; text-align:left">
+           Report di evento n.{{Protocollo}}
+       </div>
+       <div style="float:right; width:48%; text-align:right">
+           {PAGENO}
+       </div>
+    </div>
+</div>
+
+<!-- #Sezione footer2 -->
+<div class="intestazionefooter">
+   <img SRC=<?php echo '"'.$this->Foother.'"';?> style="width:200mm" border="0">
+   <br>
+   <div width="100%">
+       <div style="float:left; width:48%; text-align:left">
+           Report di evento n.{{Protocollo}}
+       </div>
+       <div style="float:right; width:48%; text-align:right">
+           {PAGENO}
+       </div>
+    </div>
+</div>

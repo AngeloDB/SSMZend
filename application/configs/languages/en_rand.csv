@@ -1,0 +1,317 @@
+(Semaforo),Status
+(elenco),(list)
+<h3> Documenti allegati </h3>,<H3> Attachments </H3>
+<h4 style="padding:8px;" class="infosuriga">Caricare in allegato fototessera; file in formato JPG ( 35mm x 45mm )</h4>,Upload Photo in JPG Format ( 35mm x 45mm )
+Accetta candidato,OK-Move to Personnel 
+Address,Address
+Allegati personali presente,Uploaded Documents
+Allegati personali,Attachment
+Allegato presenti,Uploaded Documents
+Allegato,Attachment
+Altro tipo spesa,Other Cost Type
+Anno,Year
+Annulla,Discard
+Area,Phase
+Attendere prego&#44; trasferimento in corso...,Please wait&#44; data transfer in progress...
+Attività,Activity
+Attivo (Si/No),Active (Yes/No)
+Attivo,Status
+Autorizzazioni,Authorization
+Bilancio,Balance
+Business Unit,Business Unit
+Business Units,Business Units
+Calendari,Calendars
+Canc.,Erase
+Caricare in allegato fototessera; file in formato JPG ( 35mm x 45mm ),Upload Photo in JPG Format ( 35mm x 45mm )
+Cash,Cash
+Cellulare locale,Local Mobile
+Cellulare,Mobile
+Città,City/Country
+Cliente Finale,Final Client
+Cliente,Int. Client
+Clienti,Clients
+Codice Fiscale,Fiscal Code
+Codice ISO,ISO Code
+Cognome,Surname
+Commessa *,Job Name
+Commessa,Job
+Commesse autorizzate,Authorized Jobs
+Commesse,Jobs
+Commesse/Commesse,Jobs/Jobs
+Commesse/Eventi,Jobs/Milestones
+Commesse/Gantt commesse,Jobs/Jobs Gantt
+Commesse/Grafico giorni lav,Jobs/Working Days Chart
+Conferma+Add,Confirm+New
+Conferma,Confirm
+Contr. M/D,Contractual Man/Days
+Contract Date,Contract Date
+Contract Note,Contract Notes
+Contract Number,Contract Number
+Contract Value,Contract Value
+Contractor,Business Name
+Contractor,Entity Name
+Contractors,Entities
+Contractual Man/days,Contractual Man/days
+Contratto PW,Int. Contractor
+Data rilascio,Date of Issue
+Data,Date
+Descrizione,Description
+Dettaglio,Detail
+Documenti allegati,Attachments
+Documenti allegati,Uploaded Documents
+Dom,SUN
+Domenica,Sunday 	    
+Edit Fase,Edit Phase
+Edit,Edit
+Edit/Commesse,Edit/Jobs
+Edit/Contract info,Edit/Contract info
+Email secondaria,E-Mail 2
+Email,E-Mail
+Entità,Entities
+Eventi,Milestones
+Fase,Phase
+Fasi,Phases
+Fattura,Invoice N.
+File presente,Uploaded File
+File,File
+Fine *,Finish Date
+Fine,End
+Fine,End Date
+Fornitore,Company
+Fornitori,Suppliers
+Fornitori personale,Personnel Suppliers
+Fototessera,Photo
+Gantt commesse,Jobs Gantt
+Generale,General Info
+Gio,THU
+Giorno libero,Day Off
+Giovedì,Thursday    
+Grafico giorni lav,Working Days Chart
+Grafico totali,Totals Chart
+Gruppi qualifiche,Qualification Groups
+Gruppo,Group
+Impianto,Plant Type
+Importo,Amount
+Indirizzo di domicilio,Living Address
+Indirizzo di residenza,Residence Address
+Indirizzo sito,Site Address
+Indirizzo,Address
+Indirizzo,Address
+Inizio,Start
+Inizio,Start Date
+Inserire username "rl" e password "rl":,Use "rl" as username and "rl" as password;
+Interno,Dept.
+Invoice,Invoice N.
+Invoicing,Invoicing
+JobNumber,Job Number
+Jobs,Jobs
+Latitudine,Latitude
+Lavori,Assigned persons
+Letter Of Credit,Letter Of Credit
+Letter of Credit Expiration,L/C Expiration
+Limitazioni,Restrictions
+List,List
+Longitudine,Longitude
+Lun,MON
+Lunedì,Monday 	    
+Luogo di nascita,Birth Place
+Luogo di nascita,Birth Place
+Madre,Mother Name
+Man/day Price,Man/day Price
+Mans. possibili,Other Qualification
+Mar,TUE
+Martedì,Tuesday     
+Max giorni,Maximum Stay
+Mer,WED
+Mercoledì,Wednesday   
+Mese,Month
+Modifica Utenti,Edit User
+Modifica attività,Edit Activity
+Modifica autorizzazioni,Edit Autorizations
+Modifica Business Unit,Edit Business Unit
+Modifica cliente,Edit Client
+Modifica contractor,Edit Entity
+Modifica fase,Edit Phase
+Modifica fornitore,Edit Supplier
+Modifica gruppo qualifiche,Qualification Group
+Modifica job,Assigned Person
+Modifica login,Edit Login
+Modifica periodo lavorativo,Edit Working Period
+Modifica qualifica richiesta,Needed Qualification
+Modifica qualifica,Qualification
+Modifica qualifiche richieste,Needed Qualifications
+Modifica servizio da fatturare,Edit Service to be Invoiced
+Modifica spesa mese,Edit Monthly Cash Expense
+Modifica tipo di visto,Edit VISA Type
+Modifica utenti,Edit User
+Modifica valuta,Edit Currency
+Modifica visto,Edit VISA
+Nascita,Birth Date
+Nessuna mansione selezionata., No selected qualification
+New,New
+Nome,Short Name
+Non si possono aggiungere visti senza un passaporto valido,Can't add a VISA without a valid passport
+Non si può inserire un supervisor senza qualifica,Can't add a supervisor without a qualification
+Not Invoiced,Not Invoiced
+Note,Notes
+Note,Notes
+Num. ragg.,Sorting N.
+Numero ragg.,Sorting N.
+Numero visto,Visa N.
+NumeroPass,Passport N.
+Numero,Sort
+Nuova Spesa mensile,New Monthly Cash Expense
+Nuova attività,New Activity
+Nuova Business Unit,New Business Unit
+Nuova commessa,New Job
+Nuova fase,New phase
+Nuova qualifica richiesta,New Needed Qualification
+Nuova qualifica,New Qualification
+Nuova spesa mese,New Monthly Cash Expense
+Nuova valuta, New Currency
+Nuovo cliente,New Client
+Nuovo contractor,New Int. Entity
+Nuovo contratto PW,New Int. Contract
+Nuovo evento,New Milestone
+Nuovo fornitore,New Supplier
+Nuovo gruppo qualifiche,New Qualifications Group
+Nuovo job,New Assigned Person
+Nuovo lavoro,New Assigned Person
+Nuovo login,New Login
+Nuovo periodo lavorativo,New Working Period
+Nuovo personale,New Person
+Nuovo personale,New Person
+Nuovo servizio da fatturare,New Service to be Invoiced
+Nuovo tipo di visto,New VISA Type
+Nuovo utente,New User
+Nuovo visto,New VISA
+Opzione,Service
+Opzioni commesse,Jobs Data Options
+Orario,Timing
+Ore lavorative,Working Hours
+Order,PO N.
+Ordine di acquisto,Purch. Order
+Ordine,Sort
+Ordine,Sorting N.
+PW Main Contr.,Int. Main Contractor
+PW Main Contractor,Int. Main Contractor
+Padre,Father Name
+Paese - Valuta,Country - Currency
+Paese di domicilio,Living Country
+Paese di residenza,Residence Country
+Paese,Country
+Passaporto,Passport Details
+Passaporto,Passport N.
+Periodo lavorativo,Working Period
+Periodi lavorativi,Working Periods
+Periodi lavorativi (list),Working Period List
+Periodo lavorativo,Working Period
+Periodo,Ref.Period
+Permanent/Temporary,Permanent
+Permanenza,Maximum Stay
+Personale,Person
+Personale all grid,All Personnel
+Personale esterno,External
+Personale esterno grid,External Personnel
+Personale interno,Internal
+Personale interno grid,Internal Personnel
+Personale sito,Site Personnel
+Personale tutto,All
+Personale tutto grid,All Personnel
+Personale,Personal Info
+PersonaleMnu,Personnel
+Planning,Planning
+Planning/Attività,Planning/Activities
+Planning/steps,Planning/Phases
+Pocket Money,Pocket Money
+Premere il pulsante + nella colonna a destra per selezionare dall'elenco,Push + on the right column to select from lists
+Premere il pulsante <span class="aiutopulsantepiu"> + </span>nella colonna a destra per selezionare dall'elenco,Push <span class="aiutopulsantepiu"> + </span>on the right column to select from lists
+Progr. da fatt.,Contract Progressive
+Progr. effettivo,Actual Progr.
+Progressivo corrente,Current Progressive
+Progressivo,Progressive
+Pw,Password
+Qual.,Qual.
+Qualifica,Main Qualification
+Qualifiche richieste,Needed Qualification
+Qualifiche,Qualifications
+Raggruppamento,Group
+Ragione Sociale,Business Name
+Ragione Sociale,Business Name
+Ragione Sociale,Full Name
+Rate/Day,Daily Rate
+Rate/GG,Daily Rate
+Rate/Hour,Hourly Rate
+Rate/Ora,Hourly Rate
+Rates,Rates
+Reference,Reference Date
+Residenza,Residence Address
+Responsabile,Reference Name
+Responsabile,Reference Person
+Richiesta,Activity
+Riferimento spesa,Cost Reference Date
+Riferimento,Reference Date
+Riferimento,Reference Name
+Riferimento,Reference Person
+Rilasciato da,Issued By
+Rilascio,Date of Issue
+Ripete password,Rewrite Password
+Rotation,Rotation
+Ruolo,Role
+Sab,SAT
+Sabato,Saturday    
+Scadenza,Expiring Date
+Scheda,Business Card
+Scrivania,Desktop
+Secondary JobNumber,Entity Job N.
+Servizi da fatturare,Services to be Invoiced
+Sigla,Abbreviation
+Sigla,Entity Code
+Simbolo,Symbol
+Spese Mensili,Monthly Cash Expenses
+Stampa,Print
+Stato,Status
+Storno,Balance
+Supervisor,Supervisor
+Tabelle,Lists
+Tabelle/Autorizzazioni,Lists/Authorization
+Tabelle/Contractors,Lists/Int. Entities
+Tabelle/Gruppi qualifiche,Lists/Qualification Groups
+Tabelle/Qualifiche,Lists/Qualification
+Tariffa giornaliera di base,Ref. Daily Rate
+Tariffa giornaliera,Daily rate
+Tariffa oraria di base,Ref. Hourly Rate
+Tariffa oraria,Hourly Rate
+Telefono,Mobile
+Telefono,Phone
+Tipo,Type
+Tipi di visto,VISA Types
+Tipo di visto,VISA Type
+Tipo spesa,Cost Type
+Tipo visto,VISA Type
+Titolo,User Level
+Tot. effettivo,Actual Total
+Tot. spese,Total Expenses
+Totale corrente,Current Total
+Totale da fatt.,Contract Total
+Totale,Total
+Totali,Totals
+Un,Username
+Username o password errata.,Wrong password or username
+Utente,User
+Utenti,Users
+VISA type,VISA Type
+Valuta,Currency
+Valutazione,Rating
+Valute,Currencies
+Ven,FRI
+Vendor,Vendor
+Venerdì,Friday 	    
+Visti,VISA
+anagNome,Name
+presente,loaded
+presenti,loaded
+Nuovo Calendario,New Calendar
+Nuovo calendario,New Calendar
+Nuova Calendario,New Calendar
+Calendario,Calendar

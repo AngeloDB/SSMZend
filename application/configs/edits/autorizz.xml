@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <autorizz>
+        <title>Autorizzazioni</title>
+        <edittitle>Modifica autorizzazioni</edittitle>
+        <newtitle>Nuova autorizzazione</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>autorizz_progetti</maintable>
+        <currkey>idAutorizzProgetto</currkey>
+        <currsql>SELECT * FROM autorizz_progetti WHERE </currsql>
+        <parameters>
+            <currIdUtente>
+                <from>pararr</from>
+            </currIdUtente>
+            <currUtente>
+                <from>pararr</from>
+            </currUtente>
+            <area>
+                <from>defaultnamespace</from>
+            </area>
+            <istecnico>
+                <from>cond</from>
+                <type>in</type>
+                <op1>{{area}}</op1>
+                <op2>#Tecnico#Administrator</op2>
+            </istecnico>
+        </parameters>
+        <javascript>
+
+$(function(){
+            
+    $.localise("ui.multiselect", 
+                {language: "en", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#Commesse").multiselect({
+        noneSelectedText: 'Allowed Jobs (checkbox select)',
+        checkAllText: 'Select All',
+        uncheckAllText: 'Deselect',
+        noneSelectedText: 'No selected job(s).',
+        selectedText: '# Job(s) selected',
+        selectedList: 200,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "Search:"
+    });
+  
+
+    $("button[disabled=disabled], button[readonly=readonly]").css('width','99%');
+    $("button[disabled=disabled], button[readonly=readonly]").css('color','#A0A0A0');
+    $("button[disabled=disabled], button[readonly=readonly]").css('opacity','1');
+    $("button[disabled=disabled], button[readonly=readonly]").css('filter','');
+    $("button[disabled=disabled], button[readonly=readonly]").css('disabled','');
+
+    $("button[disabled=disabled], button[readonly=readonly]").css('background-color','#FFFFFF');
+    $("button[disabled=disabled], button[readonly=readonly]").css('border','none');
+    
+  
+});
+        </javascript>
+        <form>
+            <name>formAutorizz</name>
+            <elements>
+                <DispUtente>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Utente</label>
+                    <description>{{currUtente}}</description> 
+                </DispUtente> 
+                <EmptySpace>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label> </label>
+                    <description></description> 
+                </EmptySpace> 
+                <idAutorizzProgetto>
+                    <type>hidden</type>
+                </idAutorizzProgetto>
+                <id_utente>
+                    <type>hidden</type>
+                    <value>currIdUtente</value>
+                </id_utente>
+                <Attivo>
+                    <label>Attivo (Si/No)</label>
+                    <notempty>true</notempty>
+                    <type>checkbox</type>
+                </Attivo>
+                <Commesse>
+                    <type>multiselect</type>
+                    <label>Commesse autorizzate</label>
+                    <notempty>true</notempty>                    
+                    <selsql>
+                            SELECT idProgetto AS KeyId, 
+                            CONCAT(JobNumber, ' ', Nome) AS Value, 
+                            CASE WHEN progetti.Inizio &gt; NOW() THEN '2' 
+                                 WHEN progetti.Fine &lt; NOW() THEN '1' 
+                                 ELSE '3'
+                            END AS `SemOrder`
+                        FROM progetti
+                        ORDER BY
+                          CONCAT(SemOrder,
+                          JobNumber +0,
+                          JobNumber) DESC
+
+                    </selsql>
+                    <!--<aiuto>standard</aiuto>-->
+                </Commesse>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </autorizz>
+</edits>

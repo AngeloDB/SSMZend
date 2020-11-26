@@ -1,0 +1,64 @@
+.chartTitleClass {
+    background: #FFFFFF;
+}
+#drawing {
+    background-color: #FFFFFF;
+    width: 100%;
+    height: 90%;
+}
+.lev1Label {
+    margin-left: 0px;
+    padding: 20px;
+    display: inline;
+    font-weight: bold;
+    background-color: #DDD;
+    vertical-align: top
+}
+.lev2Label {
+    background-color: #DDD;
+    margin-left: 0px; 
+    padding: 20px;
+    display: inline
+}
+.lev3Label {
+    margin-right: 50px; 
+    margin-left: 0px; 
+    padding: 20px;
+    display: inline; 
+    font-style: italic; 
+    vertical-align: bottom; 
+    background-color: #DDD;
+    color: #b00
+}
+/*.levelsSign {
+    display: inline;
+    min-height: 50px;
+    background-color: #DDD
+}*/
+.dirButtons {
+    height: 20px;
+    width: 24px;
+    border: "0";
+}
+.labelSign {
+    margin-left: 5px;
+    display: inline;
+}
+.yellowSign {
+    margin-left: 100px;
+    display: inline;
+    color: #fdfd4b;
+    background-color: #fdfd4b;    
+}   
+.greenSign {
+    margin-left: 15px;
+    display: inline;
+    color: #90fd4b;
+    background-color: #90fd4b;
+}
+.redSign {
+    margin-left: 15px;
+    display: inline;
+    color: #ee604a;
+    background-color: #ee604a;
+}

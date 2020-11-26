@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <pw_contracts>
+        <title>Contratti</title>
+        <addlink>/progetti/new-contract</addlink>
+        <addtitle>Nuovo contratto PW</addtitle>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+            <project_name>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Nome</offset>
+            </project_name>
+            <project_id>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>idProgetto</offset>
+            </project_id>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <pw_contratti>pw_contratti</pw_contratti>
+                </aliasname>
+                <fields>
+                    <idPwContratto>idPwContratto</idPwContratto>
+                    <idProgetto>idProgetto</idProgetto>
+                    <ContractNum>ContractNum</ContractNum>
+                    <ContractDate>ContractDate</ContractDate>
+                    <ContractValue>ContractValue</ContractValue>
+                </fields>
+            </from>
+            <join id='contratti'>
+                <type>left</type>
+                <cond> contratti.idContratto = pw_contratti.idContratto </cond>
+                <aliasname>
+                    <contratti>contratti</contratti>
+                </aliasname>
+                <fields>
+                    <Contractor>CONCAT(contratti.Sigla, " - ",contratti.Contratto)</Contractor>
+                </fields>
+            </join>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idProgetto = pw_contratti.idProgetto</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <idProgetto>idProgetto</idProgetto>
+                </fields>
+            </join>
+            <join id='spesemese'>
+                <type>left</type>
+                <cond>spesemese.idProgetto = progetti.idProgetto</cond>
+                <aliasname>
+                    <spesemese>spesemese</spesemese>
+                </aliasname>
+                <fields>
+                    <idSpeseMese>idSpeseMese</idSpeseMese>
+                </fields>
+            </join>
+            <join id='prog_steps'>
+                <type>left</type>
+                <cond>prog_steps.idProgetto = pw_contratti.idProgetto</cond>
+                <aliasname>
+                    <prog_steps>prog_steps</prog_steps>
+                </aliasname>
+                <fields>
+                    <idProgStep>idProgStep</idProgStep>
+                </fields>
+            </join>
+            <join id='richieste'>
+                <type>left</type>
+                <cond>richieste.idProgStep = prog_steps.idProgStep</cond>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <idRichiesta>idRichiesta</idRichiesta>
+                </fields>
+            </join>
+            <join id='giorni_lav'>
+                <type>left</type>
+                <cond>giorni_lav.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <giorni_lav>giorni_lav</giorni_lav>
+                </aliasname>
+                <fields>
+                    <idGiorniLav>idGiorniLav</idGiorniLav>
+                    <delIco> (CASE WHEN SUM(giorni_lav.GiorniEff) > 0 OR MIN(spesemese.idSpeseMese) IS NOT NULL THEN 'del-dis' ELSE 'fechar' END) </delIco>
+                    <delLink> (CASE WHEN SUM(giorni_lav.GiorniEff) > 0 OR MIN(spesemese.idSpeseMese) IS NOT NULL THEN '#' ELSE CONCAT('/progetti/delete-contract/id/', progetti.idProgetto) END) </delLink>
+                    <delAlert> (CASE WHEN SUM(giorni_lav.GiorniEff) > 0 OR MIN(spesemese.idSpeseMese) IS NOT NULL THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) </delAlert>
+                </fields>
+            </join>
+        </select>
+        <updatecolumns>
+            <idProgetto>
+                <hidden>1</hidden>
+            </idProgetto>
+            <idPwContratto>
+                <hidden>1</hidden>                
+            </idPwContratto>
+            <idSpeseMese>
+                <hidden>1</hidden>                
+            </idSpeseMese>
+            <idProgStep>
+                <hidden>1</hidden>                
+            </idProgStep>
+            <idRichiesta>
+                <hidden>1</hidden>                
+            </idRichiesta>
+            <idGiorniLav>
+                <hidden>1</hidden>                
+            </idGiorniLav>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <ContractNum>
+                <title>Number</title>
+                <position>1</position>
+            </ContractNum>
+            <ContractDate>
+                <position>2</position>
+                <title>Data</title>
+<!--                <format>date</format>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </ContractDate>
+            <Contractor>
+                <title>PW Contractor</title>
+                <position>3</position>
+            </Contractor>
+            <ContractValue>
+                <title>Contract Value</title>
+                <position>4</position>
+                <format>currency</format>
+                <format>
+                    <locale>it-IT</locale>
+                </format>
+            </ContractValue>
+        </updatecolumns>
+        <updateCallbacks>
+            <ContractDate>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{ContractDate}}</params>
+            </ContractDate>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /progetti/edit-contract/id/{{idPwContratto}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+        <!--                    <linkheight>
+                                    28
+                            </linkheight>-->
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                            <!--/prog-steps/delete/id/{{idProgStep}}#/images/del-dis.png#Delete-->
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </pw_contracts>
+</grids>

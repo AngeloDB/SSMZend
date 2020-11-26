@@ -1,0 +1,31 @@
+<script>
+	$(function() {
+		$("#GGtabs").tabs();
+
+	//	macroAddTabsBtn (".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+	macroAddTabsBtn(".ui-tabs-nav", "precedente3", "form", "#", "r");
+	});
+</script>
+<?php 
+echo $this->javascript;
+?>
+<div id="GGtabs">
+	<ul class="tabsul">
+		<li><a href="#GGtabs-1"><?php if($this->title) {echo $this->title;}else{echo "Nuovo";} ?></a></li>
+	</ul>
+	<div id="GGtabs-1">
+		<div id="form">
+			<?php echo $this->form; ?>
+		</div>
+	</div>
+</div>
+<?php
+
+/*
+
+<br /><br /><h1><center><?php echo $this->title; ?></center></h1>
+<br /><br />
+<?php
+echo $this->form;
+ * 
+ */

@@ -1,0 +1,72 @@
+<?php
+
+	//$this->ggAiuto = '/public/' . Zend_Controller_Front::getInstance()->getRequest()->getControllerName() . "/aiuto/" . Zend_Controller_Front::getInstance()->getRequest()->getParam('id');	
+	//echo $ggAiuto;	
+?>
+<script>
+	$(function() {
+		$( "#GGtabs" ).tabs();
+		<?php
+		if ($this->addLink != '' && $this->addLabel != '')
+		{
+		?>
+			macroAddTabsBtn (".tabsul", "btn_tab_creanuovo", "+ <?php echo $this->addLabel; ?>", <?php echo $this->addLink; ?>, "l");
+			
+			
+		 <?php
+		}
+		?>
+		//macroAddTabsBtn (".tabsul", "btn_tab_aiuto", "Aiuto", <?php echo $this->ggAiuto; ?>, "r");
+	});
+</script>
+<?php
+//echo $this->jsGrid;
+?>
+<style>
+	table{width: 100%;}
+	table>tbody>tr>th:first-child{width: 20px;}
+</style>
+<div id="GGtabs">
+	<ul class="tabsul">
+        <li><a href="#GGtabs-1">
+            <?php 
+            $translate = Zend_Registry::get('translate');
+            echo $this->title.' '.$translate->_('(elenco)');
+            ?>
+            </a>
+        </li>
+	</ul>
+	<div id="GGtabs-1">
+		<?php echo $this->grid; ?>
+	</div>
+</div>
+<?php
+
+/*
+ *<br> <br>
+<div class="header">
+<h1>
+<center>
+<?php echo $this->title;?>
+</center>
+</h1>
+</div>
+<?php
+if($this->addLink!='')
+{
+    ?>
+<a href=<?php echo $this->addLink; ?>>
+<div style="float: left; padding-right: 4px">
+<img src=<?php echo '"'.$this->baseUrl().'/images/plus.png"'; ?>
+     height="16px" width="16px" border="0" >
+</div>
+<div>
+<?php echo $this->addLabel; ?>
+</div>
+</a>
+    <?php
+}
+echo '<br />';
+echo $this->grid;
+ * 
+ */

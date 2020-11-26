@@ -1,0 +1,99 @@
+<?php
+if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == "edit")
+    {
+    $ggStampa = '/public/' . 
+        Zend_Controller_Front::getInstance()->getRequest()->getControllerName() . 
+        "/print/id/" . Zend_Controller_Front::getInstance()->getRequest()->getParam('id');
+    }
+?>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+//        macroAddTabsBtn(".ui-tabs-nav", "stampa", "Stampa", "<?php // echo $ggStampa; ?>", "l");
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+
+    });
+    
+    
+    $(document).ready(function () {
+//        $('#confSaveNote').click(function(){callNoteOut()});
+//        $('#discSaveNote').click(function(){$("#saveNote").dialog("close");
+
+        $("#newWP").dialog({
+          autoOpen: false,
+          closeOnEscape: false,
+          open: function(event, ui) { 
+              $(".ui-dialog-titlebar-close").hide(); 
+          },
+          width: "auto",
+          title: "New Working Period",
+          show: {
+              effect: "blind",
+              duration: 100
+          },
+          hide: {
+              effect: "blind",
+              duration: 100
+            }
+        });
+        
+        openWP();
+        
+      });
+
+    function openWP()
+        {
+        request = $.ajax({
+        url: baseUrl+'/spese-mese/new-wp',
+        cache: false,
+        type: 'post',
+        data: '',
+        success:function(result){  
+//            var parsed_data = JSON.parse(result);
+//            $('#newWP').html(JSON.stringify(parsed_data));
+        
+            $("#newWP").dialog("open");
+//            $("#newWP").html(result);
+            $('#formWP1').contents().appendTo('#newWP');
+            $('#newWP').css('visibility', 'visible');
+            }
+          });
+        }
+
+</script>
+
+<style>
+
+  .popupContainer {
+      /*visibility: hidden;*/
+      position: relative;
+  }
+    
+</style>
+
+
+<div id="newWP">
+</div>
+
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li>
+            <a href="#GGtabs-1">
+                <?php echo $this->formTitle; ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+        <div id="form">
+            <?php echo $this->form; ?>
+            <div style="height: 50px;"></div>
+        </div>
+        <div id="formHidden" class="popupContainer">
+            <div id="formWP1">
+                <?php echo $this->formWP; ?>
+                <div style="height: 50px;"></div>
+            </div>
+        </div>
+    </div>
+</div>

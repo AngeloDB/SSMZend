@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <calendars>
+        <title>Calendario</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/calendars/new</addlink>
+        <addtitle>Nuovo calendario</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <calendars>calendars</calendars>
+                </aliasname>
+                <fields>
+                    <idCalendar>idCalendar</idCalendar>
+                    <Nome>Nome</Nome>
+                    <Descrizione>Descrizione</Descrizione>
+                    <Lun>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Lun = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Lun>
+                    <Mar>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Mar = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Mar>
+                    <Mer>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Mer = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Mer>
+                    <Gio>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Gio = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Gio>
+                    <Ven>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Ven = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Ven>
+                    <Sab>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Sab = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Sab>
+                    <Dom>CONCAT("{{baseUrl}}","/images/",(CASE WHEN Dom = 0 THEN 'bkg-loginico' ELSE 'delete' END)) </Dom>
+                    <Note>Note</Note>
+                    <delIco> (CASE WHEN COUNT(progetti.idProgetto) > 0 THEN 'del-dis' ELSE 'fechar' END) </delIco>
+                    <delLink> (CASE WHEN COUNT(progetti.idProgetto) > 0 THEN '#' ELSE CONCAT('/calendars/delete/id/', calendars.idCalendar) END) </delLink>
+                    <delAlert> (CASE WHEN COUNT(progetti.idProgetto) > 0 THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) </delAlert>            
+                </fields>
+            </from>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idCalendar = calendars.idCalendar</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <numProgetti>COUNT(idProgetto)</numProgetti>
+                </fields>
+            </join>            
+            <join></join>
+            <group>
+                calendars.idCalendar
+            </group>                        
+            <order>calendars.Nome</order>                        
+        </select>
+        <updatecolumns>
+            <idCalendar>
+                <hidden>1</hidden>
+            </idCalendar>
+            <idCliente>
+                <hidden>1</hidden>
+            </idCliente>
+            <numProgetti>
+                <hidden>1</hidden>
+            </numProgetti>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Nome>
+                <title>Calendario</title>
+                <position>1</position>
+            </Nome>
+            <Descrizione>
+                <title>Description</title>
+                <position>2</position>
+            </Descrizione>
+            <Lun>
+                <title>Lun</title>
+                <position>3</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Lun}}.png"&gt;</decorator>
+            </Lun>
+            <Mar>
+                <title>Mar</title>
+                <position>4</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Mar}}.png"&gt;</decorator>
+            </Mar>
+            <Mer>
+                <title>Mer</title>
+                <position>5</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Mer}}.png"&gt;</decorator>
+            </Mer>
+            <Gio>
+                <title>Gio</title>
+                <position>6</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Gio}}.png"&gt;</decorator>
+            </Gio>
+            <Ven>
+                <title>Ven</title>
+                <position>7</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Ven}}.png"&gt;</decorator>
+            </Ven>
+            <Sab>
+                <title>Sab</title>
+                <position>8</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Sab}}.png"&gt;</decorator>
+            </Sab>
+            <Dom>
+                <title>Dom</title>
+                <position>9</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <order>false</order>
+                <decorator>&lt;img src="{{Dom}}.png"&gt;</decorator>
+            </Dom>
+            <Note>
+                <title>Note</title>
+                <position>10</position>
+            </Note>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /calendars/edit/id/{{idCalendar}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </calendars>
+</grids>

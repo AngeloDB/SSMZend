@@ -1,0 +1,37 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    echo 'macroAddTabsBtn(".ui-tabs-nav", "esci", "Close", "' . $this->baseUrl('giorni-lav/grid/id/'.$this->currId) . '", "r");';
+    }
+?>
+    });
+</script>
+<?php
+echo $this->jsGrid;
+?>
+<div id="GGtabs">
+    <ul class="tabsul">
+        <li><a href="#GGtabs-1">
+            <?php 
+            $translate = Zend_Registry::get('translate');
+            echo $this->title.' '.$translate->_('(elenco)');
+            ?>
+            </a>
+        </li>
+    </ul>
+    <div id="GGtabs-1">
+<div>    
+<div class="buttonLike">
+<?php 
+    echo '<a href="'.$this->baseUrl().'/area/edit/id/'.$this->currFase.'">'.
+            $translate->_('Edit Fase').'</a>';    
+?>
+</div>
+</div>
+<?php echo $this->grid; ?>
+    </div>
+</div>

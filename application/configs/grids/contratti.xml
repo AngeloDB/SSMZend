@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <contratti>
+        <title>Contractors</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/contratti/new</addlink>
+        <addtitle>Nuovo contractor</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <contratti>contratti</contratti>
+                </aliasname>
+                <fields>
+                    <idContratto>idContratto</idContratto>
+                    <Sigla>Sigla</Sigla>
+                    <Contratto>Contratto</Contratto>
+                    <Note>Note</Note>
+                    <delIco> (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                        COUNT(pw_contratti.idPwContratto) > 0 OR
+                        COUNT(prog_steps.idProgStep) > 0 OR
+                        COUNT(aree.idArea) > 0 OR
+                        COUNT(richieste.idRichiesta) > 0
+                        THEN 'del-dis' ELSE 'fechar' END) 
+                    </delIco>
+                    <delLink> (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                        COUNT(pw_contratti.idPwContratto) > 0 OR
+                        COUNT(prog_steps.idProgStep) > 0 OR
+                        COUNT(aree.idArea) > 0 OR
+                        COUNT(richieste.idRichiesta) > 0
+                        THEN '#' ELSE CONCAT('/contratti/delete/id/', 
+                          contratti.idContratto) END) 
+                    </delLink>
+                    <delAlert> (CASE WHEN COUNT(progetti.idProgetto) > 0 OR
+                        COUNT(pw_contratti.idPwContratto) > 0 OR
+                        COUNT(prog_steps.idProgStep) > 0 OR
+                        COUNT(aree.idArea) > 0 OR
+                        COUNT(richieste.idRichiesta) > 0
+                        THEN 'alert(''Can`t delete''); return false;' 
+                        ELSE 'return(confirm(''Confirm delete?''));' END) 
+                    </delAlert>            
+                </fields>
+            </from>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idContratto = contratti.idContratto</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <numProgetti>COUNT(progetti.idProgetto)</numProgetti>
+                </fields>
+            </join>            
+            <join id='prog_steps'>
+                <type>left</type>
+                <cond> prog_steps.idContratto = contratti.idContratto</cond>
+                <aliasname>
+                    <prog_steps>prog_steps</prog_steps>
+                </aliasname>
+                <fields>
+                    <numProgSteps>COUNT(prog_steps.idProgStep)</numProgSteps>
+                </fields>
+            </join>            
+            <join id='aree'>
+                <type>left</type>
+                <cond> aree.idContratto = contratti.idContratto</cond>
+                <aliasname>
+                    <aree>aree</aree>
+                </aliasname>
+                <fields>
+                    <numAree>COUNT(aree.idArea)</numAree>
+                </fields>
+            </join>            
+            <join id='richieste'>
+                <type>left</type>
+                <cond>richieste.idContratto = contratti.idContratto</cond>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <numRichieste>COUNT(richieste.idRichiesta)</numRichieste>
+                </fields>
+            </join>            
+            <join id='pw_contratti'>
+                <type>left</type>
+                <cond>pw_contratti.idContratto = contratti.idContratto</cond>
+                <aliasname>
+                    <pw_contratti>pw_contratti</pw_contratti>
+                </aliasname>
+                <fields>
+                    <numPwContratti>COUNT(pw_contratti.idPwContratto)</numPwContratti>
+                </fields>
+            </join>            
+            <join></join>
+            <group>
+                contratti.idContratto
+            </group>                        
+            <order>contratti.Contratto</order>                        
+        </select>
+        <updatecolumns>
+            <idContratto>
+                <hidden>1</hidden>
+            </idContratto>
+            <numProgetti>
+                <hidden>1</hidden>
+            </numProgetti>
+            <numPwContratti>
+                <hidden>1</hidden>
+            </numPwContratti>
+            <numProgSteps>
+                <hidden>1</hidden>
+            </numProgSteps>
+            <numRichieste>
+                <hidden>1</hidden>
+            </numRichieste>
+            <numAree>
+                <hidden>1</hidden>
+            </numAree>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <Sigla>
+                <title>Sigla</title>
+                <position>1</position>
+                <class>width_75</class>
+            </Sigla>
+            <Contratto>
+                <title>Contractor</title>                
+                <position>2</position>
+            </Contratto>
+            <Note>
+                <title>Note</title>                
+                <position>3</position>
+            </Note>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /contratti/edit/id/{{idContratto}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </contratti>
+</grids>

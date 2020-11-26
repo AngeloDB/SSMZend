@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <personale1>
+        <title>Personale</title>
+        <edittitle>Modifica personale</edittitle>
+        <newtitle>Nuovo personale</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>personale</maintable>
+        <currkey>idPersonale</currkey>
+        <currsql>SELECT * FROM personale WHERE </currsql>
+        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "en", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idQualifica").multiselect({
+        multiple: false,
+        noneSelectedText: 'No selected job(s).',
+        selectedText: '# Job(s) Selected',
+        selectedList: 200,
+        height: 175,
+        minWidth: 600
+<!--        position: {
+        my: 'left bottom',
+        at: 'left top'
+    }-->
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+            
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: Click to select).',
+        noneSelectedText: 'Possible qualification (checkbox selection)',
+        uncheckAllText: 'Unselect',
+        noneSelectedText: 'No selected qualification.',
+        selectedText: '# qualification(s) selected',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+            
+    $("#idFornPers").multiselect({
+        multiple: false,
+        noneSelectedText: 'No selected company.',
+        selectedText: '# Job(s) Selected',
+        selectedList: 200,
+        height: 175,
+        minWidth: 500
+<!--        position: {
+        my: 'left bottom',
+        at: 'left top'
+    }-->
+    }).multiselectfilter({
+        label: "Filter:",
+        placeholder: "search"
+    });
+  
+});  
+
+        </javascript>
+<!--        <javascript>
+    
+$(document).ready(function() 
+{
+    $.localise("ui.multiselect", 
+                {language: "it", path: baseUrl+"/multiselect/js/locale/"});
+    $(".multiselect").multiselect();
+
+    $("#idMultiQual").multiselect({
+        multiple: true,
+        header: '(info: per selezionare una mansione cliccare sul nome).',
+        noneSelectedText: 'Mansioni possibili (selezione a checkbox)',
+        uncheckAllText: 'Deseleziona',
+        noneSelectedText: 'Nessuna mansione selezionata.',
+        selectedText: 'Sono state selezionate # ',
+        selectedList: 1,
+        height: 175,
+        minWidth: 600
+    }).multiselectfilter({
+        label: "Filtra:",
+        placeholder: "ricerca"
+    });
+  
+});  
+
+        </javascript>-->
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formPersonale</name>
+            <elements>
+                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>
+                <Nome>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>anagNome</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Nome>
+                <Cognome>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Cognome</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Cognome>
+                <Email>
+                    <type>text</type>
+                    <label>Email</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Email>
+                <Email2>
+                    <type>text</type>
+                    <label>Email secondaria</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Email2>
+                <TelMobile>
+                    <type>text</type>
+                    <label>Cellulare</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </TelMobile>
+                <TelMobileLocal>
+                    <type>text</type>
+                    <label>Cellulare locale</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </TelMobileLocal>
+                <idQualifica>
+                    <type>select</type>
+                    <label>Qualifica</label>
+                    <selsql>
+                        SELECT qualifiche.idQualifica AS KeyId, qualifiche.Descrizione AS Value
+                        FROM qualifiche
+                    </selsql>
+                </idQualifica>
+                <idMultiQual>
+                    <type>multiselect</type>
+                    <label>Mans. possibili</label>
+                    <selsql>
+                        SELECT idQualifica AS KeyId, 
+                            CONCAT(qualifiche.NumRagg, ' - ',
+                            raggruppamenti.Raggruppamento, ' ', 
+                            SiglaDesc, ' - ', Descrizione) AS Value
+                        FROM qualifiche
+                        JOIN raggruppamenti ON raggruppamenti.idRagg = qualifiche.idRagg
+                    </selsql>
+                    <!--<aiuto>standard</aiuto>-->                
+                </idMultiQual>                               
+                <idFornPers>
+                    <type>select</type>
+                    <label>Fornitore</label>
+                    <selsql>
+                        SELECT forn_pers.idFornPers AS KeyId, forn_pers.RagSoc AS Value
+                        FROM forn_pers
+                        ORDER BY forn_pers.RagSoc
+                    </selsql>
+                </idFornPers>
+                <Resident>
+                    <label>Permanent/Temporary</label>
+                    <type>checkbox</type>
+                </Resident>
+                <Pubwarning>
+                    <type>linecustom</type>
+                    <description> &lt;h3&gt; Documenti allegati &lt;/h3&gt;</description> 
+                </Pubwarning>
+                <Allegato>
+                    <type>file</type>
+                    <label>Attachment</label>
+                    <parameters>
+                        <MultiFile>1</MultiFile>
+                        <Size>2000000</Size>
+                    </parameters>
+                </Allegato>
+               <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </personale1>
+</edits>

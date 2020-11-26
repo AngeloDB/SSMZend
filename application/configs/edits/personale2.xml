@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <personale2>
+        <title>Personale</title>
+        <edittitle>Modifica personale</edittitle>
+        <newtitle>Nuovo personale</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>personale</maintable>
+        <currkey>idPersonale</currkey>
+        <currsql>SELECT * FROM personale WHERE </currsql>
+        <form>
+            <name>formPersonale</name>
+            <elements>
+                <idPersonale>
+                    <type>hidden</type>
+                </idPersonale>
+                <CodFisc>
+                    <type>text</type>
+                    <label>Codice Fiscale</label>
+                    <!--<checkcodfisc>true</checkcodfisc>-->
+                    <parameters>
+                        <size>25</size>
+                        <maxlen>25</maxlen>
+                    </parameters>
+                </CodFisc>
+                <DataNascita>
+                    <type>date</type>
+                    <!--<notempty>true</notempty>-->
+                    <parameters>
+                        <Label>Nascita</Label>
+                        <!--<notempty>true</notempty>-->
+                        <Locale>it-IT</Locale>
+                        <FormatLength>long</FormatLength>
+                        <DatePattern>dd/MM/yyyy</DatePattern>
+                    </parameters>
+                </DataNascita>
+                <LuogoNascita>
+                    <type>text</type>
+                    <label>Luogo di nascita</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </LuogoNascita>
+                <PaeseResidenza>
+                    <type>text</type>
+                    <label>Paese di residenza</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </PaeseResidenza>
+                <IndResidenza>
+                    <type>text</type>
+                    <label>Indirizzo di residenza</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </IndResidenza>
+                <PaeseDomicilio>
+                    <type>text</type>
+                    <label>Paese di domicilio</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </PaeseDomicilio>
+                <IndDomicilio>
+                    <type>text</type>
+                    <label>Indirizzo di domicilio</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </IndDomicilio>
+                <Telefono>
+                    <type>text</type>
+                    <label>Telefono</label>
+                    <parameters>
+                        <size>40</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Telefono>
+                <Padre>
+                    <type>text</type>
+                    <label>Padre</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Padre>
+                <Madre>
+                    <type>text</type>
+                    <label>Madre</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Madre>
+                <Pubwarning>
+                    <type>linecustom</type>
+                    <description> &lt;h3&gt; Documenti allegati &lt;/h3&gt;</description> 
+                </Pubwarning>
+                <AllPers>
+                    <type>file</type>
+                    <label>Allegati personali</label>
+                    <parameters>
+                        <MultiFile>1</MultiFile>
+                        <Size>2000000</Size>
+                    </parameters>
+                </AllPers>
+               <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </personale2>
+</edits>

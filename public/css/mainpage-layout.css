@@ -1,0 +1,54 @@
+/* 
+    Document   : mainpage-layout
+    Created on : 21-lug-2011, 10.54.43
+    Author     : italba
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+body { margin:0px; padding:0px; font-family:"Trebuchet MS", Arial, Helvetica, sans-serif; }
+/* margini */
+h1, h2, h3, h4, h5, h6, p { margin:0px; padding:0px; }
+
+#contenitore { margin:0px; padding:0px; width:100%; height:100%; border:#CCC 1px dashed; }
+/* barra stato */
+#barra-stato { margin:0px; padding:2px; list-style-type: none; height:16px; font-size: 12px; background-color:#444; color:#FFF; }
+#barra-stato #colonna-left { float:left; margin:0px; padding:0px; }
+#barra-stato #colonna-logout { text-align:right; width:10%; height:100%; float:right; margin:0px; padding:0px 2px 0px 0px; color:#9F0; }
+/* barra myslidemenu */
+#barra-myslidemenu { margin:0px; padding:0px; background-color:#999; }
+/* barra nome societa , poziaione applicazione */
+#barra-cantiere { margin:0px; padding:0px; background-color:#9CF; }
+
+/* barra content */
+
+#content { width:100%; background-color:#f6f6f6; margin:0px; padding:0px; height:100%; }
+/*#content { width:100%; background-color:#f6f6f6; margin:0px; padding:0px; height:600px; }*/
+#colonne-area { margin:0px; padding:0px; list-style-type: none; height:100%; }
+#content #colonna-left { width:150px; height:100%; float:left; margin:0px; padding:0px; background-color:#f6f6f6; }
+#content #colonna-right { margin-left: 151px; height:100%; background-color:#f6f6f6; }
+#menuelenco {  text-align: center; }
+#menuelenco, #menuelenco ul { margin:0px; padding:0px; height:100%; }
+#menuelenco li { margin:0px; padding:0px; list-style-type: none; width:100%; }
+
+/* barra aiuto */
+#barra-aiuto { margin:0px; padding:0px; background-color:#888; }
+
+/* set */
+#clear { clear:both; }
+.clear { clear:both; }
+.margine {  margin:0px; padding:4px; overflow:hidden }
+.marginescroll { margin:0px; padding:4px; overflow:auto; }
+.margscavato { margin:0px; padding:32px; background-color:#666 }
+.bkg_rosso { margin:8px; padding: 4px; background-color:#FFC6C6; border:#CCC 1px dashed; }
+.bkg_verde { margin:8px; padding: 4px; background-color:#D2FFA6; border:#CCC 1px dashed; }
+.floatleft { float:left; }
+.floatright { float:right; }
+#barra-l-max { width:100%; }
+/* decorazioni */
+.gridTs{ border-bottom:#444 1px dashed;}

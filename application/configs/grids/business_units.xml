@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <business_units>
+        <title>Business Units</title>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <addlink>/business-units/new</addlink>
+        <addtitle>Nuova Business Unit</addtitle>
+        <select>
+            <from>
+                <aliasname>
+                    <business_units>business_units</business_units>
+                </aliasname>
+                <fields>
+                    <idBusinessUnit>idBusinessUnit</idBusinessUnit>
+                    <idCliente>idCliente</idCliente>
+                    <DescShort>DescShort</DescShort>
+                    <Descrizione>Descrizione</Descrizione>
+                    <Note>Note</Note>
+                    <delIco> (CASE WHEN COUNT(progetti.idProgetto) > 0 THEN 'del-dis' ELSE 'fechar' END) </delIco>
+                    <delLink> (CASE WHEN COUNT(progetti.idProgetto) > 0 THEN '#' ELSE CONCAT('/business-units/delete/id/', business_units.idBusinessUnit) END) </delLink>
+                    <delAlert> (CASE WHEN COUNT(progetti.idProgetto) > 0 THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) </delAlert>            
+                </fields>
+            </from>
+            <join id='progetti'>
+                <type>left</type>
+                <cond>progetti.idBusinessUnit = business_units.idBusinessUnit</cond>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <numProgetti>COUNT(idProgetto)</numProgetti>
+                </fields>
+            </join>            
+            <join></join>
+            <group>
+                business_units.idBusinessUnit
+            </group>                        
+            <order>business_units.DescShort</order>                        
+        </select>
+        <updatecolumns>
+            <idBusinessUnit>
+                <hidden>1</hidden>
+            </idBusinessUnit>
+            <idCliente>
+                <hidden>1</hidden>
+            </idCliente>
+            <numProgetti>
+                <hidden>1</hidden>
+            </numProgetti>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+            <DescShort>
+                <title>Short Name</title>
+            </DescShort>
+            <Descrizione>
+                <title>Description</title>
+            </Descrizione>
+            <Note>
+                <title>Note</title>
+            </Note>
+        </updatecolumns>
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /business-units/edit/id/{{idBusinessUnit}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+        </extracolumns>
+    </business_units>
+</grids>

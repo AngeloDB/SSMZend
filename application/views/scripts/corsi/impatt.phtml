@@ -1,0 +1,21 @@
+<script>
+	$(function() {
+		$("#GGtabs").tabs();
+		
+		macroAddTabsBtn(".ui-tabs-nav", "precedente3", "form", "#", "r");
+	});
+</script>
+<?php 
+echo $this->javascript;
+?>
+<div id="GGtabs">
+	<ul class="tabsul">
+		<li><a href="#GGtabs-1"><?php if($this->titleOss) {echo $this->titleOss;}else{echo "Nuovo";} ?></a></li>
+	</ul>
+	<div id="GGtabs-1">
+		<div id="form">
+			<?php echo $this->form; ?>
+		</div>
+	</div>
+</div>
+<?php

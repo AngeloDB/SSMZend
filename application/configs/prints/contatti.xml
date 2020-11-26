@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : contatti.xml
+    Created on : 4 marzo 2010, 14.02
+    Author     : Italo
+    Description:
+        Purpose of the document follows.
+
+-->
+
+<root>
+    <mainitle>
+        <title>
+            <italiano>Appuntamento</italiano>
+        </title>
+    </mainitle>
+    <contatti>
+        <title>
+            <italiano>Appuntamento</italiano>
+        </title>
+        <fields>
+            <field>
+                <italiano>Data</italiano>
+                <fieldname>data_inizio</fieldname>
+            </field>
+            <field>
+                <italiano>Ora</italiano>
+                <fieldname>ora_inizio</fieldname>
+            </field>
+            <field>
+                <italiano>Durata</italiano>
+                <fieldname>ore_durata</fieldname>
+            </field>
+            <field>
+                <italiano>Riferimento</italiano>
+                <fieldname>cognome</fieldname>
+            </field>
+            <field>
+                <italiano>Tipo contatto</italiano>
+                <fieldname>tipo_contatto</fieldname>
+            </field>
+            <field>
+                <italiano>Indirizzo</italiano>
+                <fieldname>indirizzo</fieldname>
+            </field>
+            <field>
+                <italiano>Tipo indirizzo</italiano>
+                <fieldname>tipo_indirizzo</fieldname>
+            </field>
+            <field>
+                <italiano>Cliente</italiano>
+                <fieldname>Cliente</fieldname>
+            </field>
+            <field>
+                <italiano>Commerciale</italiano>
+                <fieldname>Commerciale</fieldname>
+            </field>
+            <field>
+                <italiano>Oggetto</italiano>
+                <fieldname>oggetto</fieldname>
+            </field>
+            <field>
+                <italiano>Risultato</italiano>
+                <fieldname>risultato</fieldname>
+            </field>
+            <field>
+                <italiano>Note</italiano>
+                <fieldname>noteContatto</fieldname>
+            </field>
+        </fields>
+    </contatti>
+</root>

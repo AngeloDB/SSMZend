@@ -1,0 +1,168 @@
+<!--Cash Detail form-->
+<script>
+    var currPosition = {idSpeseMese: 0,
+                        idProgetto: 0,
+                        Anno: '', 
+                        Mese: '',
+                        idRichiesta: 0};
+
+    $(document).ready(function () {
+            
+        $("#dettRate").dialog({
+          autoOpen: false,
+          closeOnEscape: false,
+          open: function(event, ui) { 
+              $(".ui-dialog-titlebar-close").show();
+              $(this).parent().promise().done(function () {
+                $("#listDettRate").html(ratesResponse);
+                $('#cashdett').trigger('reset');
+                $('#cashDetTable tr').click(function(){
+                    $(this).siblings().removeClass('gridEvid');
+                    $(this).addClass('gridEvid');
+                    var currId=$(this).attr('id').substring(('cdRow-').length);
+                    currPosition.idSpeseMese = currId;
+                    if(currId == '0') {
+                        $('#cashdett').trigger('reset');
+                    }
+                    else {
+                        var callRow = baseUrl+'/giorni-lav/get-cash-row';
+                        request = $.ajax({
+                            url: callRow,
+                            type: "post",
+                            data: {id: currId},
+                            success: function(result){
+                                var currRow = JSON.parse(result);
+                                for (let [key, value] of Object.entries(currRow)) {
+                                    $('#'+key).val(value);
+                                    }
+                                },  
+                            error: function(request, status, err) 
+                                {
+                                alert(err+' '+request.responseText);
+                                }                
+                            });
+                    }    
+                });
+                  
+              })
+          },
+          width: "auto",
+          title: "Cash detail",
+          show: {
+              effect: "blind",
+              duration: 100
+          },
+          hide: {
+              effect: "blind",
+              duration: 100
+            }
+        });
+
+        $('#discDettRate').click(function(){$("#dettRate").dialog('close');});
+        $('#delDettRate').click(function(){
+            var saveRow = baseUrl+'/giorni-lav/del-cash-row';
+            if(parseInt(currPosition.idSpeseMese) > 0)
+                {
+                $.ajax({
+                    type: 'post',
+                    url: saveRow,
+                    data: {toDel: currPosition.idSpeseMese}, 
+                    success: function(response) {
+                        saveAll();
+                        $('#outMode').attr('value', 'cash');
+                        $('#orderBy').attr('value', this.value);
+                        $("#exitForm").submit();
+                        },
+                    error: function() {
+                        alert("There was an error submitting comment");
+                        }
+                    });
+                $("#dettRate").dialog('close');
+                }
+            });
+        
+        $('#confDettRate').click(function(){
+            var saveRow = baseUrl+'/giorni-lav/save-cash-row';
+            $('#idProgetto').val(currPosition.idProgetto);
+            $('#Anno').val(currPosition.Anno);
+            $('#Mese').val(currPosition.Mese);
+            $('#idRichiesta').val(currPosition.idRichiesta);
+            $.ajax({
+                type: 'post',
+                url: saveRow,
+                data: $('#cashdett').serialize(), 
+                success: function(response) {
+                    savePo();
+//                    saveAll();
+//                    $('#outMode').attr('value', 'cash');
+//                    $('#orderBy').attr('value', this.value);
+//                    $("#exitForm").submit();
+                    },
+                error: function() {
+                    alert("There was an error submitting detail");
+                    }
+                });
+            });
+        });
+
+    function savePo() {
+        var saveRow = baseUrl+'/cash-po-detail/save-cash-po-row';
+        $.ajax({
+        type: 'post',
+        url: saveRow,
+        data: $('#formPersFornpers').serialize(), 
+        success: function(response) {
+            saveAll();
+            $('#outMode').attr('value', 'cash');
+            $('#orderBy').attr('value', this.value);
+            $("#exitForm").submit();
+            },
+        error: function() {
+            alert("There was an error submitting P.O.");
+            }
+        });
+        $("#dettRate").dialog('close');
+
+    }
+
+</script>    
+
+<div id = "pippo" class="gridHidden">
+    <div id="dettRate" class="childDetail, confirmForm">
+        <div id="detailSheet" class="tableDetail">
+            
+        <br>
+        <div id="listDettRate">
+            Lista
+        </div>
+        <br>
+            <?php
+               echo $this->cashForm;
+            ?>   
+        <br>
+        <button type="submit" id="delDettRate" name="delDettRate" value="delDettRate">
+            <?php
+               echo '<img src="'.$this->baseUrl() . 
+                    '/images/nao.png" title="Delete" ';
+            ?>   
+            alt="Delete">Delete</button>
+        <button type="submit" id="discDettRate" name="discDettRate" value="discDettRate">
+            <?php
+               echo '<img src="'.$this->baseUrl() . 
+                    '/images/nao.png" title="Discard" ';
+            ?>   
+            alt="Discard">Discard</button>
+        <button type="submit" id="confDettRate" name="confDettRate" value="confDettRate">
+            <?php
+               echo '<img src="'.$this->baseUrl() . 
+                    '/images/ok.png" title="Confirm" ';
+            ?>   
+            alt="Confirm">Confirm</button>
+        </div>
+        <div class="rightDetail">
+            <div id="titles_detail" class="titlesDetail_1">
+                Purchase Orders
+            </div>            
+        </div>            
+    </div>  
+</div>

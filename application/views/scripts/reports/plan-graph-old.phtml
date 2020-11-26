@@ -1,0 +1,90 @@
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+<?php
+if ($this->addLink != '' && $this->addLabel != '')
+    {
+    echo 'macroAddTabsBtn(".tabsul", "btn_tab_creanuovo", "+ ' . $this->addLabel.'", "'.$this->addLink.'", "l");';
+    }
+?>
+
+});
+
+var firstPass = 1;
+
+$(document).ready(function(){
+    var ganttData = <?php echo $this->planGrid; ?> ;
+    $(".gantt").gantt({source: ganttData, 
+        itemsPerPage: 20, 
+        navigate: 'scroll',
+        scale: 'months', 
+        maxScale: 'months', 
+        minScale: 'days'});
+    $("#back").click( function(e)
+        {
+        alert('Back');
+        return false;    
+    });
+});
+
+function printIt()
+    {
+    $("#chart1").css("position", "relative");
+    var zIndex = 1;
+    $('#chart1 > canvas').each( function(e)
+        {
+        var image = new Image();
+        image.src = this.toDataURL("image/png");
+        $(image).css('position', 'absolute');
+        if(zIndex > 2)
+            {
+            $(image).css('left', '29px');
+            }
+        $(image).css('z-index', zIndex++);
+        $(this).replaceWith(image);
+        });
+    }
+
+</script>
+<?php echo $this->javascript; ?>
+<script>
+    $(function () {
+        $("#GGtabs").tabs();
+        macroAddTabsBtn(".ui-tabs-nav", "esci", "Esci", "<?php echo $_SESSION['ggEsci-1_list']; ?>", "r");
+    });
+</script>
+<!--<div id="buttons_wrapper" style="width: 98%; overflow: hidden; ">
+    <div id="buttons_content">
+        <div style="float: right; display: inline;">
+            <div id="printIt"class="buttonLike">
+                <a href= "javascript: printIt();">Print</a>
+            </div>
+            <div id="backWorld"class="buttonLike">
+                <a href= "javascript:history.back()">Back</a>
+            </div>
+        </div>
+    </div>
+</div>-->
+
+<div class="buttonLike">
+<a href="#" id="testPrint" onClick="testPrint();">Print</a>
+<form id="printForm" name="printForm" 
+    action= <?php echo '"' . $this->baseUrl() . 
+              '/personale/print-gantt' . '"'; ?> 
+    method="POST" title="Close" alt="Close">
+<input type="hidden" name="outgantt" id="outGantt"/>
+</form>
+</div>
+<div style="float: right">
+    <form name="exitForm" action="personale/list" method="POST">
+        <button id="back" name="esci" type="submit"> 
+            <img src="/public/images/nao.png" title="Close"alt="Close">    
+            Close
+        </button>
+    </form>
+</div>
+
+<div id="view-content">
+    <div class="gantt">&nbsp;</div>
+</div>
+<div id="chart1" style="height:95%; width:98%;"></div>

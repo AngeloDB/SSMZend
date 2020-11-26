@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grids>
+    <progetti_aperti>
+        <title>Commesse aperte</title>
+        <addlink>/progetti/new</addlink>
+        <addtitle>Nuova commessa</addtitle>
+        <parameters>
+            <baseUrl>
+                <from>defaultnamespace</from>
+            </baseUrl>
+            <aclReadonly>
+                <from>defaultnamespace</from>
+            </aclReadonly>
+            <userType>
+                <from>arrdefaultnamespace</from>
+                <array>user</array>
+                <offset>desc_ul_short</offset>
+            </userType>
+            <allowedProjects>
+                <from>arrdefaultnamespace</from>
+                <array>user</array>
+                <offset>AutCommesse</offset>
+            </allowedProjects>
+            <canDelete>
+                <from>cond</from>
+                <type>eq</type>
+                <op1>{{aclReadonly}}</op1>
+                <op2>1</op2>
+            </canDelete>
+        </parameters>
+        <select>
+            <from>
+                <aliasname>
+                    <progetti>progetti</progetti>
+                </aliasname>
+                <fields>
+                    <idProgetto>idProgetto</idProgetto>
+                    <Nome>Nome</Nome>
+                    <JobNumber>JobNumber</JobNumber>
+                    <Paese>Paese</Paese>
+                    <Indirizzo>Indirizzo</Indirizzo>
+                    <Inizio>Inizio</Inizio>
+                    <Fine>Fine</Fine>
+<!--                    <SemImg>
+                        (CASE 
+                            WHEN progetti.OnHold &gt; 0 THEN "doc_status_8.png"
+                            WHEN progetti.OnHold = 0 AND progetti.Inizio &gt; NOW() THEN "doc_status_9.png"
+                            WHEN progetti.OnHold = 0 AND progetti.Fine &lt; NOW() THEN "doc_status_10.png"
+                            ELSE "doc_status_6.png" 
+                        END)
+                    </SemImg>
+                    <SemOrder>
+                        (CASE 
+                            WHEN progetti.OnHold &gt; 0 THEN "4"
+                            WHEN progetti.Inizio &gt; NOW() THEN "2"
+                            WHEN progetti.Fine &lt; NOW() THEN "1"
+                            ELSE "3" 
+                        END)
+                    </SemOrder>-->
+                    <ContractValue>ContractValue</ContractValue>
+                </fields>
+            </from>
+            <join id='spesemese'>
+                <type>left</type>
+                <cond>spesemese.idProgetto = progetti.idProgetto</cond>
+                <aliasname>
+                    <spesemese>spesemese</spesemese>
+                </aliasname>
+                <fields>
+                    <idSpeseMese>idSpeseMese</idSpeseMese>
+                </fields>
+            </join>
+            <join id='prog_steps'>
+                <type>left</type>
+                <cond>prog_steps.idProgetto = progetti.idProgetto</cond>
+                <aliasname>
+                    <prog_steps>prog_steps</prog_steps>
+                </aliasname>
+                <fields>
+                    <idProgStep>idProgStep</idProgStep>
+                </fields>
+            </join>
+            <join id='richieste'>
+                <type>left</type>
+                <cond>richieste.idProgStep = prog_steps.idProgStep</cond>
+                <aliasname>
+                    <richieste>richieste</richieste>
+                </aliasname>
+                <fields>
+                    <idRichiesta>idRichiesta</idRichiesta>
+                </fields>
+            </join>
+            <join id='giorni_lav'>
+                <type>left</type>
+                <cond>giorni_lav.idRichiesta = richieste.idRichiesta</cond>
+                <aliasname>
+                    <giorni_lav>giorni_lav</giorni_lav>
+                </aliasname>
+                <fields>
+                    <idGiorniLav>idGiorniLav</idGiorniLav>
+                    <delIco> (CASE WHEN SUM(giorni_lav.GiorniEff) > 0 OR MIN(spesemese.idSpeseMese) IS NOT NULL THEN 'del-dis' ELSE 'fechar' END) </delIco>
+                    <delLink> (CASE WHEN SUM(giorni_lav.GiorniEff) > 0 OR MIN(spesemese.idSpeseMese) IS NOT NULL THEN '#' ELSE CONCAT('/progetti/delete/id/', progetti.idProgetto) END) </delLink>
+                    <delAlert> (CASE WHEN SUM(giorni_lav.GiorniEff) > 0 OR MIN(spesemese.idSpeseMese) IS NOT NULL THEN 'alert(''Can`t delete''); return false;' ELSE 'return(confirm(''Confirm delete?''));' END) </delAlert>
+                </fields>
+            </join>
+            <join id='business_units'>
+                <type>left</type>
+                <cond>business_units.idBusinessUnit = progetti.idBusinessUnit</cond>
+                <aliasname>
+                    <business_units>business_units</business_units>
+                </aliasname>
+                <fields>
+                    <BU>Descrizione</BU>
+                </fields>
+            </join>
+            <join id='contratti'>
+                <type>left</type>
+                <cond> contratti.idContratto = progetti.PWMainContractor </cond>
+                <aliasname>
+                    <contratti>contratti</contratti>
+                </aliasname>
+                <fields>
+                    <!--<Contractor>CONCAT(contratti.Sigla, " - ",contratti.Contratto)</Contractor>-->
+                    <Contractor>contratti.Sigla</Contractor>
+                </fields>
+            </join>
+            <join id='utenti'>
+                <type>left</type>
+                <cond>utenti.id_utente = progetti.HQ_Coordinator</cond>
+                <aliasname>
+                    <utenti>utenti</utenti>
+                </aliasname>
+                <fields>
+                    <HqCoord>CONCAT(utenti.nome, " ", utenti.cognome)</HqCoord>
+                </fields>
+            </join>
+            <orderdesc>CONCAT(JobNumber+0,JobNumber)</orderdesc>
+            <!--<orderdesc>CONCAT(SemOrder,JobNumber+0,JobNumber)</orderdesc>-->
+            <group>
+                progetti.idProgetto
+            </group>
+            <where>
+                <from>
+                    (progetti.Inizio &lt; NOW() AND 
+                     progetti.Fine &gt; NOW() AND 
+                     progetti.OnHold = 0)
+                     AND (                    
+                    ("{{userType}}" != "PM-CM") OR
+                    ("{{userType}}" = "PM-CM" AND
+                      "{{allowedProjects}}" LIKE CONCAT("%#", progetti.idProgetto, "#%")))
+                </from>
+            </where>                        
+        </select>
+        <updatecolumns>
+            <idProgetto>
+                <hidden>1</hidden>
+            </idProgetto>
+            <idProgStep>
+                <hidden>1</hidden>                
+            </idProgStep>
+            <idRichiesta>
+                <hidden>1</hidden>
+            </idRichiesta>
+            <idSpeseMese>
+                <hidden>1</hidden>
+            </idSpeseMese>
+            <idGiorniLav>                
+                <hidden>1</hidden>
+            </idGiorniLav>
+            <delIco>
+                <hidden>1</hidden>
+            </delIco>
+            <delLink>
+                <hidden>1</hidden>
+            </delLink>
+            <delAlert>
+                <hidden>1</hidden>
+            </delAlert>
+<!--            <SemOrder>
+                <hidden>1</hidden>
+            </SemOrder>            
+            <SemImg>
+                <title></title>
+                <print>0</print>
+                <position>1</position>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <decorator>
+                    &lt;img src = "/public/images/{{SemImg}}" 
+                        alt="{{SemImg}}" border="0"&gt;&lt;/img&gt;
+                </decorator>
+            </SemImg>            -->
+            <JobNumber>
+                <title>JobNumber</title>
+                <position>2</position>
+                <class>width_75</class>
+            </JobNumber>
+            <Nome>
+                <title>Commessa</title>
+                <position>3</position>
+            </Nome>
+            <Paese>
+                <title>Paese</title>
+                <position>4</position>
+                <class>width_120</class>
+            </Paese>
+            <Indirizzo>
+                <title>Indirizzo</title>
+                <position>5</position>
+            </Indirizzo>
+            <Contractor>
+                <title>PW Main Contractor</title>
+                <position>6</position>
+                <class>width_75</class>
+            </Contractor>
+            <BU>
+                <title>Business Unit</title>
+                <position>7</position>
+                <class>width_120</class>
+            </BU>
+            <ContractValue>
+                <title>Contract Value</title>
+                <position>8</position>
+                <format>currency</format>
+                <class>width_80</class>
+                <format>
+                    <locale>it-IT</locale>
+                </format>
+            </ContractValue>
+            <HqCoord>
+                <title>HQ Coordinator</title>
+                <position>9</position>
+                <class>width_120</class>
+            </HqCoord>
+            <Inizio>
+                <position>10</position>
+                <title>Inizio</title>
+<!--                <format>date</format>
+                <class>width_75</class>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Inizio>
+            <Fine>
+                <position>11</position>
+                <title>Fine</title>
+<!--                <format>date</format>
+                <class>width_75</class>
+                <format>
+                    <locale>it-IT</locale>
+                    <date_format>dd/MM/y</date_format>
+                </format>-->
+            </Fine>
+        </updatecolumns>
+        <updateCallbacks>
+            <Inizio>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Inizio}}</params>
+            </Inizio>
+            <Fine>
+                <class>Custom_GridCallback</class>
+                <method>format_date</method>
+                <params>{{Fine}}</params>
+            </Fine>
+            <End></End>
+        </updateCallbacks>        
+        <extracolumns>
+            <Edit>
+                <position>left</position>
+                <title>Edit</title>
+                <decorator>
+                    /progetti/edit-both/id/{{idProgetto}}#/images/edit.png#Edit
+                </decorator>
+            </Edit>
+            <GGMTarget>
+                <position>left</position>
+                <title>Planning</title>
+                <decorator>
+                    /giorni-lav/grid/id/{{idProgetto}}#/images/img/calendar.gif#Target
+                </decorator>
+            </GGMTarget>
+            <if>
+                <cond>{{canDelete}}</cond>
+                <iftrue>
+                </iftrue>
+                <iffalse>                    
+                    <Del>
+                        <position>left</position>
+                        <title>Delete</title>
+                        <decorator>
+                            <link>
+                                    {{delLink}}
+                            </link>
+                            <linkstyle>
+                                    cursor:help;
+                            </linkstyle>
+                            <linkimg>
+                                    /images/{{delIco}}.png
+                            </linkimg>
+        <!--                    <linkheight>
+                                    28
+                            </linkheight>-->
+                            <onclick>{{delAlert}}</onclick>
+                            <linkalt>
+                                    Delete
+                            </linkalt>
+                            <linktitle>
+                                    Delete
+                            </linktitle>                    
+                            <!--/prog-steps/delete/id/{{idProgStep}}#/images/del-dis.png#Delete-->
+                        </decorator>
+                    </Del>
+                </iffalse>
+            </if>
+<!--            <Semaforo>
+                <title></title>
+                <position>left</position>
+                <print>0</print>
+                <style>max-width: 50px;</style>
+                <search>0</search>
+                <decorator>
+                    <link>
+                            {{#}}
+                    </link>
+                    <linkstyle>
+                            cursor:help;
+                    </linkstyle>
+                    <linkimg>
+                            /images/{{SemImg}}
+                    </linkimg>
+                    <linktitle>
+                        Stop light
+                    </linktitle>                    
+                </decorator>
+            </Semaforo>            -->
+        </extracolumns>
+    </progetti_aperti>
+</grids>

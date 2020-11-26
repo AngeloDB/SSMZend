@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edits>
+    <prog_step_template>
+        <title>Modello step di progetto</title>
+        <edittitle>Modifica modello step di progetto</edittitle>
+        <newtitle>Nuovo modello step di progetto</newtitle>
+        <savingalert>1</savingalert>
+        <maintable>prog_steps_template</maintable>
+        <currkey>idProgStepTemplate</currkey>
+        <currsql>SELECT * FROM prog_steps_template WHERE </currsql>
+        <parameters>
+            <project_name>
+                <from>arrdefaultnamespace</from>
+                <array>currProject</array>
+                <offset>Nome</offset>
+            </project_name>
+        </parameters>
+        <!--<mode>{{rwmode}}</mode>-->
+        <form>
+            <name>formProgStepTemplate</name>
+            <elements>
+                <idProgStepTemplate>
+                    <type>hidden</type>
+                </idProgStepTemplate>
+                <DispProgetto>
+                    <type>custom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <label>Modello di progetto</label>
+                    <description>{{project_name}}</description> 
+                    <!--<description> &lt;h4 class="aiutosuriga"&gt; Identificare il soggetto referente, se diverso dal referente d'impresa, per il DDS in oggetto &lt;/h4&gt;</description>--> 
+                </DispProgetto> 
+<!--                <idProgTemplate>
+                    <type>select</type>
+                    <label>Modello di progetto</label>
+                    <selsql>
+                        SELECT prog_template.idProgTemplate AS KeyId, prog_template.Nome AS Value
+                        FROM prog_template    
+                    </selsql>
+                </idProgTemplate>-->
+                <Step>
+                    <type>text</type>
+                    <notempty>true</notempty>
+                    <label>Modello step di progetto</label>
+                    <parameters>
+                        <size>80</size>
+                        <maxlen>255</maxlen>
+                    </parameters>
+                </Step>
+                <Note>
+                    <label>Note</label>
+                    <type>textarea</type>
+                    <parameters>
+                        <rows>3</rows>
+                    </parameters>
+                </Note> 
+                <spazioverticale>
+                    <type>linecustom</type>
+                    <parameters>
+                        <type>h3</type>
+                    </parameters>
+                    <description> &lt;div class="spazioverticale"&gt;&lt;/div&gt; </description> 
+                </spazioverticale>
+                <Conferma>
+                    <type>submitreset</type>
+                    <label>Conferma</label>
+                </Conferma>
+            </elements>
+        </form>
+    </prog_step_template>
+</edits>
